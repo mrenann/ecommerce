@@ -74,7 +74,7 @@ dependencies {
     ksp(libs.lyricist.processor)
 
     implementation(project(":navigation"))
-    implementation(project(":feature-onboarding:presentation"))
+    implementation(project(":feature-main:presentation"))
 
     //TESTs
     testImplementation(libs.junit)
