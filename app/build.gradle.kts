@@ -73,6 +73,9 @@ dependencies {
     implementation(libs.lyricist)
     ksp(libs.lyricist.processor)
 
+    implementation(project(":navigation"))
+    implementation(project(":feature-onboarding:presentation"))
+
     //TESTs
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

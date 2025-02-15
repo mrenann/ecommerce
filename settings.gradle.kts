@@ -21,3 +21,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "Ecommerce"
 include(":app")
+include(":core")
+include(":feature-onboarding")
+include(":feature-onboarding:domain")
+include(":feature-onboarding:presentation")
+include(":navigation")

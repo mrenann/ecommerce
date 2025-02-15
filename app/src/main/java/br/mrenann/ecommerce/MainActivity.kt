@@ -12,6 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import br.mrenann.ecommerce.ui.theme.EcommerceTheme
+import br.mrenann.navigation.SharedScreen
+import br.mrenann.onboarding.presentation.WelcomeScreen
+import cafe.adriel.voyager.core.registry.rememberScreen
 import cafe.adriel.voyager.navigator.Navigator
 
 class MainActivity : ComponentActivity() {
@@ -21,7 +24,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             EcommerceTheme {
-                Navigator(Initial)
+                Navigator(WelcomeScreen())
             }
         }
     }

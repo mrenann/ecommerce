@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="Ecommerce.feature-onboarding.main" target="11" />
+      <module name="Ecommerce.feature-onboarding.test" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
