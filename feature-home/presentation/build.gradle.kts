@@ -49,6 +49,7 @@ dependencies {
     implementation(libs.voyager.navigator)
     implementation(libs.voyager.tabNavigator)
     implementation(project(":navigation"))
+    implementation(project(":feature-productDetails:presentation"))
 
     implementation(libs.composeIcons.evaIcons)
     implementation(libs.coil.compose)

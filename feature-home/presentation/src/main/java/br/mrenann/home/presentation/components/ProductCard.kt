@@ -1,10 +1,12 @@
 package br.mrenann.home.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,6 +23,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.mrenann.navigation.LocalNavigatorParent
+import br.mrenann.productdetails.presentation.DetailsScreen
+import cafe.adriel.voyager.navigator.currentOrThrow
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -30,9 +35,13 @@ import compose.icons.evaicons.fill.Star
 
 @Composable
 fun ProductCard() {
-
+    val navigator = LocalNavigatorParent.currentOrThrow
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                navigator.push(DetailsScreen())
+            }
     ) {
         Column(
             modifier = Modifier
@@ -55,7 +64,9 @@ fun ProductCard() {
                     .build(),
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxWidth(0.7F)
+                modifier = Modifier
+                    .fillMaxWidth(0.7F)
+                    .height(120.dp)
             )
         }
         Column(
