@@ -7,15 +7,15 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import compose.icons.EvaIcons
-import compose.icons.evaicons.Fill
-import compose.icons.evaicons.fill.Star
+import compose.icons.evaicons.Outline
+import compose.icons.evaicons.outline.Heart
 
 class FavoritesTab : Tab {
     override val options: TabOptions
         @Composable
         get() {
             val title = "Favoritos"
-            val icon = rememberVectorPainter(EvaIcons.Fill.Star)
+            val icon = rememberVectorPainter(EvaIcons.Outline.Heart)
 
             return remember {
                 TabOptions(
