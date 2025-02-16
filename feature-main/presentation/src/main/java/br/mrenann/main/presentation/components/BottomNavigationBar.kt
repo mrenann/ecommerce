@@ -11,7 +11,7 @@ internal fun BottomNavigationBar(tabs: List<Tab>) {
     val tabNavigator = LocalTabNavigator.current
 
     NavigationBar(
-        containerColor = Color.Black
+        containerColor = Color.White
     ) {
         tabs.forEach { tab ->
             TabNavigationItem(

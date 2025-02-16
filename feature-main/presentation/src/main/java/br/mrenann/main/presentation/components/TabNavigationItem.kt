@@ -15,7 +15,7 @@ fun RowScope.TabNavigationItem(
     selected: Boolean,
     onClick: () -> Unit,
 ) {
-    val selectedColor = Color.White
+    val selectedColor = Color(0xFF1373FF)
     val unselectedColor = Color.DarkGray
 
     NavigationBarItem(
