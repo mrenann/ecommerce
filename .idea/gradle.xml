@@ -37,6 +37,8 @@
             <option value="$PROJECT_DIR$/feature-onboarding" />
             <option value="$PROJECT_DIR$/feature-onboarding/domain" />
             <option value="$PROJECT_DIR$/feature-onboarding/presentation" />
+            <option value="$PROJECT_DIR$/feature-productDetails" />
+            <option value="$PROJECT_DIR$/feature-productDetails/presentation" />
             <option value="$PROJECT_DIR$/feature-profile" />
             <option value="$PROJECT_DIR$/feature-profile/presentation" />
             <option value="$PROJECT_DIR$/navigation" />

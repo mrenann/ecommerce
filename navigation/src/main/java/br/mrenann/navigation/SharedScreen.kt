@@ -1,7 +1,11 @@
 package br.mrenann.navigation
 
+import androidx.compose.runtime.staticCompositionLocalOf
 import cafe.adriel.voyager.core.registry.ScreenProvider
+import cafe.adriel.voyager.navigator.Navigator
 
-sealed class SharedScreen: ScreenProvider {
-    object WelcomeScreen: SharedScreen()
+val LocalNavigatorParent = staticCompositionLocalOf<Navigator?> { null }
+
+sealed class SharedScreen : ScreenProvider {
+    object WelcomeScreen : SharedScreen()
 }

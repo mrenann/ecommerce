@@ -14,6 +14,8 @@
       <module name="Ecommerce.feature-main.test" target="11" />
       <module name="Ecommerce.feature-onboarding.main" target="11" />
       <module name="Ecommerce.feature-onboarding.test" target="11" />
+      <module name="Ecommerce.feature-productDetails.main" target="11" />
+      <module name="Ecommerce.feature-productDetails.test" target="11" />
       <module name="Ecommerce.feature-profile.main" target="11" />
       <module name="Ecommerce.feature-profile.test" target="11" />
     </bytecodeTargetLevel>
