@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -159,25 +160,38 @@ class DetailsScreen : Screen {
 
                         )
 
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(24.dp)
-                    ) {
-                        Text(
-                            text = "R$4500,00",
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Button(
-                            modifier = Modifier.weight(1F),
-                            shape = RoundedCornerShape(10.dp),
-                            onClick = {}
-                        ) {
-                            Text("Add to Cart")
-                        }
-                    }
 
+                }
+                HorizontalDivider(
+                    modifier = Modifier
+                        .background(Color.White)
+                        .padding(horizontal = 12.dp, vertical = 16.dp),
+                    thickness = 1.dp,
+                    color = Color(0xFFF1F1F1)
+                )
+                Row(
+                    modifier = Modifier
+                        .background(Color.White)
+                        .padding(
+                            bottom = innerPadding.calculateBottomPadding(),
+                        )
+                        .padding(horizontal = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(24.dp)
+                ) {
+                    Text(
+                        text = "R$4500,00",
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Button(
+                        modifier = Modifier.weight(1F),
+                        shape = RoundedCornerShape(10.dp),
+                        onClick = {}
+                    ) {
+                        Text("Add to Cart")
+                    }
                 }
 
             }
