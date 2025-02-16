@@ -1,0 +1,145 @@
+package br.mrenann.cart.presentation.components
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import compose.icons.EvaIcons
+import compose.icons.evaicons.Outline
+import compose.icons.evaicons.outline.Minus
+import compose.icons.evaicons.outline.Plus
+
+@Composable
+fun CartItem() {
+    var quantity = remember { mutableIntStateOf(1) }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = Color.White, shape = RoundedCornerShape(8.dp))
+            .padding(8.dp)
+    ) {
+        Row {
+            Column(
+                modifier = Modifier
+                    .size(76.dp)
+                    .padding(end = 12.dp)
+                    .background(Color(0xFFF1F1F1))
+            ) {
+
+            }
+            Column {
+                Text(
+                    modifier = Modifier.padding(vertical = 2.dp),
+                    text = "Iphone 16 pro Max",
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    modifier = Modifier.padding(vertical = 2.dp),
+                    text = "Electronic",
+                    color = Color.LightGray,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontSize = 14.sp
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "R$ 1399,99",
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Row(
+                        modifier = Modifier,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Button(
+                            modifier = Modifier.size(36.dp),
+                            border = BorderStroke(1.dp, if(quantity.intValue == 1) Color.LightGray else Color(0xFF3F51B5)),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.Transparent,
+                                disabledContainerColor = Color.Transparent,
+                                disabledContentColor = Color.Black,
+                                contentColor = Color.Black
+                            ),
+                            enabled = quantity.intValue != 1,
+                            shape = RoundedCornerShape(10.dp),
+                            contentPadding = PaddingValues(0.dp),
+                            onClick = {
+                                quantity.intValue = quantity.intValue - 1
+                            }
+                        ) {
+                            Icon(
+                                tint = Color.Black,
+                                imageVector = EvaIcons.Outline.Minus,
+                                contentDescription = "Localized description",
+                            )
+                        }
+                        Text(
+                            modifier = Modifier.padding(horizontal = 6.dp),
+                            text = "${quantity.intValue}",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Button(
+                            modifier = Modifier.size(36.dp),
+                            border = BorderStroke(1.dp, Color(0xFF3F51B5)),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.Transparent,
+                                disabledContainerColor = Color.Transparent,
+                                disabledContentColor = Color.Black,
+                                contentColor = Color.Black
+                            ),
+                            contentPadding = PaddingValues(0.dp),
+                            shape = RoundedCornerShape(10.dp),
+                            onClick = {
+                                quantity.intValue = quantity.intValue + 1
+                            }
+                        ) {
+                            Icon(
+                                tint = Color.Black,
+                                imageVector = EvaIcons.Outline.Plus,
+                                contentDescription = "Localized description",
+                            )
+                        }
+                    }
+                }
+
+            }
+        }
+
+    }
+}
+
+
+@Preview
+@Composable
+fun CartItemPreview() {
+    CartItem()
+}
