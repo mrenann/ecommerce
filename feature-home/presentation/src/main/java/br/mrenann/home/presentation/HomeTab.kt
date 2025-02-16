@@ -39,10 +39,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.mrenann.cart.presentation.CartScreen
 import br.mrenann.home.presentation.components.CategoryCard
 import br.mrenann.home.presentation.components.ProductCard
 import br.mrenann.home.presentation.components.SearchBar
 import br.mrenann.home.presentation.components.SectionTitle
+import br.mrenann.navigation.LocalNavigatorParent
+import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import coil3.compose.AsyncImage
@@ -73,6 +76,7 @@ class HomeTab : Tab {
     @Composable
     override fun Content() {
         var searchQuery by remember { mutableStateOf("") }
+        val navigator = LocalNavigatorParent.currentOrThrow
         val categories = listOf<String>(
             "Mobile",
             "Headphone",
@@ -122,7 +126,9 @@ class HomeTab : Tab {
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         SectionTitle("Discover")
-                        IconButton(onClick = {}) {
+                        IconButton(onClick = {
+                            navigator.push(CartScreen())
+                        }) {
                             Icon(
                                 tint = Color.Black,
                                 imageVector = EvaIcons.Outline.ShoppingCart,

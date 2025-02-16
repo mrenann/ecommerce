@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.voyager.tabNavigator)
     implementation(project(":navigation"))
     implementation(project(":feature-productDetails:presentation"))
+    implementation(project(":feature-cart:presentation"))
 
     implementation(libs.composeIcons.evaIcons)
     implementation(libs.coil.compose)
