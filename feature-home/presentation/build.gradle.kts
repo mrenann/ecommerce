@@ -43,6 +43,7 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.material3)
 
     implementation(libs.voyager.navigator)
@@ -50,6 +51,8 @@ dependencies {
     implementation(project(":navigation"))
 
     implementation(libs.composeIcons.evaIcons)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

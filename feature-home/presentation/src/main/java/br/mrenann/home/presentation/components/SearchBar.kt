@@ -1,0 +1,44 @@
+package br.mrenann.home.presentation.components
+
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import compose.icons.EvaIcons
+import compose.icons.evaicons.Outline
+import compose.icons.evaicons.outline.Search
+
+@Composable
+fun SearchBar(
+    query: String,
+    onQueryChange: (String) -> Unit
+) {
+    OutlinedTextField(
+        value = query,
+        onValueChange = onQueryChange,
+        placeholder = { Text("Search") },
+        trailingIcon = {
+            Icon(
+                imageVector = EvaIcons.Outline.Search,
+                contentDescription = "Search Icon"
+            )
+        },
+        shape = RoundedCornerShape(8.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            unfocusedBorderColor = Color.Transparent,
+            unfocusedContainerColor = Color(0xFFF1F1F1),
+            focusedContainerColor = Color(0xFFF1F1F1)
+        ),
+
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    )
+}
