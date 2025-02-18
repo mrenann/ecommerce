@@ -45,7 +45,7 @@ fun ProductCard(product: Product) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                navigator.push(DetailsScreen())
+                navigator.push(DetailsScreen(product.id))
             }
     ) {
         Column(

@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.cart.presentation.CartScreen
+import br.mrenann.core.domain.model.Category
 import br.mrenann.home.presentation.components.CategoryCard
 import br.mrenann.home.presentation.components.ProductCard
 import br.mrenann.home.presentation.components.SearchBar
@@ -82,127 +83,128 @@ class HomeTab : Tab {
         val navigator = LocalNavigatorParent.currentOrThrow
         val screenModel = koinScreenModel<HomeScreenModel>()
         val state by screenModel.state.collectAsState()
-        val categories = listOf<String>(
-            "Mobile",
-            "Headphone",
-            "Tablets",
-            "Laptop",
-            "Speakers",
-            "Clothes",
-            "Foods"
-        )
 
-        Scaffold(
-            modifier = Modifier.fillMaxSize()
-        ) { innerPadding ->
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(
-                        PaddingValues(
-                            top = innerPadding.calculateTopPadding(),
-                            start = innerPadding.calculateStartPadding(
-                                layoutDirection = LayoutDirection.Ltr
-                            ),
-                            bottom = 0.dp,
-                            end = innerPadding.calculateEndPadding(
-                                layoutDirection = LayoutDirection.Ltr
-                            ),
-                        )
-                    )
-                    .padding(horizontal = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        SectionTitle("Discover")
-                        IconButton(onClick = {
-                            navigator.push(CartScreen())
-                        }) {
-                            Icon(
-                                tint = Color.Black,
-                                imageVector = EvaIcons.Outline.ShoppingCart,
-                                contentDescription = "Localized description",
-                            )
-                        }
-                    }
-                }
-
-                item {
-                    SearchBar(query = searchQuery, onQueryChange = { searchQuery = it })
-                }
-
-                item {
-                    Box(
+        when (state) {
+            is HomeScreenModel.State.Init -> {}
+            is HomeScreenModel.State.Loading -> {}
+            is HomeScreenModel.State.Result -> {
+                val products = (state as HomeScreenModel.State.Result).products
+                val categories = (state as HomeScreenModel.State.Result).categories
+                Scaffold(
+                    modifier = Modifier.fillMaxSize()
+                ) { innerPadding ->
+                    LazyColumn(
                         modifier = Modifier
-                            .padding(vertical = 12.dp)
-                            .background(Color(0xFF3B73FF), RoundedCornerShape(8.dp))
-                            .fillMaxWidth()
-                            .height(150.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                    ) {
-                        AsyncImage(
-                            modifier = Modifier.background(Color.Black, RoundedCornerShape(8.dp)),
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data("https://github.com/mrenann/mrenann/blob/master/img/1.png?raw=true")
-                                .crossfade(true)
-                                .build(),
-                            contentDescription = "",
-                            contentScale = ContentScale.FillWidth,
-                        )
-                        Column(
-                            modifier = Modifier
-                                .padding(horizontal = 8.dp, vertical = 14.dp)
-                                .fillMaxWidth(.5F)
-                                .fillMaxHeight(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 26.sp,
-                                text = "Buy your electronics",
-                                color = Color.White
+                            .fillMaxSize()
+                            .padding(
+                                PaddingValues(
+                                    top = innerPadding.calculateTopPadding(),
+                                    start = innerPadding.calculateStartPadding(
+                                        layoutDirection = LayoutDirection.Ltr
+                                    ),
+                                    bottom = 0.dp,
+                                    end = innerPadding.calculateEndPadding(
+                                        layoutDirection = LayoutDirection.Ltr
+                                    ),
+                                )
                             )
-                        }
-                    }
-                }
-
-                item { SectionTitle("Categories") }
-
-                item {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(3),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(240.dp), // Set a fixed height here
-                        userScrollEnabled = false
+                            .padding(horizontal = 12.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        val modifiedCategories = categories.take(5).toMutableList().apply {
-                            if (categories.size > 5) add("More")
+                        item {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                SectionTitle("Discover")
+                                IconButton(onClick = {
+                                    navigator.push(CartScreen())
+                                }) {
+                                    Icon(
+                                        tint = Color.Black,
+                                        imageVector = EvaIcons.Outline.ShoppingCart,
+                                        contentDescription = "Localized description",
+                                    )
+                                }
+                            }
                         }
-                        items(modifiedCategories.size) { index ->
-                            val category = modifiedCategories[index]
-                            CategoryCard(category)
+
+                        item {
+                            SearchBar(query = searchQuery, onQueryChange = { searchQuery = it })
                         }
-                    }
-                }
 
-                item { SectionTitle("For You") }
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .padding(vertical = 12.dp)
+                                    .background(Color(0xFF3B73FF), RoundedCornerShape(8.dp))
+                                    .fillMaxWidth()
+                                    .height(150.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                            ) {
+                                AsyncImage(
+                                    modifier = Modifier.background(
+                                        Color.Black,
+                                        RoundedCornerShape(8.dp)
+                                    ),
+                                    model = ImageRequest.Builder(LocalContext.current)
+                                        .data("https://github.com/mrenann/mrenann/blob/master/img/1.png?raw=true")
+                                        .crossfade(true)
+                                        .build(),
+                                    contentDescription = "",
+                                    contentScale = ContentScale.FillWidth,
+                                )
+                                Column(
+                                    modifier = Modifier
+                                        .padding(horizontal = 8.dp, vertical = 14.dp)
+                                        .fillMaxWidth(.5F)
+                                        .fillMaxHeight(),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    Text(
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 26.sp,
+                                        text = "Buy your electronics",
+                                        color = Color.White
+                                    )
+                                }
+                            }
+                        }
 
-                item {
-                    when (state) {
-                        is HomeScreenModel.State.Init -> {}
-                        is HomeScreenModel.State.Loading -> {}
-                        is HomeScreenModel.State.Result -> {
-                            val products = (state as HomeScreenModel.State.Result).products
+                        item { SectionTitle("Categories") }
+
+                        item {
+                            LazyVerticalGrid(
+                                columns = GridCells.Fixed(3),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(240.dp), // Set a fixed height here
+                                userScrollEnabled = false
+                            ) {
+                                val modifiedCategories = categories.take(5).toMutableList().apply {
+                                    if (categories.size > 5) add(
+                                        Category(
+                                            id = 0,
+                                            image = "",
+                                            name = "More"
+                                        )
+                                    )
+                                }
+                                items(modifiedCategories.size) { index ->
+                                    val category = modifiedCategories[index]
+                                    CategoryCard(category.name)
+                                }
+                            }
+                        }
+
+                        item { SectionTitle("For You") }
+
+                        item {
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -220,14 +222,13 @@ class HomeTab : Tab {
                                     items(productsSize) { index -> ProductCard(products[index]) }
                                 }
                             }
+
                         }
+
                     }
-
                 }
-
             }
         }
-
 
     }
 
