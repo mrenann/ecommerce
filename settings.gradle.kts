@@ -31,15 +31,20 @@ include(":feature-auth")
 include(":feature-main")
 include(":feature-main:presentation")
 include(":feature-home")
+include(":feature-home:presentation")
+include(":feature-home:domain")
+include(":feature-home:data")
+
 include(":feature-favorites")
 include(":feature-profile")
 //--
 include(":feature-cart")
 
-include(":feature-home:presentation")
+
 include(":feature-favorites:presentation")
 include(":feature-cart:presentation")
 include(":feature-profile:presentation")
 include(":feature-auth:presentation")
 include(":feature-productDetails")
 include(":feature-productDetails:presentation")
+

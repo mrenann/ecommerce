@@ -2,6 +2,7 @@ package br.mrenann.core.di
 
 import br.mrenann.core.BuildConfig
 import br.mrenann.core.data.remote.ParamsInterceptor
+import br.mrenann.core.data.remote.StoreService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module

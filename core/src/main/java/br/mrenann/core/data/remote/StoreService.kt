@@ -1,4 +1,4 @@
-package br.mrenann.core.di
+package br.mrenann.core.data.remote
 
 import br.mrenann.core.data.remote.model.ProductItem
 import br.mrenann.core.data.remote.response.ProductsResponse
