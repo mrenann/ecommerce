@@ -79,6 +79,9 @@ dependencies {
     implementation(project(":feature-home:domain"))
     implementation(project(":feature-home:data"))
     implementation(project(":feature-home:presentation"))
+    implementation(project(":feature-productDetails:domain"))
+    implementation(project(":feature-productDetails:data"))
+    implementation(project(":feature-productDetails:presentation"))
 
     //TESTs
     testImplementation(libs.junit)
