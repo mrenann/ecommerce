@@ -48,3 +48,5 @@ include(":feature-auth:presentation")
 include(":feature-productDetails")
 include(":feature-productDetails:presentation")
 
+include(":feature-productDetails:data")
+include(":feature-productDetails:domain")
