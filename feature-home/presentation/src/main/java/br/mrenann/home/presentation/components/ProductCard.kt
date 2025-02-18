@@ -16,13 +16,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.mrenann.core.domain.model.Category
+import br.mrenann.core.domain.model.Product
+import br.mrenann.core.util.formatBalance
 import br.mrenann.navigation.LocalNavigatorParent
 import br.mrenann.productdetails.presentation.DetailsScreen
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -34,7 +39,7 @@ import compose.icons.evaicons.Fill
 import compose.icons.evaicons.fill.Star
 
 @Composable
-fun ProductCard() {
+fun ProductCard(product: Product) {
     val navigator = LocalNavigatorParent.currentOrThrow
     Column(
         modifier = Modifier
@@ -49,15 +54,14 @@ fun ProductCard() {
                 .background(
                     color = Color(0xFFF1F1F1),
                     shape = RoundedCornerShape(8.dp)
-                )
-                .padding(horizontal = 0.dp, vertical = 12.dp),
+                ),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(
-                        "https://cms-assets.xboxservices.com/assets/bc/40/bc40fdf3-85a6-4c36-af92-dca2d36fc7e5.png?n=642227_Hero-Gallery-0_A1_857x676.png"
+                        product.images[0]
                             ?: "aaa"
                     )
                     .crossfade(true)
@@ -65,8 +69,9 @@ fun ProductCard() {
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .fillMaxWidth(0.7F)
+                    .fillMaxWidth()
                     .height(120.dp)
+                    .clip(RoundedCornerShape(8.dp))
             )
         }
         Column(
@@ -81,12 +86,16 @@ fun ProductCard() {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Xbox Series X",
+                    modifier = Modifier.weight(0.75F),
+                    text = product.title,
                     fontSize = 13.sp,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color.Gray
                 )
                 Row(
+                    modifier = Modifier.weight(0.25F),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
@@ -105,7 +114,7 @@ fun ProductCard() {
                 }
             }
             Text(
-                "R$ 3532,00",
+                product.price.formatBalance(),
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -117,5 +126,22 @@ fun ProductCard() {
 @Preview
 @Composable
 fun ProductCardPreview() {
-    ProductCard()
+    ProductCard(
+        Product(
+            id = 1,
+            title = "Handmade Fresh Table",
+            price = 687,
+            description = "Andy shoes are designed to keeping in...",
+            category = Category(
+                id = 12,
+                image = "https://placeimg.com/640/480/any?r=0.591926261873231",
+                name = "Others"
+            ),
+            images = listOf(
+                "https://placeimg.com/640/480/any?r=0.9178516507833767",
+                "https://placeimg.com/640/480/any?r=0.9300320592588625",
+                "https://placeimg.com/640/480/any?r=0.8807778235430017"
+            )
+        )
+    )
 }

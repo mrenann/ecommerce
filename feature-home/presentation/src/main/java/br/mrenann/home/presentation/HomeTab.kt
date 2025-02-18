@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,7 +45,9 @@ import br.mrenann.home.presentation.components.CategoryCard
 import br.mrenann.home.presentation.components.ProductCard
 import br.mrenann.home.presentation.components.SearchBar
 import br.mrenann.home.presentation.components.SectionTitle
+import br.mrenann.home.presentation.screenModel.HomeScreenModel
 import br.mrenann.navigation.LocalNavigatorParent
+import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
@@ -77,23 +80,14 @@ class HomeTab : Tab {
     override fun Content() {
         var searchQuery by remember { mutableStateOf("") }
         val navigator = LocalNavigatorParent.currentOrThrow
+        val screenModel = koinScreenModel<HomeScreenModel>()
+        val state by screenModel.state.collectAsState()
         val categories = listOf<String>(
             "Mobile",
             "Headphone",
             "Tablets",
             "Laptop",
             "Speakers",
-            "Clothes",
-            "Foods"
-        )
-        val products = listOf<String>(
-            "Mobile",
-            "Headphone",
-            "Tablets",
-            "Laptop",
-            "Speakers",
-            "Clothes",
-            "Foods",
             "Clothes",
             "Foods"
         )
@@ -204,27 +198,31 @@ class HomeTab : Tab {
                 item { SectionTitle("For You") }
 
                 item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(min = 100.dp, max = 1000.dp)
-                    ) {
-                        LazyVerticalGrid(
-                            columns = GridCells.Fixed(2),
-                            userScrollEnabled = false,
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            val productsSize =
-                                if (products.size > 8) 8 else products.size // Limit to 8 items
-                            items(productsSize) { ProductCard() }
+                    when (state) {
+                        is HomeScreenModel.State.Init -> {}
+                        is HomeScreenModel.State.Loading -> {}
+                        is HomeScreenModel.State.Result -> {
+                            val products = (state as HomeScreenModel.State.Result).products
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .heightIn(min = 100.dp, max = 1000.dp)
+                            ) {
+                                LazyVerticalGrid(
+                                    columns = GridCells.Fixed(2),
+                                    userScrollEnabled = false,
+                                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    val productsSize =
+                                        if (products.size > 8) 8 else products.size // Limit to 8 items
+                                    items(productsSize) { index -> ProductCard(products[index]) }
+                                }
+                            }
                         }
                     }
-                }
 
-                item {
-                    Text("ACABOU SE O QUE ERA DOCE")
                 }
 
             }
