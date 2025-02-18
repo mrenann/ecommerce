@@ -75,6 +75,7 @@ dependencies {
 
     implementation(project(":navigation"))
     implementation(project(":feature-main:presentation"))
+    implementation(project(":core"))
 
     //TESTs
     testImplementation(libs.junit)
