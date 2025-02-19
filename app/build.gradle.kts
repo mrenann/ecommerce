@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.gms.google.services)
 }
 
 android {
@@ -79,9 +80,17 @@ dependencies {
     implementation(project(":feature-home:domain"))
     implementation(project(":feature-home:data"))
     implementation(project(":feature-home:presentation"))
+    implementation(project(":feature-auth:presentation"))
     implementation(project(":feature-productDetails:domain"))
     implementation(project(":feature-productDetails:data"))
     implementation(project(":feature-productDetails:presentation"))
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.play.services.auth)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
 
     //TESTs
     testImplementation(libs.junit)
