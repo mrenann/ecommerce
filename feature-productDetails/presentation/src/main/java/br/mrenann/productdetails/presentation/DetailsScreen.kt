@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.mrenann.cart.presentation.screenModel.CartScreenModel
 import br.mrenann.core.util.formatBalance
 import br.mrenann.productdetails.presentation.screenModel.DetailsScreenModel
 import cafe.adriel.voyager.core.screen.Screen
@@ -53,6 +54,8 @@ data class DetailsScreen(
         val navigator = LocalNavigator.currentOrThrow
         val screenModel = koinScreenModel<DetailsScreenModel>()
         val state by screenModel.state.collectAsState()
+
+        val cartScreenModel = koinScreenModel<CartScreenModel>()
 
         when (state) {
             is DetailsScreenModel.State.Init -> {
@@ -202,7 +205,7 @@ data class DetailsScreen(
                             Button(
                                 modifier = Modifier.weight(1F),
                                 shape = RoundedCornerShape(10.dp),
-                                onClick = {}
+                                onClick = { cartScreenModel.addProduct(product = product) }
                             ) {
                                 Text("Add to Cart")
                             }

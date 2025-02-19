@@ -13,13 +13,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.cart.presentation.components.CartItem
+import br.mrenann.cart.presentation.screenModel.CartScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import compose.icons.EvaIcons
@@ -31,6 +35,9 @@ class CartScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        val screenModel = koinScreenModel<CartScreenModel>()
+        val state by screenModel.state.collectAsState()
+        screenModel.getProducts()
 
         Scaffold(
             modifier = Modifier.fillMaxSize()
@@ -40,6 +47,7 @@ class CartScreen : Screen {
                     .fillMaxSize()
                     .padding(innerPadding),
             ) {
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -61,7 +69,9 @@ class CartScreen : Screen {
                         style = MaterialTheme.typography.bodyLarge,
                         fontSize = 18.sp
                     )
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {
+                        screenModel.clearCart()
+                    }) {
                         Icon(
                             tint = Color.Black,
                             imageVector = EvaIcons.Outline.Trash,
@@ -70,16 +80,23 @@ class CartScreen : Screen {
                     }
                 }
 
-                LazyColumn(
-                    modifier = Modifier.padding(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(10) {
-                        CartItem()
+                when (state) {
+                    is CartScreenModel.State.Init -> {}
+                    is CartScreenModel.State.Loading -> {}
+                    is CartScreenModel.State.Result -> {
+                        val result = state as CartScreenModel.State.Result
+                        LazyColumn(
+                            modifier = Modifier.padding(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(result.products.size) { index ->
+                                CartItem(result.products[index])
+                            }
+                        }
                     }
                 }
 
-                
+
             }
 
 

@@ -47,8 +47,18 @@ dependencies {
 
     implementation(libs.voyager.navigator)
     implementation(libs.voyager.tabNavigator)
+    implementation(libs.voyager.screenModel)
+
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation(libs.koin.compose)
+    implementation(libs.voyager.koin)
+
     implementation(project(":navigation"))
-    implementation(project(":feature-productDetails:presentation"))
+    implementation(project(":core"))
+    implementation(project(":feature-cart:data"))
+    implementation(project(":feature-cart:domain"))
 
     implementation(libs.composeIcons.evaIcons)
     implementation(libs.coil.compose)

@@ -1,7 +1,10 @@
 package br.mrenann.ecommerce
 
 import android.app.Application
+import br.mrenann.cart.data.di.cartModule
+import br.mrenann.cart.presentation.di.cartModelModule
 import br.mrenann.core.di.networkModule
+import br.mrenann.core.di.roomModule
 import br.mrenann.home.data.di.categoriesModule
 import br.mrenann.home.data.di.productsModule
 import br.mrenann.home.presentation.di.homeModule
@@ -19,9 +22,12 @@ class App : Application() {
                 androidContext(applicationContext)
                 modules(
                     networkModule,
+                    roomModule,
                     productsModule,
                     categoriesModule,
                     homeModule,
+                    cartModule,
+                    cartModelModule,
                     productModule,
                     detailsModule
                 )

@@ -1,0 +1,17 @@
+package br.mrenann.cart.presentation.di
+
+import br.mrenann.cart.domain.usecase.AddCartUseCase
+import br.mrenann.cart.domain.usecase.ClearCartUseCase
+import br.mrenann.cart.domain.usecase.GetProductsFromCartUseCase
+import br.mrenann.cart.presentation.screenModel.CartScreenModel
+import org.koin.dsl.module
+
+val cartModelModule = module {
+    factory {
+        CartScreenModel(
+            get<AddCartUseCase>(),
+            get<ClearCartUseCase>(),
+            get<GetProductsFromCartUseCase>()
+        )
+    }
+}

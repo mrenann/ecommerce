@@ -1,0 +1,30 @@
+package br.mrenann.cart.data.repository
+
+import br.mrenann.cart.domain.repository.CartRepository
+import br.mrenann.cart.domain.source.CartDataSource
+import br.mrenann.core.domain.model.Product
+import kotlinx.coroutines.flow.Flow
+
+class CartRepositoryImpl(
+    private val dataSource: CartDataSource
+) : CartRepository {
+    override fun getProducts(): Flow<List<Product>> {
+        return dataSource.getProducts()
+    }
+
+    override suspend fun insertProduct(product: Product) {
+        return dataSource.insertProduct(product)
+    }
+
+    override suspend fun deleteProduct(product: Product) {
+        return dataSource.deleteProduct(product)
+    }
+
+    override suspend fun exists(productId: String): Boolean {
+        return dataSource.exists(productId)
+    }
+
+    override suspend fun clear() {
+        return dataSource.clear()
+    }
+}

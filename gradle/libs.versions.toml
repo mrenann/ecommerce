@@ -27,6 +27,7 @@ composeIcons = "1.1.1"
 coil = "3.0.4"
 googleServices = "4.4.2"
 firebase = "33.9.0"
+room = "2.6.1"
 
 [libraries]
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentialsPlayServicesAuth" }
@@ -109,6 +110,10 @@ coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp"
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }
 firebase-analytics = { group = "com.google.firebase", name = "analytics" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
+
+androidx-room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

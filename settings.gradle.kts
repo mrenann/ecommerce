@@ -50,3 +50,5 @@ include(":feature-productDetails:presentation")
 
 include(":feature-productDetails:data")
 include(":feature-productDetails:domain")
+include(":feature-cart:domain")
+include(":feature-cart:data")
