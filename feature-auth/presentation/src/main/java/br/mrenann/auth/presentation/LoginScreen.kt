@@ -158,7 +158,7 @@ class LoginScreen() : Screen {
                                 .onEach { response ->
                                     when (response) {
                                         is AuthResponse.Success -> {
-                                            navigation.push(MainScreen())
+                                            navigation.replace(MainScreen())
                                         }
 
                                         is AuthResponse.Error -> {
