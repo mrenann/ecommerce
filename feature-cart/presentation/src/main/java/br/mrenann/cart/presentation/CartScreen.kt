@@ -204,7 +204,7 @@ class CartScreen : Screen {
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text("Delivery Fee:", style = MaterialTheme.typography.bodyMedium)
-                            Text("Free")
+                            Text(text = "Free", color = Color(0xFF48D861))
                         }
                         if (discountPercentage != 0) {
                             Row(
@@ -227,7 +227,7 @@ class CartScreen : Screen {
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Text(
-                            text = "Checkout for $${"%.2f".format(total)}",
+                            text = "Checkout for ${total.toInt().formatBalance()}",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White
