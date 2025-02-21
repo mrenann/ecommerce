@@ -7,7 +7,9 @@ import org.koin.dsl.module
 
 val roomModule = module {
     single {
-        Room.databaseBuilder(get(), StoreDatabase::class.java, "store_database").build()
+        Room.databaseBuilder(get(), StoreDatabase::class.java, "store_database")
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     single<CartDao> {
