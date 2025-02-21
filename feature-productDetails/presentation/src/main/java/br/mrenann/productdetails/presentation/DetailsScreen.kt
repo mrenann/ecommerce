@@ -19,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -33,6 +34,7 @@ import br.mrenann.cart.presentation.screenModel.CartScreenModel
 import br.mrenann.core.util.formatBalance
 import br.mrenann.favorites.presentation.screenModel.FavoriteScreenModel
 import br.mrenann.productdetails.presentation.screenModel.DetailsScreenModel
+import br.mrenann.productdetails.presentation.state.DetailsEvent
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -41,9 +43,11 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import compose.icons.EvaIcons
+import compose.icons.evaicons.Fill
 import compose.icons.evaicons.Outline
+import compose.icons.evaicons.fill.Bookmark
+import compose.icons.evaicons.outline.Bookmark
 import compose.icons.evaicons.outline.ChevronLeft
-import compose.icons.evaicons.outline.Heart
 import compose.icons.evaicons.outline.Share
 import compose.icons.evaicons.outline.Star
 
@@ -57,16 +61,31 @@ data class DetailsScreen(
         val state by screenModel.state.collectAsState()
 
         val cartScreenModel = koinScreenModel<CartScreenModel>()
-        val favoriteScreenModel = koinScreenModel<FavoriteScreenModel>()
+        koinScreenModel<FavoriteScreenModel>()
+
+        LaunchedEffect(
+            key1 = id
+        ) {
+            screenModel.getDetails(DetailsEvent.GetDetails(id))
+            screenModel.checkedFavorite(
+                DetailsEvent.CheckedFavorite(
+                    id
+                )
+            )
+        }
 
         when (state) {
             is DetailsScreenModel.State.Init -> {
-                screenModel.getProduct(id)
+                Text("INÍCIO...")
             }
 
-            is DetailsScreenModel.State.Loading -> {}
+            is DetailsScreenModel.State.Loading -> {
+                Text("CARREGANDO...")
+            }
+
             is DetailsScreenModel.State.Result -> {
-                val product = (state as DetailsScreenModel.State.Result).product
+                val product = (state as DetailsScreenModel.State.Result).state.product
+                val checked = (state as DetailsScreenModel.State.Result).state.checked
 
                 Scaffold(
                     modifier = Modifier
@@ -78,7 +97,7 @@ data class DetailsScreen(
                             AsyncImage(
                                 model = ImageRequest.Builder(LocalContext.current)
                                     .data(
-                                        product.images[0]
+                                        product?.images[0]
                                             ?: "aaa"
                                     )
                                     .crossfade(true)
@@ -110,12 +129,17 @@ data class DetailsScreen(
                                 }
                                 Row {
                                     IconButton(onClick = {
-                                        favoriteScreenModel.addProduct(product)
+                                        if (product != null) {
+                                            screenModel.favorite(
+                                                item = product
+                                            )
+                                        }
+
                                     }) {
                                         innerPadding
                                         Icon(
                                             tint = Color.Black,
-                                            imageVector = EvaIcons.Outline.Heart,
+                                            imageVector = if (checked) EvaIcons.Fill.Bookmark else EvaIcons.Outline.Bookmark,
                                             contentDescription = "Localized description",
                                         )
                                     }
@@ -143,7 +167,7 @@ data class DetailsScreen(
                                 .padding(top = 16.dp)
                         ) {
                             Text(
-                                text = product.title,
+                                text = product?.title ?: "",
                                 style = MaterialTheme.typography.bodyLarge,
                                 fontSize = 22.sp,
                                 fontWeight = FontWeight.Bold
@@ -154,7 +178,7 @@ data class DetailsScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = product.category.name,
+                                    text = product?.category?.name ?: "",
                                     style = MaterialTheme.typography.bodyLarge,
                                     fontSize = 16.sp,
                                     color = Color.Gray
@@ -179,7 +203,7 @@ data class DetailsScreen(
                                 }
                             }
                             Text(
-                                text = product.description,
+                                text = product?.description ?: "",
                                 fontSize = 16.sp,
                             )
                         }
@@ -201,7 +225,7 @@ data class DetailsScreen(
                             horizontalArrangement = Arrangement.spacedBy(24.dp)
                         ) {
                             Text(
-                                text = product.price.formatBalance(),
+                                text = (product?.price ?: 0).formatBalance(),
                                 style = MaterialTheme.typography.bodyLarge,
                                 fontSize = 22.sp,
                                 fontWeight = FontWeight.Bold
@@ -209,7 +233,7 @@ data class DetailsScreen(
                             Button(
                                 modifier = Modifier.weight(1F),
                                 shape = RoundedCornerShape(10.dp),
-                                onClick = { cartScreenModel.addProduct(product = product) }
+                                onClick = { if (product != null) cartScreenModel.addProduct(product = product) }
                             ) {
                                 Text("Add to Cart")
                             }

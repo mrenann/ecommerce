@@ -7,7 +7,10 @@ import org.koin.dsl.module
 val detailsModule = module {
     factory {
         DetailsScreenModel(
-            productUseCase = get<ProductUseCase>()
+            productUseCase = get<ProductUseCase>(),
+            addToFavoriteUseCase = get(),
+            removeFromFavoriteUseCase = get(),
+            isFavoritedUseCase = get()
         )
     }
 }
