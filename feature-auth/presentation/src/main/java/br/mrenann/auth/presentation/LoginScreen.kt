@@ -43,6 +43,8 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingExcept
 import com.google.firebase.Firebase
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Fill
 import compose.icons.evaicons.fill.Email
@@ -176,19 +178,20 @@ class LoginScreen() : Screen {
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(10.dp),
                         onClick = {
-                            authenticationManager.signInWithGoogle()
-                                .onEach { response ->
-                                    when (response) {
-                                        is AuthResponse.Success -> {
-                                            Log.i("LoginScreen", "Success Google")
-                                        }
-
-                                        is AuthResponse.Error -> {
-                                            Log.i("LoginScreen", "Error Google")
-
-                                        }
-                                    }
-                                }.launchIn(coroutineScope)
+                            navigation.replace(RegisterScreen())
+//                            authenticationManager.signInWithGoogle()
+//                                .onEach { response ->
+//                                    when (response) {
+//                                        is AuthResponse.Success -> {
+//                                            Log.i("LoginScreen", "Success Google")
+//                                        }
+//
+//                                        is AuthResponse.Error -> {
+//                                            Log.i("LoginScreen", "Error Google")
+//
+//                                        }
+//                                    }
+//                                }.launchIn(coroutineScope)
                         }
                     ) {
                         Text("Google")
@@ -204,16 +207,36 @@ class AuthenticationManager(val context: Context) {
 
     fun createAccountWithEmail(email: String, password: String): Flow<AuthResponse> = callbackFlow {
         auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    trySend(AuthResponse.Success)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val userId = auth.currentUser?.uid
+                    if (userId != null) {
+                        // Create the user document in Firestore
+                        val userData = hashMapOf(
+                            "email" to email,
+                            "createdAt" to FieldValue.serverTimestamp()
+                        )
+
+                        FirebaseFirestore.getInstance()
+                            .collection("users")
+                            .document(userId) // userID is used as the document ID
+                            .set(userData)
+                            .addOnSuccessListener {
+                                trySend(AuthResponse.Success)
+                            }
+                            .addOnFailureListener { exception ->
+                                trySend(AuthResponse.Error(message = exception.message ?: ""))
+                            }
+                    } else {
+                        trySend(AuthResponse.Error(message = "User ID is null"))
+                    }
                 } else {
-                    trySend(AuthResponse.Error(message = it.exception?.message ?: ""))
+                    trySend(AuthResponse.Error(message = task.exception?.message ?: ""))
                 }
             }
         awaitClose()
-
     }
+
 
     fun loginWithEmail(email: String, password: String): Flow<AuthResponse> = callbackFlow {
         auth.signInWithEmailAndPassword(email, password)
