@@ -6,4 +6,5 @@ sealed class CartEvent {
     object GetProducts : CartEvent()
     object ClearCart : CartEvent()
     data class AddProduct(val product: Product) : CartEvent()
+    object CountItems : CartEvent()
 }

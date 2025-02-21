@@ -6,6 +6,7 @@ import br.mrenann.cart.domain.usecase.ClearCartUseCase
 import br.mrenann.cart.domain.usecase.GetProductsFromCartUseCase
 import br.mrenann.cart.presentation.screenModel.CartScreenModel.State.Result
 import br.mrenann.cart.presentation.state.CartEvent
+import br.mrenann.cart.presentation.state.CartState
 import br.mrenann.core.domain.model.Product
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
@@ -20,7 +21,7 @@ class CartScreenModel(
     sealed class State {
         object Init : State()
         object Loading : State()
-        data class Result(val products: List<Product>) : State()
+        data class Result(val state: CartState) : State()
     }
 
     fun addProduct(product: Product) {
@@ -35,6 +36,10 @@ class CartScreenModel(
         event(CartEvent.ClearCart)
     }
 
+    fun countItemsFromCart() {
+        event(CartEvent.CountItems)
+    }
+
     private fun event(event: CartEvent) {
         when (event) {
             is CartEvent.AddProduct -> {
@@ -47,15 +52,38 @@ class CartScreenModel(
             is CartEvent.GetProducts -> {
                 screenModelScope.launch {
                     getUseCase.invoke().collectLatest { result ->
-                        mutableState.value = Result(result)
+                        mutableState.value = Result(
+                            CartState(
+                                products = result,
+                                itemsCount = result.size
+                            )
+                        )
                     }
                 }
             }
 
             CartEvent.ClearCart -> {
                 screenModelScope.launch {
-                    clearUseCase.invoke().collectLatest { result ->
-                        mutableState.value = Result(emptyList())
+                    clearUseCase.invoke().collectLatest {
+                        mutableState.value = Result(
+                            CartState(
+                                products = emptyList(),
+                                itemsCount = 0
+                            )
+                        )
+                    }
+                }
+            }
+
+            CartEvent.CountItems -> {
+                screenModelScope.launch {
+                    getUseCase.invoke().collectLatest { result ->
+                        mutableState.value = Result(
+                            CartState(
+                                products = emptyList(),
+                                itemsCount = result.size
+                            )
+                        )
                     }
                 }
             }

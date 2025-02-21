@@ -1,5 +1,6 @@
 package br.mrenann.cart.presentation
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -81,16 +82,25 @@ class CartScreen : Screen {
                 }
 
                 when (state) {
-                    is CartScreenModel.State.Init -> {}
-                    is CartScreenModel.State.Loading -> {}
+                    is CartScreenModel.State.Init -> {
+                        Log.i("TAG", "Init")
+
+                    }
+
+                    is CartScreenModel.State.Loading -> {
+                        Log.i("TAG", "Loading")
+
+                    }
+
                     is CartScreenModel.State.Result -> {
                         val result = state as CartScreenModel.State.Result
+                        Log.i("TAG", "$result")
                         LazyColumn(
                             modifier = Modifier.padding(8.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            items(result.products.size) { index ->
-                                CartItem(result.products[index])
+                            items(result.state.products.size) { index ->
+                                CartItem(result.state.products[index])
                             }
                         }
                     }

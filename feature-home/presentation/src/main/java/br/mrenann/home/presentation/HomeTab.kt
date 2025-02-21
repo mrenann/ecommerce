@@ -18,6 +18,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -41,6 +43,8 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.cart.presentation.CartScreen
+import br.mrenann.cart.presentation.screenModel.CartScreenModel
+import br.mrenann.cart.presentation.screenModel.CartScreenModel.State.Result
 import br.mrenann.core.domain.model.Category
 import br.mrenann.home.presentation.components.CategoryCard
 import br.mrenann.home.presentation.components.ProductCard
@@ -84,6 +88,9 @@ class HomeTab : Tab {
         val screenModel = koinScreenModel<HomeScreenModel>()
         val state by screenModel.state.collectAsState()
 
+        val cartScreenModel = koinScreenModel<CartScreenModel>()
+        val cartState by cartScreenModel.state.collectAsState()
+        cartScreenModel.countItemsFromCart()
         when (state) {
             is HomeScreenModel.State.Init -> {}
             is HomeScreenModel.State.Loading -> {}
@@ -121,11 +128,27 @@ class HomeTab : Tab {
                                 IconButton(onClick = {
                                     navigator.push(CartScreen())
                                 }) {
-                                    Icon(
-                                        tint = Color.Black,
-                                        imageVector = EvaIcons.Outline.ShoppingCart,
-                                        contentDescription = "Localized description",
-                                    )
+
+                                    BadgedBox(
+                                        badge = {
+                                            if (cartState is Result) {
+                                                val cartItemCount =
+                                                    (cartState as Result).state.itemsCount
+                                                if (cartItemCount > 0) { // Exibir apenas se houver itens no carrinho
+                                                    Badge {
+                                                        Text(text = cartItemCount.toString())
+                                                    }
+                                                }
+                                            }
+
+                                        }
+                                    ) {
+                                        Icon(
+                                            tint = Color.Black,
+                                            imageVector = EvaIcons.Outline.ShoppingCart,
+                                            contentDescription = "Shopping Cart",
+                                        )
+                                    }
                                 }
                             }
                         }
