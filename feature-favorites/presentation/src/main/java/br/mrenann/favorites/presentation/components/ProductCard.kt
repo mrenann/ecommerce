@@ -29,7 +29,6 @@ import br.mrenann.core.domain.model.Category
 import br.mrenann.core.domain.model.Product
 import br.mrenann.core.util.formatBalance
 import br.mrenann.navigation.LocalNavigatorParent
-import br.mrenann.productdetails.presentation.DetailsScreen
 import cafe.adriel.voyager.navigator.currentOrThrow
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
@@ -45,7 +44,6 @@ fun ProductCard(product: Product) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                navigator.push(DetailsScreen(product.id))
             }
     ) {
         Column(

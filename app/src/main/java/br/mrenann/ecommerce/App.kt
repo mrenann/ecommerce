@@ -6,6 +6,8 @@ import br.mrenann.cart.presentation.di.cartModelModule
 import br.mrenann.core.di.firebaseModule
 import br.mrenann.core.di.networkModule
 import br.mrenann.core.di.roomModule
+import br.mrenann.favorites.data.di.favoriteModule
+import br.mrenann.favorites.presentation.di.myFavoritesModule
 import br.mrenann.home.data.di.categoriesModule
 import br.mrenann.home.data.di.productsModule
 import br.mrenann.home.presentation.di.homeModule
@@ -28,10 +30,12 @@ class App : Application() {
                     productsModule,
                     categoriesModule,
                     homeModule,
+                    favoriteModule,
                     cartModule,
                     cartModelModule,
                     productModule,
-                    detailsModule
+                    detailsModule,
+                    myFavoritesModule
                 )
             } catch (e: Exception) {
                 e.printStackTrace()

@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.cart.presentation.screenModel.CartScreenModel
 import br.mrenann.core.util.formatBalance
+import br.mrenann.favorites.presentation.screenModel.FavoriteScreenModel
 import br.mrenann.productdetails.presentation.screenModel.DetailsScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
@@ -56,6 +57,7 @@ data class DetailsScreen(
         val state by screenModel.state.collectAsState()
 
         val cartScreenModel = koinScreenModel<CartScreenModel>()
+        val favoriteScreenModel = koinScreenModel<FavoriteScreenModel>()
 
         when (state) {
             is DetailsScreenModel.State.Init -> {
@@ -107,7 +109,9 @@ data class DetailsScreen(
                                     )
                                 }
                                 Row {
-                                    IconButton(onClick = {}) {
+                                    IconButton(onClick = {
+                                        favoriteScreenModel.addProduct(product)
+                                    }) {
                                         innerPadding
                                         Icon(
                                             tint = Color.Black,

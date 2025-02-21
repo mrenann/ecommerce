@@ -61,6 +61,7 @@ dependencies {
     implementation(project(":feature-productDetails:data"))
     implementation(project(":feature-productDetails:domain"))
     implementation(project(":feature-cart:presentation"))
+    implementation(project(":feature-favorites:presentation"))
 
     implementation(libs.composeIcons.evaIcons)
     implementation(libs.coil.compose)
