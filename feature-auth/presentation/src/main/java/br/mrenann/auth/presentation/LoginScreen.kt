@@ -44,7 +44,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Fill
 import compose.icons.evaicons.fill.Email
@@ -204,38 +204,40 @@ class LoginScreen() : Screen {
 
 class AuthenticationManager(val context: Context) {
     private val auth = Firebase.auth
+    private val firestore = Firebase.firestore
 
-    fun createAccountWithEmail(email: String, password: String): Flow<AuthResponse> = callbackFlow {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val userId = auth.currentUser?.uid
-                    if (userId != null) {
-                        // Create the user document in Firestore
-                        val userData = hashMapOf(
-                            "email" to email,
-                            "createdAt" to FieldValue.serverTimestamp()
-                        )
+    fun createAccountWithEmail(name: String, email: String, password: String): Flow<AuthResponse> =
+        callbackFlow {
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val userId = auth.currentUser?.uid
+                        if (userId != null) {
+                            // Criando os dados do usuário no Firestore
+                            val userData = hashMapOf(
+                                "name" to name, // Novo campo para Nome
+                                "email" to email,
+                                "createdAt" to FieldValue.serverTimestamp()
+                            )
 
-                        FirebaseFirestore.getInstance()
-                            .collection("users")
-                            .document(userId) // userID is used as the document ID
-                            .set(userData)
-                            .addOnSuccessListener {
-                                trySend(AuthResponse.Success)
-                            }
-                            .addOnFailureListener { exception ->
-                                trySend(AuthResponse.Error(message = exception.message ?: ""))
-                            }
+                            firestore.collection("users")
+                                .document(userId)
+                                .set(userData)
+                                .addOnSuccessListener {
+                                    trySend(AuthResponse.Success)
+                                }
+                                .addOnFailureListener { exception ->
+                                    trySend(AuthResponse.Error(message = exception.message ?: ""))
+                                }
+                        } else {
+                            trySend(AuthResponse.Error(message = "User ID is null"))
+                        }
                     } else {
-                        trySend(AuthResponse.Error(message = "User ID is null"))
+                        trySend(AuthResponse.Error(message = task.exception?.message ?: ""))
                     }
-                } else {
-                    trySend(AuthResponse.Error(message = task.exception?.message ?: ""))
                 }
-            }
-        awaitClose()
-    }
+            awaitClose()
+        }
 
 
     fun loginWithEmail(email: String, password: String): Flow<AuthResponse> = callbackFlow {

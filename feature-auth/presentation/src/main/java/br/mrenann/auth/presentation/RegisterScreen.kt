@@ -43,20 +43,13 @@ import kotlinx.coroutines.flow.onEach
 class RegisterScreen() : Screen {
     @Composable
     override fun Content() {
-        var email by remember {
-            mutableStateOf("")
-        }
-        var password by remember {
-            mutableStateOf("")
-        }
-        var confirmPassword by remember {
-            mutableStateOf("")
-        }
+        var name by remember { mutableStateOf("") } // Novo campo para nome
+        var email by remember { mutableStateOf("") }
+        var password by remember { mutableStateOf("") }
+        var confirmPassword by remember { mutableStateOf("") }
 
         val context = LocalContext.current
-        val authenticationManager = remember {
-            AuthenticationManager(context)
-        }
+        val authenticationManager = remember { AuthenticationManager(context) }
         val coroutineScope = rememberCoroutineScope()
         val navigation = LocalNavigator.currentOrThrow
 
@@ -85,12 +78,30 @@ class RegisterScreen() : Screen {
                     modifier = Modifier,
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    // Campo para Nome
+                    OutlinedTextField(
+                        value = name,
+                        onValueChange = { value -> name = value },
+                        placeholder = { Text("Name") },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = EvaIcons.Fill.Email,
+                                contentDescription = "User Icon"
+                            )
+                        },
+                        shape = RoundedCornerShape(8.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            unfocusedBorderColor = Color.Transparent,
+                            focusedBorderColor = Color.Transparent,
+                            unfocusedContainerColor = Color(0xFFF1F1F1),
+                            focusedContainerColor = Color(0xFFF1F1F1)
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
                     OutlinedTextField(
                         value = email,
-                        maxLines = 1,
-                        onValueChange = { value ->
-                            email = value
-                        },
+                        onValueChange = { value -> email = value },
                         placeholder = { Text("Email") },
                         leadingIcon = {
                             Icon(
@@ -105,16 +116,12 @@ class RegisterScreen() : Screen {
                             unfocusedContainerColor = Color(0xFFF1F1F1),
                             focusedContainerColor = Color(0xFFF1F1F1)
                         ),
-                        modifier = Modifier
-                            .fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth()
                     )
 
                     OutlinedTextField(
                         value = password,
-                        maxLines = 1,
-                        onValueChange = { value ->
-                            password = value
-                        },
+                        onValueChange = { value -> password = value },
                         placeholder = { Text("Password") },
                         leadingIcon = {
                             Icon(
@@ -130,16 +137,12 @@ class RegisterScreen() : Screen {
                             focusedContainerColor = Color(0xFFF1F1F1)
                         ),
                         visualTransformation = PasswordVisualTransformation(),
-                        modifier = Modifier
-                            .fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth()
                     )
 
                     OutlinedTextField(
                         value = confirmPassword,
-                        maxLines = 1,
-                        onValueChange = { value ->
-                            confirmPassword = value
-                        },
+                        onValueChange = { value -> confirmPassword = value },
                         placeholder = { Text("Confirm Password") },
                         leadingIcon = {
                             Icon(
@@ -155,8 +158,7 @@ class RegisterScreen() : Screen {
                             focusedContainerColor = Color(0xFFF1F1F1)
                         ),
                         visualTransformation = PasswordVisualTransformation(),
-                        modifier = Modifier
-                            .fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth()
                     )
 
                     Spacer(modifier = Modifier.size(18.dp))
@@ -164,9 +166,9 @@ class RegisterScreen() : Screen {
                     Button(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(10.dp),
-                        enabled = email.isNotEmpty() && password.isNotEmpty() && password == confirmPassword,
+                        enabled = name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && password == confirmPassword,
                         onClick = {
-                            authenticationManager.createAccountWithEmail(email, password)
+                            authenticationManager.createAccountWithEmail(name, email, password)
                                 .onEach { response ->
                                     when (response) {
                                         is AuthResponse.Success -> {
@@ -175,7 +177,6 @@ class RegisterScreen() : Screen {
 
                                         is AuthResponse.Error -> {
                                             Log.i("RegisterScreen", "Error")
-
                                         }
                                     }
                                 }.launchIn(coroutineScope)
@@ -183,30 +184,9 @@ class RegisterScreen() : Screen {
                     ) {
                         Text("Register")
                     }
-
-                    Button(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(10.dp),
-                        onClick = {
-                            authenticationManager.signInWithGoogle()
-                                .onEach { response ->
-                                    when (response) {
-                                        is AuthResponse.Success -> {
-                                            Log.i("LoginScreen", "Success Google")
-                                        }
-
-                                        is AuthResponse.Error -> {
-                                            Log.i("LoginScreen", "Error Google")
-
-                                        }
-                                    }
-                                }.launchIn(coroutineScope)
-                        }
-                    ) {
-                        Text("Google")
-                    }
                 }
             }
         }
     }
 }
+
