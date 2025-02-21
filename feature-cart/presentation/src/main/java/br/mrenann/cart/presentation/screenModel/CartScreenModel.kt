@@ -1,7 +1,9 @@
 package br.mrenann.cart.presentation.screenModel
 
+import android.util.Log
 import br.mrenann.cart.domain.usecase.AddCartUseCase
 import br.mrenann.cart.domain.usecase.AddCartUseCase.Params
+import br.mrenann.cart.domain.usecase.ApplyCouponUseCase
 import br.mrenann.cart.domain.usecase.ClearCartUseCase
 import br.mrenann.cart.domain.usecase.GetProductsFromCartUseCase
 import br.mrenann.cart.presentation.screenModel.CartScreenModel.State.Result
@@ -17,6 +19,7 @@ class CartScreenModel(
     private val addUseCase: AddCartUseCase,
     private val clearUseCase: ClearCartUseCase,
     private val getUseCase: GetProductsFromCartUseCase,
+    private val applyCouponUseCase: ApplyCouponUseCase
 ) : StateScreenModel<CartScreenModel.State>(State.Init) {
     sealed class State {
         object Init : State()
@@ -26,6 +29,10 @@ class CartScreenModel(
 
     fun addProduct(product: Product) {
         event(CartEvent.AddProduct(product))
+    }
+
+    init {
+        getProducts()
     }
 
     fun getProducts() {
@@ -38,6 +45,10 @@ class CartScreenModel(
 
     fun countItemsFromCart() {
         event(CartEvent.CountItems)
+    }
+
+    fun applyCoupon(userId: String, code: String, subtotal: Double) {
+        event(CartEvent.ApplyCoupon(userId, code, subtotal))
     }
 
     private fun event(event: CartEvent) {
@@ -84,6 +95,47 @@ class CartScreenModel(
                                 itemsCount = result.size
                             )
                         )
+                    }
+                }
+            }
+
+            is CartEvent.ApplyCoupon -> {
+                screenModelScope.launch {
+                    applyCouponUseCase.invoke(
+                        ApplyCouponUseCase.Params(
+                            userId = event.userId,
+                            code = event.code,
+                            subtotal = event.subtotal
+                        )
+                    ).collectLatest { result ->
+                        val currentState = mutableState.value
+
+
+                        when (result) {
+                            is ApplyCouponUseCase.Result.Invalid -> {
+                                Log.i("COUPON", "INVALID")
+                                if (currentState is Result) {
+                                    mutableState.value = Result(
+                                        currentState.state.copy(
+                                            discountApplied = false
+                                        )
+                                    )
+                                }
+                            }
+
+                            is ApplyCouponUseCase.Result.Success -> {
+                                Log.i("COUPON", "SUCCESS")
+
+                                if (currentState is Result) {
+                                    mutableState.value = Result(
+                                        currentState.state.copy(
+                                            discountApplied = true
+                                        )
+                                    )
+                                }
+                            }
+                        }
+
                     }
                 }
             }

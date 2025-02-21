@@ -1,34 +1,49 @@
 package br.mrenann.cart.presentation
 
-import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.cart.presentation.components.CartItem
 import br.mrenann.cart.presentation.screenModel.CartScreenModel
+import br.mrenann.core.util.formatBalance
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import compose.icons.EvaIcons
+import compose.icons.evaicons.Fill
 import compose.icons.evaicons.Outline
+import compose.icons.evaicons.fill.CheckmarkCircle2
 import compose.icons.evaicons.outline.ChevronLeft
 import compose.icons.evaicons.outline.Trash
 
@@ -38,31 +53,41 @@ class CartScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val screenModel = koinScreenModel<CartScreenModel>()
         val state by screenModel.state.collectAsState()
-        screenModel.getProducts()
+
+        var promoCode by remember { mutableStateOf("") }
+        var discountPercentage by remember { mutableStateOf(0) }
+        val subtotal = state.let {
+            if (it is CartScreenModel.State.Result) {
+                it.state.products.sumOf { product -> product.price }
+            } else 0
+        }
+        val deliveryFee = 0.00
+        val discountAmount = (subtotal * discountPercentage) / 100.0
+        val total = (subtotal - discountAmount) + deliveryFee
 
         Scaffold(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
         ) { innerPadding ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding),
+                    .background(Color(0xFFF5F8FE))
+                    .padding(innerPadding)
             ) {
-
+                // Header
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = innerPadding.calculateTopPadding()),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(onClick = {
-                        navigator.pop()
-                    }) {
+                    IconButton(onClick = { navigator.pop() }) {
                         Icon(
                             tint = Color.Black,
                             imageVector = EvaIcons.Outline.ChevronLeft,
-                            contentDescription = "Localized description",
+                            contentDescription = "Back"
                         )
                     }
                     Text(
@@ -70,33 +95,23 @@ class CartScreen : Screen {
                         style = MaterialTheme.typography.bodyLarge,
                         fontSize = 18.sp
                     )
-                    IconButton(onClick = {
-                        screenModel.clearCart()
-                    }) {
+                    IconButton(onClick = { screenModel.clearCart() }) {
                         Icon(
                             tint = Color.Black,
                             imageVector = EvaIcons.Outline.Trash,
-                            contentDescription = "Localized description",
+                            contentDescription = "Clear Cart"
                         )
                     }
                 }
 
+                // Cart Items
                 when (state) {
-                    is CartScreenModel.State.Init -> {
-                        Log.i("TAG", "Init")
-
-                    }
-
-                    is CartScreenModel.State.Loading -> {
-                        Log.i("TAG", "Loading")
-
-                    }
-
                     is CartScreenModel.State.Result -> {
                         val result = state as CartScreenModel.State.Result
-                        Log.i("TAG", "$result")
                         LazyColumn(
-                            modifier = Modifier.padding(8.dp),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(8.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             items(result.state.products.size) { index ->
@@ -104,12 +119,129 @@ class CartScreen : Screen {
                             }
                         }
                     }
+
+                    else -> {}
                 }
 
+                // Promo Code Input and Checkout Summary
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    OutlinedTextField(
+                        value = promoCode,
+                        maxLines = 1,
+                        minLines = 1,
+                        singleLine = true,
+                        onValueChange = { promoCode = it },
+                        placeholder = { Text("Has Promo Code") },
+                        trailingIcon = {
+                            IconButton(onClick = {
+                                screenModel.applyCoupon(
+                                    userId = "123",
+                                    code = promoCode,
+                                    subtotal = 20.0
+                                )
+                            }) {
+                                if (discountPercentage == 0) {
+                                    Icon(
+                                        imageVector = EvaIcons.Fill.CheckmarkCircle2,
+                                        contentDescription = "Apply Promo",
+                                        tint = if (promoCode == "DISCOUNT40") Color.Green else Color.Gray
+                                    )
+                                } else {
+                                    Text(modifier = Modifier.width(200.dp), text = "Code applied")
+                                }
 
+                            }
+                        },
+                        suffix = {
+                            if (state is CartScreenModel.State.Result) {
+                                val result = state as CartScreenModel.State.Result
+                                if (result.state.discountApplied) {
+                                    Text("PROMO APPLIED")
+                                }
+                            }
+
+                        },
+                        shape = RoundedCornerShape(8.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            unfocusedBorderColor = Color.Transparent,
+                            focusedBorderColor = Color(0xFFF1F1F1),
+                            unfocusedContainerColor = Color(0xFFF1F1F1),
+                            focusedContainerColor = Color(0xFFF1F1F1)
+                        ),
+
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+//                    OutlinedTextField(
+//                        value = promoCode,
+//                        onValueChange = { promoCode = it },
+//                        trailingIcon = {
+//                            IconButton(onClick = {
+//                                // Simulating promo code validation
+//                                if (promoCode == "DISCOUNT40") {
+//                                    discountPercentage = 40
+//                                }
+//                            }) {
+//                                Icon(
+//                                    imageVector = Icons.Default.Check,
+//                                    contentDescription = "Apply Promo",
+//                                    tint = if (promoCode == "DISCOUNT40") Color.Green else Color.Gray
+//                                )
+//                            }
+//                        },
+//                        modifier = Modifier.fillMaxWidth()
+//                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Price Breakdown
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("Subtotal:", style = MaterialTheme.typography.bodyMedium)
+                            Text(subtotal.formatBalance())
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("Delivery Fee:", style = MaterialTheme.typography.bodyMedium)
+                            Text("Free")
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("Discount:", style = MaterialTheme.typography.bodyMedium)
+                            Text("${discountPercentage}%")
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Checkout Button
+                    Button(
+                        onClick = { /* Navigate to checkout */ },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text(
+                            text = "Checkout for $${"%.2f".format(total)}",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
+                }
             }
-
-
         }
     }
+
 }

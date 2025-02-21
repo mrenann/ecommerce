@@ -1,6 +1,7 @@
 package br.mrenann.cart.presentation.di
 
 import br.mrenann.cart.domain.usecase.AddCartUseCase
+import br.mrenann.cart.domain.usecase.ApplyCouponUseCase
 import br.mrenann.cart.domain.usecase.ClearCartUseCase
 import br.mrenann.cart.domain.usecase.GetProductsFromCartUseCase
 import br.mrenann.cart.presentation.screenModel.CartScreenModel
@@ -11,7 +12,8 @@ val cartModelModule = module {
         CartScreenModel(
             get<AddCartUseCase>(),
             get<ClearCartUseCase>(),
-            get<GetProductsFromCartUseCase>()
+            get<GetProductsFromCartUseCase>(),
+            get<ApplyCouponUseCase>()
         )
     }
 }

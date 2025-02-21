@@ -33,4 +33,27 @@ class FirebaseService {
 
         return snapshot.documents.map { it.data ?: emptyMap() }
     }
+
+    suspend fun getCoupon(code: String): Map<String, Any>? {
+        val doc = db.collection("coupons").document(code).get().await()
+        return if (doc.exists()) doc.data else null
+    }
+
+    suspend fun redeemCoupon(userId: String, code: String): Boolean {
+        val couponRef = db.collection("coupons").document(code)
+        val snapshot = couponRef.get().await()
+
+        if (!snapshot.exists()) return false
+
+        val data = snapshot.data ?: return false
+        val maxRedemptions = (data["maxRedemptions"] as? Number)?.toInt() ?: Int.MAX_VALUE
+        val redeemedBy = (data["redeemedBy"] as? List<*>)?.map { it.toString() } ?: emptyList()
+
+        if (redeemedBy.contains(userId) || redeemedBy.size >= maxRedemptions) {
+            return false // Coupon already used or exceeded max redemptions
+        }
+
+        couponRef.update("redeemedBy", redeemedBy + userId).await()
+        return true
+    }
 }

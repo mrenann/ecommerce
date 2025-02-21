@@ -14,4 +14,12 @@ class FavoritesFirestoreRepository(private val firebaseService: FirebaseService)
     suspend fun getFavorites(userId: String): List<Map<String, Any>> {
         return firebaseService.getFavorites(userId)
     }
+
+    suspend fun getCoupon(code: String): Map<String, Any>? {
+        return firebaseService.getCoupon(code)
+    }
+
+    suspend fun redeemCoupon(userId: String, code: String): Boolean {
+        return firebaseService.redeemCoupon(userId, code)
+    }
 }
