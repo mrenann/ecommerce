@@ -3,6 +3,7 @@ package br.mrenann.ecommerce
 import android.app.Application
 import br.mrenann.cart.data.di.cartModule
 import br.mrenann.cart.presentation.di.cartModelModule
+import br.mrenann.core.di.firebaseModule
 import br.mrenann.core.di.networkModule
 import br.mrenann.core.di.roomModule
 import br.mrenann.home.data.di.categoriesModule
@@ -23,6 +24,7 @@ class App : Application() {
                 modules(
                     networkModule,
                     roomModule,
+                    firebaseModule,
                     productsModule,
                     categoriesModule,
                     homeModule,
