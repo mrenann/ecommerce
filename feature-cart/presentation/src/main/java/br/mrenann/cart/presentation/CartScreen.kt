@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -22,6 +21,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -56,6 +56,18 @@ class CartScreen : Screen {
 
         var promoCode by remember { mutableStateOf("") }
         var discountPercentage by remember { mutableStateOf(0) }
+
+        // Update the discountPercentage whenever the state changes
+        LaunchedEffect(state) {
+            if (state is CartScreenModel.State.Result) {
+                val newDiscount =
+                    (state as CartScreenModel.State.Result).state.discountApplied?.toInt() ?: 0
+                if (newDiscount != discountPercentage) {
+                    discountPercentage = newDiscount
+                }
+            }
+        }
+
         val subtotal = state.let {
             if (it is CartScreenModel.State.Result) {
                 it.state.products.sumOf { product -> product.price }
@@ -141,29 +153,29 @@ class CartScreen : Screen {
                                 screenModel.applyCoupon(
                                     userId = "123",
                                     code = promoCode,
-                                    subtotal = 20.0
+                                    subtotal = subtotal.toDouble()
                                 )
-                            }) {
-                                if (discountPercentage == 0) {
-                                    Icon(
-                                        imageVector = EvaIcons.Fill.CheckmarkCircle2,
-                                        contentDescription = "Apply Promo",
-                                        tint = if (promoCode == "DISCOUNT40") Color.Green else Color.Gray
-                                    )
-                                } else {
-                                    Text(modifier = Modifier.width(200.dp), text = "Code applied")
+                                if (state is CartScreenModel.State.Result) {
+                                    discountPercentage =
+                                        (state as CartScreenModel.State.Result)?.state?.discountApplied?.toInt()
+                                            ?: 0
                                 }
+                            }) {
+                                Icon(
+                                    imageVector = EvaIcons.Fill.CheckmarkCircle2,
+                                    contentDescription = "Apply Promo",
+                                    tint = if (discountPercentage != 0) Color(0xFF48D861) else Color.Gray
+                                )
 
                             }
                         },
                         suffix = {
                             if (state is CartScreenModel.State.Result) {
                                 val result = state as CartScreenModel.State.Result
-                                if (result.state.discountApplied) {
+                                if (result.state.discountApplied != null) {
                                     Text("PROMO APPLIED")
                                 }
                             }
-
                         },
                         shape = RoundedCornerShape(8.dp),
                         colors = OutlinedTextFieldDefaults.colors(
@@ -172,29 +184,9 @@ class CartScreen : Screen {
                             unfocusedContainerColor = Color(0xFFF1F1F1),
                             focusedContainerColor = Color(0xFFF1F1F1)
                         ),
-
                         modifier = Modifier
                             .fillMaxWidth()
                     )
-//                    OutlinedTextField(
-//                        value = promoCode,
-//                        onValueChange = { promoCode = it },
-//                        trailingIcon = {
-//                            IconButton(onClick = {
-//                                // Simulating promo code validation
-//                                if (promoCode == "DISCOUNT40") {
-//                                    discountPercentage = 40
-//                                }
-//                            }) {
-//                                Icon(
-//                                    imageVector = Icons.Default.Check,
-//                                    contentDescription = "Apply Promo",
-//                                    tint = if (promoCode == "DISCOUNT40") Color.Green else Color.Gray
-//                                )
-//                            }
-//                        },
-//                        modifier = Modifier.fillMaxWidth()
-//                    )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -214,12 +206,14 @@ class CartScreen : Screen {
                             Text("Delivery Fee:", style = MaterialTheme.typography.bodyMedium)
                             Text("Free")
                         }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("Discount:", style = MaterialTheme.typography.bodyMedium)
-                            Text("${discountPercentage}%")
+                        if (discountPercentage != 0) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text("Discount:", style = MaterialTheme.typography.bodyMedium)
+                                Text("- " + discountPercentage.formatBalance())
+                            }
                         }
                     }
 
@@ -229,7 +223,7 @@ class CartScreen : Screen {
                     Button(
                         onClick = { /* Navigate to checkout */ },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF48D861)),
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Text(
@@ -243,5 +237,6 @@ class CartScreen : Screen {
             }
         }
     }
+
 
 }

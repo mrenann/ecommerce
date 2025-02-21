@@ -117,7 +117,7 @@ class CartScreenModel(
                                 if (currentState is Result) {
                                     mutableState.value = Result(
                                         currentState.state.copy(
-                                            discountApplied = false
+                                            discountApplied = null
                                         )
                                     )
                                 }
@@ -129,7 +129,7 @@ class CartScreenModel(
                                 if (currentState is Result) {
                                     mutableState.value = Result(
                                         currentState.state.copy(
-                                            discountApplied = true
+                                            discountApplied = result.discountAmount
                                         )
                                     )
                                 }

@@ -1,5 +1,6 @@
 package br.mrenann.cart.data.usecase
 
+import android.util.Log
 import br.mrenann.cart.domain.usecase.ApplyCouponUseCase
 import br.mrenann.core.data.firestore.repository.FavoritesFirestoreRepository
 import kotlinx.coroutines.flow.Flow
@@ -55,6 +56,8 @@ class ApplyCouponUseCaseImpl(
                 "fixed" -> discountValue.coerceAtMost(maxDiscount)
                 else -> 0.0
             }
+
+            Log.i("COUPON", "${params.subtotal} -> $discountAmount")
 
             emit(ApplyCouponUseCase.Result.Success(discountAmount))
         }
