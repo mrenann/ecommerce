@@ -45,7 +45,6 @@ fun DeliverySelectionCard() {
         modifier = Modifier
             .padding(12.dp)
             .fillMaxWidth(),
-        onClick = { },
         shape = RoundedCornerShape(4.dp)
     ) {
         Column(modifier = Modifier.background(Color.White)) {
