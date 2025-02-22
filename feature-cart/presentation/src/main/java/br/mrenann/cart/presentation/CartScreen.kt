@@ -90,8 +90,7 @@ class CartScreen : Screen {
                 // Header
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = innerPadding.calculateTopPadding()),
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -221,7 +220,7 @@ class CartScreen : Screen {
 
                     // Checkout Button
                     Button(
-                        onClick = { /* Navigate to checkout */ },
+                        onClick = { navigator.push(PreparingScreen()) },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF48D861)),
                         shape = RoundedCornerShape(12.dp)
