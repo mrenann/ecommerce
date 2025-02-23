@@ -21,11 +21,16 @@ val sfprodisplayFontFamily = FontFamily(
     Font(R.font.sfprodisplay_ultralight_italic, FontWeight.ExtraLight, FontStyle.Italic)
 )
 
+val novaSquareFamily = FontFamily(
+    Font(R.font.novasquare, FontWeight.Normal),
+)
+
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = sfprodisplayFontFamily,
-    )
+    ),
+
     /* Other default text styles to override
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,
