@@ -68,6 +68,7 @@ fun Card(initialCardFace: CardFace = CardFace.Front) {
                     } else {
                         // Handle error: User not logged in or cardData not available
                     }
+
                 })
             }
         )
