@@ -7,5 +7,5 @@ import cafe.adriel.voyager.navigator.Navigator
 val LocalNavigatorParent = staticCompositionLocalOf<Navigator?> { null }
 
 sealed class SharedScreen : ScreenProvider {
-    object WelcomeScreen : SharedScreen()
+    object LoginScreen : SharedScreen()
 }
