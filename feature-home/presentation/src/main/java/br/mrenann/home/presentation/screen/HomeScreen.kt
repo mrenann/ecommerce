@@ -205,7 +205,9 @@ class HomeScreen : Screen {
                                     CategoryCard(category = category.name, onClick = {
                                         if (category.id == 0) navigatorChildren.push(
                                             CategoriesScreen()
-                                        ) else Unit
+                                        ) else navigatorChildren.push(
+                                            CategoryScreen(category = category)
+                                        )
                                     })
                                 }
                             }
