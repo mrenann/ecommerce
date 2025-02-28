@@ -4,7 +4,10 @@ package br.mrenann.home.presentation.screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.Category
@@ -53,17 +57,46 @@ data class CategoryScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color(0xFFF5F8FE))
-                    .padding(innerPadding)
+                    .padding(
+                        PaddingValues(
+                            top = innerPadding.calculateTopPadding(),
+                            start = innerPadding.calculateStartPadding(
+                                layoutDirection = LayoutDirection.Ltr
+                            ),
+                            bottom = 0.dp,
+                            end = innerPadding.calculateEndPadding(
+                                layoutDirection = LayoutDirection.Ltr
+                            ),
+                        )
+                    )
             ) {
 
-                when(state){
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = { navigator.pop() }) {
+                        Icon(
+                            tint = Color.Black,
+                            imageVector = EvaIcons.Outline.ChevronLeft,
+                            contentDescription = "Back"
+                        )
+                    }
+                    Text(
+                        text = "${category.name}",
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontSize = 18.sp
+                    )
+
+                }
+
+                when (state) {
                     is CategoryScreenModel.State.Init -> {}
                     is CategoryScreenModel.State.Loading -> {}
                     is CategoryScreenModel.State.Result -> {
                         val products = (state as CategoryScreenModel.State.Result).products
                         ScreenContent(
-                            navigatePop = { navigator.pop() },
-                            category = category,
                             products = products
                         )
                     }
@@ -75,31 +108,9 @@ data class CategoryScreen(
 
     @Composable
     fun ScreenContent(
-        navigatePop: () -> Boolean,
-        category: Category,
         products: List<Product>,
     ) {
         Column {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(onClick = { navigatePop() }) {
-                    Icon(
-                        tint = Color.Black,
-                        imageVector = EvaIcons.Outline.ChevronLeft,
-                        contentDescription = "Back"
-                    )
-                }
-                Text(
-                    text = "${category.name}",
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontSize = 18.sp
-                )
-
-            }
-
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),

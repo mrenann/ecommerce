@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.Category
+import br.mrenann.home.presentation.R
 import br.mrenann.home.presentation.screenModel.HomeScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
@@ -41,6 +42,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import coil3.request.placeholder
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Outline
 import compose.icons.evaicons.outline.ChevronLeft
@@ -130,6 +132,10 @@ class CategoriesScreen : Screen {
         Column(
             modifier = Modifier
                 .height(100.dp)
+                .background(
+                    color = Color(0xFFF1F1F1),
+                    shape = RoundedCornerShape(8.dp)
+                )
                 .clickable {
                     onClick()
                 }
@@ -141,6 +147,7 @@ class CategoriesScreen : Screen {
                             category.image
                         )
                         .crossfade(true)
+                        .placeholder(R.drawable.ic_shoppingcart)
                         .build(),
                     contentDescription = "",
                     contentScale = ContentScale.Crop,

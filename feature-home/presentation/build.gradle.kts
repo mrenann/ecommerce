@@ -64,6 +64,8 @@ dependencies {
     implementation(project(":feature-home:domain"))
 
     implementation(libs.composeIcons.evaIcons)
+    implementation(libs.composeIcons.fontAwesome)
+    implementation(libs.composeIcons.lineAwesome)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
