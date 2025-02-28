@@ -94,37 +94,42 @@ class ProfileScreen() : Screen {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Profile Header
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = EvaIcons.Outline.Person,
-                        contentDescription = "Profile Picture",
-                        modifier = Modifier.size(64.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Column {
-                        Text("Ben Loh", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                        Text("Product Designer", fontSize = 14.sp, color = Color.Gray)
-                        Text("hey@mashify.io", fontSize = 14.sp, color = Color.Gray)
-                    }
-                }
-                Spacer(modifier = Modifier.height(16.dp))
 
-                // Pro Member Section
                 Card(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
                     shape = MaterialTheme.shapes.medium,
-                    colors = CardDefaults.cardColors(containerColor = Color.Black)
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFDADADA))
                 ) {
-                    Row(
-                        modifier = Modifier.padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                    Column(
+                        modifier = Modifier.padding(top = 12.dp)
                     ) {
-                        Text("Pro Member", color = Color.White, fontWeight = FontWeight.Bold)
-                        Spacer(modifier = Modifier.weight(1f))
-                        Text("View analytics", color = Color.Red)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = EvaIcons.Outline.Person,
+                                contentDescription = "Profile Picture",
+                                modifier = Modifier.size(64.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Column {
+                                Text("Ben Loh", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                                Text("Product Designer", fontSize = 14.sp, color = Color.Gray)
+                                Text("hey@mashify.io", fontSize = 14.sp, color = Color.Gray)
+                            }
+                        }
+
+                        Row(
+                            modifier = Modifier.padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text("Pro Member", color = Color.White, fontWeight = FontWeight.Bold)
+                            Spacer(modifier = Modifier.weight(1f))
+                            Text("View analytics", color = Color.Red)
+                        }
                     }
 
                 }
