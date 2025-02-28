@@ -2,7 +2,6 @@ package br.mrenann.home.presentation.screen
 
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,7 +44,9 @@ import compose.icons.EvaIcons
 import compose.icons.evaicons.Outline
 import compose.icons.evaicons.outline.ChevronLeft
 
-class CategoriesScreen : Screen {
+data class CategoryScreen(
+    val category: Category
+) : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
@@ -64,8 +65,8 @@ class CategoriesScreen : Screen {
 
                 ScreenContent(
                     navigatePop = { navigator.pop() },
+                    category = category
                 )
-
             }
         }
     }
@@ -73,9 +74,8 @@ class CategoriesScreen : Screen {
     @Composable
     fun ScreenContent(
         navigatePop: () -> Boolean,
+        category: Category,
     ) {
-        val navigator = LocalNavigator.currentOrThrow
-
         Column {
             Row(
                 modifier = Modifier
@@ -90,88 +90,15 @@ class CategoriesScreen : Screen {
                     )
                 }
                 Text(
-                    text = "Categories",
+                    text = "${category.name}",
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = 18.sp
                 )
 
             }
-            val screenModel = koinScreenModel<HomeScreenModel>()
-            val state by screenModel.state.collectAsState()
-            when (state) {
-                is HomeScreenModel.State.Init -> {}
-                is HomeScreenModel.State.Loading -> {}
-                is HomeScreenModel.State.Result -> {
-                    val categories = (state as HomeScreenModel.State.Result).categories
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.padding(horizontal = 12.dp),
-                    ) {
-                        items(categories.size) { index ->
-                            val category = categories[index]
-                            CategoryCard(
-                                category = category
-                            ) {
-                                navigator.push(CategoryScreen(category))
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-    }
-
-    @Composable
-    fun CategoryCard(category: Category, onClick: () -> Unit) {
-
-        Column(
-            modifier = Modifier
-                .height(100.dp)
-                .clickable {
-                    onClick()
-                }
-        ) {
-            Box(contentAlignment = Alignment.BottomStart) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(
-                            category.image
-                        )
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                )
-                Text(
-                    text = category.name,
-                    modifier = Modifier.padding(16.dp),
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-            }
-
 
         }
+
     }
 
-
-    @Composable
-    @Preview
-    fun CategoriesContentPreview() {
-        CategoryCard(
-            category = Category(
-                id = 1,
-                image = "https://imgur.com/ZANVnHE",
-                name = "Electronics"
-            ),
-            onClick = { }
-        )
-    }
 }
