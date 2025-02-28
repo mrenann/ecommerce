@@ -40,7 +40,7 @@ import compose.icons.evaicons.outline.Minus
 import compose.icons.evaicons.outline.Plus
 
 @Composable
-fun CartItem(product: ProductCart) {
+fun CartItem(product: ProductCart, onDecrease: () -> Unit, onIncrement: () -> Unit) {
     var quantity = remember { mutableIntStateOf(product.qtd) }
     Log.i("asd", "${product}")
     Column(
@@ -133,6 +133,8 @@ fun CartItem(product: ProductCart) {
                             shape = RoundedCornerShape(10.dp),
                             contentPadding = PaddingValues(0.dp),
                             onClick = {
+                                onDecrease()
+
                                 quantity.intValue = quantity.intValue - 1
                             }
                         ) {
@@ -161,6 +163,7 @@ fun CartItem(product: ProductCart) {
                             contentPadding = PaddingValues(0.dp),
                             shape = RoundedCornerShape(10.dp),
                             onClick = {
+                                onIncrement()
                                 quantity.intValue = quantity.intValue + 1
                             }
                         ) {

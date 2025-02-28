@@ -5,8 +5,10 @@ import br.mrenann.cart.domain.usecase.AddCartUseCase
 import br.mrenann.cart.domain.usecase.AddCartUseCase.Params
 import br.mrenann.cart.domain.usecase.ApplyCouponUseCase
 import br.mrenann.cart.domain.usecase.ClearCartUseCase
+import br.mrenann.cart.domain.usecase.DecreaseUseCase
 import br.mrenann.cart.domain.usecase.GetCartTotalUseCase
 import br.mrenann.cart.domain.usecase.GetProductsFromCartUseCase
+import br.mrenann.cart.domain.usecase.IncreaseUseCase
 import br.mrenann.cart.presentation.screenModel.CartScreenModel.State.Result
 import br.mrenann.cart.presentation.state.CartEvent
 import br.mrenann.cart.presentation.state.CartState
@@ -22,7 +24,9 @@ class CartScreenModel(
     private val clearUseCase: ClearCartUseCase,
     private val getUseCase: GetProductsFromCartUseCase,
     private val applyCouponUseCase: ApplyCouponUseCase,
-    private val getCartTotalUseCase: GetCartTotalUseCase
+    private val getCartTotalUseCase: GetCartTotalUseCase,
+    private val increaseUseCase: IncreaseUseCase,
+    private val decreaseUseCase: DecreaseUseCase
 ) : StateScreenModel<CartScreenModel.State>(State.Init) {
     sealed class State {
         object Init : State()
@@ -52,6 +56,18 @@ class CartScreenModel(
 
     fun applyCoupon(userId: String, code: String, subtotal: Double) {
         event(CartEvent.ApplyCoupon(userId, code, subtotal))
+    }
+
+    fun removeProduct() {
+        event(CartEvent.RemoveProduct)
+    }
+
+    fun increaseQuantity(id: String) {
+        event(CartEvent.increaseQuantity(id))
+    }
+
+    fun decreaseQuantity(id: String) {
+        event(CartEvent.decreaseQuantity(id))
     }
 
     private fun event(event: CartEvent) {
@@ -152,6 +168,21 @@ class CartScreenModel(
                         }
 
                     }
+                }
+            }
+
+            is CartEvent.RemoveProduct -> {}
+            is CartEvent.decreaseQuantity -> {
+                screenModelScope.launch {
+                    decreaseUseCase.invoke(DecreaseUseCase.Params(event.id))
+                        .collectLatest { result -> }
+                }
+            }
+
+            is CartEvent.increaseQuantity -> {
+                screenModelScope.launch {
+                    increaseUseCase.invoke(IncreaseUseCase.Params(event.id))
+                        .collectLatest { result -> }
                 }
             }
         }

@@ -126,7 +126,17 @@ class CartScreen : Screen {
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             items(result.state.products.size) { index ->
-                                CartItem(result.state.products[index])
+                                val product = result.state.products[index]
+                                CartItem(
+                                    product = product,
+                                    onIncrement = {
+                                        screenModel.increaseQuantity(product.id.toString())
+                                    },
+                                    onDecrease = {
+                                        screenModel.decreaseQuantity(product.id.toString())
+
+                                    }
+                                )
                             }
                         }
                     }

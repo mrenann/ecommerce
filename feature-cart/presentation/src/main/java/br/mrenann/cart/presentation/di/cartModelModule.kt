@@ -15,7 +15,10 @@ val cartModelModule = module {
             get<ClearCartUseCase>(),
             get<GetProductsFromCartUseCase>(),
             get<ApplyCouponUseCase>(),
-            get<GetCartTotalUseCase>()
+            get<GetCartTotalUseCase>(),
+            get(),
+            get()
+
         )
     }
 }
