@@ -31,6 +31,6 @@ interface CartDao {
     @Query("UPDATE cart_items SET quantity = quantity - 1 WHERE productId = :id AND quantity > 1")
     suspend fun decreaseQuantity(id: String)
 
-    @Query("UPDATE cart_items SET discount = :discount WHERE productId = :id")
-    suspend fun applyDiscount(id: String, discount: Double)
+    @Query("UPDATE cart_items SET discount = :discount, couponCode = :coupon WHERE productId = :id")
+    suspend fun applyCoupon(id: String, discount: Double, coupon: String)
 }

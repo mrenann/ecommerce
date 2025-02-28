@@ -9,7 +9,7 @@ import br.mrenann.core.data.local.entity.FavoriteItemEntity
 
 @Database(
     entities = [CartItemEntity::class, FavoriteItemEntity::class],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 abstract class StoreDatabase : RoomDatabase() {

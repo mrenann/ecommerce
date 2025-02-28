@@ -63,6 +63,8 @@ dependencies {
     implementation(project(":feature-cart:domain"))
 
     implementation(libs.composeIcons.evaIcons)
+    implementation(libs.composeIcons.simpleIcons)
+
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 

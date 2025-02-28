@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,106 +24,56 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.mrenann.cart.presentation.Card
+import br.mrenann.cart.presentation.R
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Outline
-import compose.icons.evaicons.outline.Car
 import compose.icons.evaicons.outline.ChevronRight
 
 @Composable
 fun ChoosePaymentContent(
-    navigatePop: () -> Boolean,
     goToNext: () -> Unit,
+    cards: List<Card>,
 ) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-    ) {
-        item {
-            PaymentOption(
-                icon = EvaIcons.Outline.Car, // Replace
-                title = "Pix",
-                subtitle = "Aprovação imediata",
-                cashback = "Até R\$ 639 de cashback",
-                recommended = true
-            )
-            HorizontalDivider(modifier = Modifier, thickness = 1.dp, color = Color.LightGray)
-        }
-        item {
-            PaymentOption(
-                icon = EvaIcons.Outline.Car, // Replace
-                title = "Saldo no Mercado Pago",
-                subtitle = "Saldo: R\$ 4,30",
-                cashback = "Até R\$ 639 de cashback"
-            )
-            HorizontalDivider(modifier = Modifier, thickness = 1.dp, color = Color.LightGray)
-        }
-
-        item {
-            PaymentOption(
-                icon = EvaIcons.Outline.Car, // Replace
-                title = "Linha de Crédito",
-                subtitle = "Limite disponível: R\$ 189,10\nDe 4 a 6x sem cartão",
-                cashback = "Até R\$ 639 de cashback"
-            )
-            HorizontalDivider(modifier = Modifier, thickness = 1.dp, color = Color.LightGray)
-        }
-
-        item {
-            PaymentOption(
-                icon = EvaIcons.Outline.Car, // Replace
-                title = "Meli Dólar",
-                subtitle = "Saldo: R\$ 9,90",
-                cashback = "Até R\$ 639 de cashback",
-                isNew = true
-
-            )
-            HorizontalDivider(modifier = Modifier, thickness = 1.dp, color = Color.LightGray)
-        }
-
-        item {
-            BankPaymentOption(
-                bankName = "BANCO INTER S.A.",
-                lastDigits = "8090",
-                cardType = "MasterCard"
-            ) //Replace with your own icon
-            HorizontalDivider(modifier = Modifier, thickness = 1.dp, color = Color.LightGray)
-        }
-
-        item {
-            BankPaymentOption(bankName = "Visa", lastDigits = "6124", cardType = "VISA")
-            HorizontalDivider(modifier = Modifier, thickness = 1.dp, color = Color.LightGray)
-        }
-        item {
-            BankPaymentOption(
-                bankName = "BANCO ORIGINAL SA",
-                lastDigits = "2033",
-                cardType = "MasterCard"
-            )
-            HorizontalDivider(modifier = Modifier, thickness = 1.dp, color = Color.LightGray)
-        }
-        item {
-            BankPaymentOption(bankName = "Visa", lastDigits = "0848", cardType = "VISA")
-            HorizontalDivider(modifier = Modifier, thickness = 1.dp, color = Color.LightGray)
-        }
-
-        item {
-            CouponsSection()
-        }
-        item {
-            TotalAmountSection()
-        }
+    Column {
+        LazyColumn(
+            modifier = Modifier.weight(1F),
+        ) {
+            item {
+                PaymentOption(
+                    icon = painterResource(R.drawable.ic_pix), // Replace
+                    title = "Pix",
+                    subtitle = "Aprovação imediata",
+                    cashback = "",
+                    recommended = true
+                )
+            }
 
 
+            items(cards.size) { index ->
+                val card = cards[index]
+                BankPaymentOption(card)
+            }
+
+
+        }
+
+        CouponsSection()
+        TotalAmountSection()
     }
+
 }
 
 
 @Composable
 fun PaymentOption(
-    icon: ImageVector,
+    icon: Painter,
     title: String,
     subtitle: String,
     cashback: String,
@@ -136,9 +84,11 @@ fun PaymentOption(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White)
-            .padding(16.dp)
-            .clickable { /* Handle click */ },
+            .padding(12.dp)
+            .background(Color.White, RoundedCornerShape(8.dp))
+            .clickable { /* Handle click */ }
+
+            .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween // Important for spacing
     ) {
@@ -151,7 +101,7 @@ fun PaymentOption(
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    imageVector = icon,
+                    painter = icon,
                     contentDescription = null, // Provide a meaningful description
                     modifier = Modifier.size(24.dp),
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
@@ -209,41 +159,29 @@ fun PaymentOption(
 }
 
 @Composable
-fun BankPaymentOption(bankName: String, lastDigits: String, cardType: String) {
+fun BankPaymentOption(card: Card) {
     Row(
         modifier = Modifier
+            .padding(horizontal = 12.dp, vertical = 2.dp)
             .fillMaxWidth()
-            .background(Color.White)
-            .padding(16.dp)
-            .clickable { /* Handle click */ },
+            .clickable { /* Handle click */ }
+
+            .background(Color.White, RoundedCornerShape(8.dp))
+            .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
 
-//            if(cardType == "VISA"){
-//                Icon(
-//                    modifier = Modifier.size(40.dp),
-//                    painter = painterResource(id = R.drawable.ic_visa),
-//                    contentDescription = "visa",
-//                    tint = Color.Unspecified
-//                )
-//
-//            }else{
-//                Icon(
-//                    modifier = Modifier.size(40.dp),
-//                    painter = painterResource(id = R.drawable.ic_mastercard),
-//                    contentDescription = "mastercard",
-//                    tint = Color.Unspecified
-//                )
-//
-//            }
             Spacer(modifier = Modifier.width(16.dp))
 
             Column {
-                Text(text = bankName, fontWeight = FontWeight.Bold)
-                Text(text = "$cardType **** $lastDigits", fontSize = 14.sp, color = Color.Gray)
-                Text(text = "Até R\$ 639 de cashback", fontSize = 12.sp, color = Color(0xFF008000))
+                Text(text = "Card", fontWeight = FontWeight.Bold)
+                Text(
+                    text = "**** ${card.cardNumber.takeLast(4)}",
+                    fontSize = 14.sp,
+                    color = Color.Gray
+                )
             }
         }
         Icon(
@@ -285,4 +223,25 @@ fun TotalAmountSection() {
         }
 
     }
+}
+
+@Preview
+@Composable
+fun ContentPreview() {
+    ChoosePaymentContent(
+        {}, listOf(
+            Card(
+                cardNumber = "12345678900009",
+                cvv = "111",
+                expiryDate = "123",
+                type = "as"
+            ),
+            Card(
+                cardNumber = "12345678900009",
+                cvv = "111",
+                expiryDate = "123",
+                type = "as"
+            )
+        )
+    )
 }
