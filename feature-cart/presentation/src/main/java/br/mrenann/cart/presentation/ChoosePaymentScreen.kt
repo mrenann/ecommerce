@@ -92,7 +92,7 @@ class ChoosePaymentScreen() : Screen {
                 }
 
                 ChoosePaymentContent(
-                    goToNext = { navigator.push(ChoosePaymentScreen()) },
+                    goToNext = {payment, card -> navigator.push(ConfirmPurchaseScreen(payment,card)) },
                     cards = cards
                 )
 

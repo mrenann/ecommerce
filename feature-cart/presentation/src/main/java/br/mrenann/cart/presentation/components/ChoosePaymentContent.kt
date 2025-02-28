@@ -27,7 +27,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.cart.presentation.Card
@@ -38,7 +37,7 @@ import compose.icons.evaicons.outline.ChevronRight
 
 @Composable
 fun ChoosePaymentContent(
-    goToNext: () -> Unit,
+    goToNext: (String, Card?) -> Unit,
     cards: List<Card>,
 ) {
     Column {
@@ -51,14 +50,15 @@ fun ChoosePaymentContent(
                     title = "Pix",
                     subtitle = "Aprovação imediata",
                     cashback = "",
-                    recommended = true
+                    recommended = true,
+                    click = goToNext
                 )
             }
 
 
             items(cards.size) { index ->
                 val card = cards[index]
-                BankPaymentOption(card)
+                BankPaymentOption(card, goToNext)
             }
 
 
@@ -79,14 +79,14 @@ fun PaymentOption(
     cashback: String,
     recommended: Boolean = false,
     isNew: Boolean = false,
-
-    ) {
+    click: (String, Card?) -> Unit,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(12.dp)
             .background(Color.White, RoundedCornerShape(8.dp))
-            .clickable { /* Handle click */ }
+            .clickable { click("pix", null) }
 
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -159,12 +159,15 @@ fun PaymentOption(
 }
 
 @Composable
-fun BankPaymentOption(card: Card) {
+fun BankPaymentOption(
+    card: Card,
+    click: (String, Card?) -> Unit
+) {
     Row(
         modifier = Modifier
             .padding(horizontal = 12.dp, vertical = 2.dp)
             .fillMaxWidth()
-            .clickable { /* Handle click */ }
+            .clickable { click("card", card) }
 
             .background(Color.White, RoundedCornerShape(8.dp))
             .padding(16.dp),
@@ -223,25 +226,4 @@ fun TotalAmountSection() {
         }
 
     }
-}
-
-@Preview
-@Composable
-fun ContentPreview() {
-    ChoosePaymentContent(
-        {}, listOf(
-            Card(
-                cardNumber = "12345678900009",
-                cvv = "111",
-                expiryDate = "123",
-                type = "as"
-            ),
-            Card(
-                cardNumber = "12345678900009",
-                cvv = "111",
-                expiryDate = "123",
-                type = "as"
-            )
-        )
-    )
 }
