@@ -1,5 +1,6 @@
 package br.mrenann.cart.presentation.components
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.ProductCart
@@ -40,6 +42,7 @@ import compose.icons.evaicons.outline.Plus
 @Composable
 fun CartItem(product: ProductCart) {
     var quantity = remember { mutableIntStateOf(product.qtd) }
+    Log.i("asd", "${product}")
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -90,12 +93,25 @@ fun CartItem(product: ProductCart) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(
-                        text = product.price.formatBalance(),
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Row {
+                        if (product.priceFinal != product.price) {
+                            Text(
+                                text = product.priceFinal.formatBalance(),
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        Text(
+                            text = product.price.formatBalance(),
+                            style = MaterialTheme.typography.bodyLarge,
+                            textDecoration = if (product.price != product.priceFinal) TextDecoration.LineThrough else null,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color.Gray
+                        )
+                    }
+
                     Row(
                         modifier = Modifier,
                         verticalAlignment = Alignment.CenterVertically

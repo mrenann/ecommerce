@@ -44,7 +44,7 @@ fun List<CartItemEntity>.toProductCart() = map { entity ->
     ProductCart(
         id = entity.productId.toInt(),
         title = entity.name,
-        price = entity.price.toInt(),
+        price = entity.price,
         description = "",
         category = Category(
             id = 1,

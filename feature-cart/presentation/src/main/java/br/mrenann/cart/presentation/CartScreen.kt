@@ -55,13 +55,13 @@ class CartScreen : Screen {
         val state by screenModel.state.collectAsState()
 
         var promoCode by remember { mutableStateOf("") }
-        var discountPercentage by remember { mutableStateOf(0) }
+        var discountPercentage by remember { mutableStateOf(0.0) }
 
         // Update the discountPercentage whenever the state changes
         LaunchedEffect(state) {
             if (state is CartScreenModel.State.Result) {
                 val newDiscount =
-                    (state as CartScreenModel.State.Result).state.discountApplied?.toInt() ?: 0
+                    (state as CartScreenModel.State.Result).state.discountApplied ?: 0.0
                 if (newDiscount != discountPercentage) {
                     discountPercentage = newDiscount
                 }
@@ -71,7 +71,7 @@ class CartScreen : Screen {
         val subtotal = state.let {
             if (it is CartScreenModel.State.Result) {
                 it.state.products.sumOf { product -> product.price }
-            } else 0
+            } else 0.0
         }
         val deliveryFee = 0.00
         val discountAmount = (subtotal * discountPercentage) / 100.0
@@ -156,14 +156,14 @@ class CartScreen : Screen {
                                 )
                                 if (state is CartScreenModel.State.Result) {
                                     discountPercentage =
-                                        (state as CartScreenModel.State.Result)?.state?.discountApplied?.toInt()
-                                            ?: 0
+                                        (state as CartScreenModel.State.Result)?.state?.discountApplied
+                                            ?: 0.0
                                 }
                             }) {
                                 Icon(
                                     imageVector = EvaIcons.Fill.CheckmarkCircle2,
                                     contentDescription = "Apply Promo",
-                                    tint = if (discountPercentage != 0) Color(0xFF48D861) else Color.Gray
+                                    tint = if (discountPercentage != 0.0) Color(0xFF48D861) else Color.Gray
                                 )
 
                             }
@@ -205,7 +205,7 @@ class CartScreen : Screen {
                             Text("Delivery Fee:", style = MaterialTheme.typography.bodyMedium)
                             Text(text = "Free", color = Color(0xFF48D861))
                         }
-                        if (discountPercentage != 0) {
+                        if (discountPercentage != 0.0) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween

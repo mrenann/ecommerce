@@ -7,7 +7,7 @@ fun Product.toProductCart(): ProductCart {
     return ProductCart(
         id = id,
         title = title,
-        price = price,
+        price = price.toDouble(),
         description = description,
         category = category,
         images = images,

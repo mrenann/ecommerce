@@ -132,13 +132,23 @@ class CartScreenModel(
                                 Log.i("COUPON", "SUCCESS")
 
                                 if (currentState is Result) {
+                                    val updatedProducts =
+                                        currentState.state.products.map { product ->
+                                            val discountFactor =
+                                                1 - (result.discountAmount / currentState.state.total)
+                                            product.copy(priceFinal = product.price * discountFactor)
+                                        }
+
                                     mutableState.value = Result(
                                         currentState.state.copy(
-                                            discountApplied = result.discountAmount
+                                            products = updatedProducts,
+                                            discountApplied = result.discountAmount,
+                                            total = currentState.state.total - result.discountAmount
                                         )
                                     )
                                 }
                             }
+
                         }
 
                     }
