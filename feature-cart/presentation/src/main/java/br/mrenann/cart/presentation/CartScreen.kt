@@ -74,8 +74,9 @@ class CartScreen : Screen {
             } else 0.0
         }
         val deliveryFee = 0.00
-        val discountAmount = (subtotal * discountPercentage) / 100.0
-        (subtotal - discountAmount) + deliveryFee
+        val total = (subtotal - discountPercentage) + deliveryFee
+
+        
 
         Scaffold(
             modifier = Modifier
@@ -237,7 +238,7 @@ class CartScreen : Screen {
                             if (resultState.products.isEmpty()) {
                                 "Cart Empty"
                             } else {
-                                "Checkout for ${resultState.total.formatBalance()}"
+                                "Checkout for ${total.formatBalance()}"
                             }
                         Button(
                             onClick = { navigator.push(PreparingScreen()) },
