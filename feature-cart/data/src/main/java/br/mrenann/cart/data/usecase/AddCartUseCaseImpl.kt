@@ -12,8 +12,14 @@ class AddCartUseCaseImpl(
 ) : AddCartUseCase {
     override suspend fun invoke(params: AddCartUseCase.Params): Flow<Unit> {
         return flow {
-            val insert = repository.insertProduct(params.item)
-            emit(insert)
+            val exists = repository.exists(params.item.id.toString())
+            if (exists) {
+                repository.addQuantity(params.item.id.toString())
+            } else {
+                repository.insertProduct(params.item)
+            }
+
+            emit(Unit)
         }.flowOn(Dispatchers.IO)
     }
 

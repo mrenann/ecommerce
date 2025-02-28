@@ -94,7 +94,8 @@ fun CartItem(product: ProductCart) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Row {
-                        if (product.priceFinal != product.price) {
+                        val priceNotEquals = product.priceFinal != product.price * product.qtd
+                        if (priceNotEquals) {
                             Text(
                                 text = product.priceFinal.formatBalance(),
                                 style = MaterialTheme.typography.bodyLarge,
@@ -105,10 +106,10 @@ fun CartItem(product: ProductCart) {
                         Text(
                             text = product.price.formatBalance(),
                             style = MaterialTheme.typography.bodyLarge,
-                            textDecoration = if (product.price != product.priceFinal) TextDecoration.LineThrough else null,
+                            textDecoration = if (priceNotEquals) TextDecoration.LineThrough else null,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium,
-                            color = Color.Gray
+                            color = if (priceNotEquals) Color.Gray else Color.Black
                         )
                     }
 

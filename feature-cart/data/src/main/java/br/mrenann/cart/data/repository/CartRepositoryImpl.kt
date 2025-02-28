@@ -20,6 +20,14 @@ class CartRepositoryImpl(
         return dataSource.insertProduct(product)
     }
 
+    override suspend fun addQuantity(productId: String) {
+        return dataSource.addQuantity(productId)
+    }
+
+    override suspend fun removeQuantity(productId: String) {
+        return dataSource.removeQuantity(productId)
+    }
+
     override suspend fun deleteProduct(product: ProductCart) {
         return dataSource.deleteProduct(product)
     }

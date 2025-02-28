@@ -70,7 +70,7 @@ class CartScreen : Screen {
 
         val subtotal = state.let {
             if (it is CartScreenModel.State.Result) {
-                it.state.products.sumOf { product -> product.price }
+                it.state.products.sumOf { product -> (product.price * product.qtd) }
             } else 0.0
         }
         val deliveryFee = 0.00

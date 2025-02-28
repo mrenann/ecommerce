@@ -31,6 +31,14 @@ class CartDataSourceImpl(
         dao.removeFromCart(product.toCartItemEntity())
     }
 
+    override suspend fun addQuantity(productId: String) {
+        dao.increaseQuantity(productId)
+    }
+
+    override suspend fun removeQuantity(productId: String) {
+        dao.decreaseQuantity(productId)
+    }
+
     override suspend fun exists(productId: String): Boolean {
         return dao.inList(productId) != null
     }
