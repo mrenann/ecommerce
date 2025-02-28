@@ -60,7 +60,7 @@ class ProfileScreen() : Screen {
         val firestore = Firebase.firestore
         val navigatorParent = LocalNavigatorParent.currentOrThrow
         val userId = auth.currentUser?.uid
-        LocalNavigator.currentOrThrow
+        val navigator = LocalNavigator.currentOrThrow
         val loginScreen = rememberScreen(SharedScreen.LoginScreen)
         var userName by remember { mutableStateOf("Carregando...") }
         var userEmail by remember { mutableStateOf("Carregando...") }
@@ -139,7 +139,11 @@ class ProfileScreen() : Screen {
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.weight(1F)
+                        modifier = Modifier
+                            .weight(1F)
+                            .clickable {
+                                navigator.push(CardListScreen())
+                            }
                     ) {
                         Icon(
                             imageVector = EvaIcons.Outline.CreditCard,
@@ -172,82 +176,6 @@ class ProfileScreen() : Screen {
                         navigatorParent.replace(loginScreen)
                     })
             }
-
-//            Column(
-//                modifier = Modifier
-//                    .fillMaxSize()
-//                    .padding(innerPadding)
-//                    .padding(16.dp),
-//                verticalArrangement = Arrangement.Top,
-//                horizontalAlignment = Alignment.CenterHorizontally
-//            ) {
-//                Row(
-//                    horizontalArrangement = Arrangement.Center,
-//                    verticalAlignment = Alignment.CenterVertically
-//                ) {
-//                    Column(
-//                        modifier = Modifier
-//                            .size(100.dp)
-//                            .clip(CircleShape)
-//                            .background(Color.Gray.copy(alpha = 0.2f)),
-//                        verticalArrangement = Arrangement.Center,
-//                        horizontalAlignment = Alignment.CenterHorizontally
-//                    ) {
-//                        Text(
-//                            text = "MF",
-//                            textAlign = TextAlign.Center,
-//                            fontWeight = FontWeight.Bold,
-//                            fontSize = 48.sp,
-//
-//                            )
-//                    }
-//
-//
-//                    Column {
-//                        Text(
-//                            text = userName,
-//                            fontSize = 22.sp,
-//                            fontWeight = FontWeight.Bold
-//                        )
-//
-//                        Text(
-//                            text = userEmail,
-//                            fontSize = 16.sp,
-//                            fontWeight = FontWeight.Medium,
-//                            color = Color.Gray
-//                        )
-//                    }
-//                }
-//                Spacer(modifier = Modifier.height(12.dp))
-//
-//
-//
-//                Button(
-//                    modifier = Modifier.fillMaxWidth(),
-//                    shape = RoundedCornerShape(10.dp),
-//                    onClick = {
-//                        navigator.push(CardListScreen())
-//                    }
-//                ) {
-//                    Text("See Cards")
-//                }
-//
-//                Spacer(modifier = Modifier.height(24.dp))
-//
-//                Button(
-//                    onClick = {
-//                        auth.signOut()
-//                        Toast.makeText(context, "Desconectado", Toast.LENGTH_SHORT).show()
-//                    },
-//                    colors = ButtonDefaults.buttonColors(
-//                        containerColor = Color.Red,
-//                        contentColor = Color.White
-//                    ),
-//                    shape = RoundedCornerShape(8.dp)
-//                ) {
-//                    Text(text = "Logout")
-//                }
-//            }
         }
     }
 }
