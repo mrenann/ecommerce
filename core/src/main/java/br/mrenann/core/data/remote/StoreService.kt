@@ -5,10 +5,16 @@ import br.mrenann.core.data.remote.response.CategoriesResponse
 import br.mrenann.core.data.remote.response.ProductsResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface StoreService {
     @GET("products")
     suspend fun getProducts(): ProductsResponse
+
+    @GET("products")
+    suspend fun getProductsByCategory(
+        @Query("categoryId") categoryId: Int
+    ): ProductsResponse
 
     @GET("products/{product_id}")
     suspend fun getProductById(

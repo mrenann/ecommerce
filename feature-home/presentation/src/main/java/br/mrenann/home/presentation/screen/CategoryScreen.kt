@@ -3,16 +3,13 @@ package br.mrenann.home.presentation.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -23,23 +20,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.Category
-import br.mrenann.home.presentation.screenModel.HomeScreenModel
+import br.mrenann.core.domain.model.Product
+import br.mrenann.home.presentation.components.ProductCard
+import br.mrenann.home.presentation.screenModel.CategoryScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Outline
 import compose.icons.evaicons.outline.ChevronLeft
@@ -50,6 +41,9 @@ data class CategoryScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        val screenModel = koinScreenModel<CategoryScreenModel>()
+        screenModel.getProductsByCategory(category.id.toString())
+        val state by screenModel.state.collectAsState()
 
         Scaffold(
             modifier = Modifier
@@ -62,11 +56,19 @@ data class CategoryScreen(
                     .padding(innerPadding)
             ) {
 
+                when(state){
+                    is CategoryScreenModel.State.Init -> {}
+                    is CategoryScreenModel.State.Loading -> {}
+                    is CategoryScreenModel.State.Result -> {
+                        val products = (state as CategoryScreenModel.State.Result).products
+                        ScreenContent(
+                            navigatePop = { navigator.pop() },
+                            category = category,
+                            products = products
+                        )
+                    }
+                }
 
-                ScreenContent(
-                    navigatePop = { navigator.pop() },
-                    category = category
-                )
             }
         }
     }
@@ -75,6 +77,7 @@ data class CategoryScreen(
     fun ScreenContent(
         navigatePop: () -> Boolean,
         category: Category,
+        products: List<Product>,
     ) {
         Column {
             Row(
@@ -95,6 +98,15 @@ data class CategoryScreen(
                     fontSize = 18.sp
                 )
 
+            }
+
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                items(products.size) { index -> ProductCard(products[index]) }
             }
 
         }

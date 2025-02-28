@@ -11,4 +11,8 @@ class ProductsRepositoryImpl(
         return remoteDataSource.getProducts()
     }
 
+    override suspend fun getProductsByCategory(id: String): List<Product> {
+        return remoteDataSource.getProductsByCategory(id)
+    }
+
 }
