@@ -6,4 +6,5 @@ data class CartState(
     val products: List<Product>,
     val itemsCount: Int,
     val discountApplied: Double? = null,
+    val total: Double = 0.0
 )

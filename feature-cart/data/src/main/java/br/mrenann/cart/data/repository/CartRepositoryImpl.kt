@@ -12,6 +12,10 @@ class CartRepositoryImpl(
         return dataSource.getProducts()
     }
 
+    override suspend fun getCartTotal(): Double {
+        return dataSource.getCartTotal()
+    }
+
     override suspend fun insertProduct(product: Product) {
         return dataSource.insertProduct(product)
     }

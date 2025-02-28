@@ -5,6 +5,7 @@ import br.mrenann.cart.domain.usecase.AddCartUseCase
 import br.mrenann.cart.domain.usecase.AddCartUseCase.Params
 import br.mrenann.cart.domain.usecase.ApplyCouponUseCase
 import br.mrenann.cart.domain.usecase.ClearCartUseCase
+import br.mrenann.cart.domain.usecase.GetCartTotalUseCase
 import br.mrenann.cart.domain.usecase.GetProductsFromCartUseCase
 import br.mrenann.cart.presentation.screenModel.CartScreenModel.State.Result
 import br.mrenann.cart.presentation.state.CartEvent
@@ -13,13 +14,15 @@ import br.mrenann.core.domain.model.Product
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class CartScreenModel(
     private val addUseCase: AddCartUseCase,
     private val clearUseCase: ClearCartUseCase,
     private val getUseCase: GetProductsFromCartUseCase,
-    private val applyCouponUseCase: ApplyCouponUseCase
+    private val applyCouponUseCase: ApplyCouponUseCase,
+    private val getCartTotalUseCase: GetCartTotalUseCase
 ) : StateScreenModel<CartScreenModel.State>(State.Init) {
     sealed class State {
         object Init : State()
@@ -62,11 +65,13 @@ class CartScreenModel(
 
             is CartEvent.GetProducts -> {
                 screenModelScope.launch {
+                    val cartTotal = getCartTotalUseCase.invoke().first()
                     getUseCase.invoke().collectLatest { result ->
                         mutableState.value = Result(
                             CartState(
                                 products = result,
-                                itemsCount = result.size
+                                itemsCount = result.size,
+                                total = cartTotal
                             )
                         )
                     }

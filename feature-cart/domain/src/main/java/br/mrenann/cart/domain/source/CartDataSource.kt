@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface CartDataSource {
     fun getProducts(): Flow<List<Product>>
+    suspend fun getCartTotal(): Double
     suspend fun insertProduct(product: Product)
     suspend fun deleteProduct(product: Product)
     suspend fun exists(productId: String): Boolean

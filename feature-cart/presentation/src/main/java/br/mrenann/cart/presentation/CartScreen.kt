@@ -75,7 +75,7 @@ class CartScreen : Screen {
         }
         val deliveryFee = 0.00
         val discountAmount = (subtotal * discountPercentage) / 100.0
-        val total = (subtotal - discountAmount) + deliveryFee
+        (subtotal - discountAmount) + deliveryFee
 
         Scaffold(
             modifier = Modifier
@@ -219,19 +219,32 @@ class CartScreen : Screen {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Checkout Button
-                    Button(
-                        onClick = { navigator.push(PreparingScreen()) },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF48D861)),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text(
-                            text = "Checkout for ${total.toInt().formatBalance()}",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
+
+
+                    if (state is CartScreenModel.State.Result) {
+                        val resultState = (state as CartScreenModel.State.Result).state
+                        val text =
+                            if (resultState.products.isEmpty()) {
+                                "Cart Empty"
+                            } else {
+                                "Checkout for ${resultState.total.formatBalance()}"
+                            }
+                        Button(
+                            onClick = { navigator.push(PreparingScreen()) },
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled = resultState.products.isNotEmpty(),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF48D861)),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Text(
+                                text = text,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                        }
                     }
+
                 }
             }
         }

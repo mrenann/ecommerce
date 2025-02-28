@@ -11,5 +11,10 @@ data class CartItemEntity(
     val name: String,
     val price: Double,
     val quantity: Int,
+    val discount: Double = 0.0, // Novo campo para desconto
     val imageUrl: String? = null
-)
+) {
+    fun totalPrice(): Double {
+        return (price * quantity) - discount
+    }
+}

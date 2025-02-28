@@ -6,6 +6,7 @@ import br.mrenann.cart.domain.source.CartDataSource
 import br.mrenann.core.data.local.dao.CartDao
 import br.mrenann.core.domain.model.Product
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 class CartDataSourceImpl(
@@ -15,6 +16,11 @@ class CartDataSourceImpl(
         return dao.getCartItems().map {
             it.toProduct()
         }
+    }
+
+    override suspend fun getCartTotal(): Double {
+        val items = dao.getCartItems().first()
+        return items.sumOf { it.totalPrice() }
     }
 
     override suspend fun insertProduct(product: Product) {

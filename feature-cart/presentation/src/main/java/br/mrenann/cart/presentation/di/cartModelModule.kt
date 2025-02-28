@@ -3,6 +3,7 @@ package br.mrenann.cart.presentation.di
 import br.mrenann.cart.domain.usecase.AddCartUseCase
 import br.mrenann.cart.domain.usecase.ApplyCouponUseCase
 import br.mrenann.cart.domain.usecase.ClearCartUseCase
+import br.mrenann.cart.domain.usecase.GetCartTotalUseCase
 import br.mrenann.cart.domain.usecase.GetProductsFromCartUseCase
 import br.mrenann.cart.presentation.screenModel.CartScreenModel
 import org.koin.dsl.module
@@ -13,7 +14,8 @@ val cartModelModule = module {
             get<AddCartUseCase>(),
             get<ClearCartUseCase>(),
             get<GetProductsFromCartUseCase>(),
-            get<ApplyCouponUseCase>()
+            get<ApplyCouponUseCase>(),
+            get<GetCartTotalUseCase>()
         )
     }
 }

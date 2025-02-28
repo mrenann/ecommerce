@@ -13,3 +13,17 @@ fun Int.formatBalance(
 
     return if (showCurrency) "$currency $formattedValue" else formattedValue
 }
+
+fun Double.formatBalance(
+    withDecimals: Boolean = true,
+    currency: String = "R$",
+    showCurrency: Boolean = true
+): String {
+    val formattedValue = if (withDecimals) {
+        String.format("%,.2f", this)
+    } else {
+        String.format("%,.0f", this)
+    }
+
+    return if (showCurrency) "$currency $formattedValue" else formattedValue
+}
