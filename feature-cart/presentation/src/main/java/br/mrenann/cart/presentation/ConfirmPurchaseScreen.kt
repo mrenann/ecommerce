@@ -18,16 +18,24 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.mrenann.cart.presentation.screenModel.CartScreenModel
+import br.mrenann.core.domain.model.Purchase
 import br.mrenann.core.util.formatBalance
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Outline
 import compose.icons.evaicons.outline.ChevronLeft
@@ -39,6 +47,9 @@ data class ConfirmPurchaseScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        val cartScreenModel = koinScreenModel<CartScreenModel>()
+        val cartState by cartScreenModel.state.collectAsState()
+
         Scaffold(
             modifier = Modifier
                 .fillMaxSize()
@@ -113,14 +124,41 @@ data class ConfirmPurchaseScreen(
 
                         }
 
-                        Button(
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(10.dp),
-                            onClick = {
+                        if (cartState is CartScreenModel.State.Result) {
+                            Button(
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(10.dp),
+                                onClick = {
+                                    val db = Firebase.firestore
+                                    val userId = Firebase.auth.currentUser?.uid
+                                    if (userId != null) {
+                                        val products =
+                                            (cartState as CartScreenModel.State.Result).state.products
+                                        val ordersRef =
+                                            db.collection("users").document(userId)
+                                                .collection("orders")
+                                                .document()
+                                        val completeCardData = Purchase(
+                                            priceFinal = (cartState as CartScreenModel.State.Result).state.total,
+                                            coupon = "",
+                                            products = products
+                                        )
+                                        ordersRef.set(completeCardData)
+                                            .addOnSuccessListener {
+                                                cartScreenModel.clearCart()
+                                                navigator.popAll()
+                                            }
+                                            .addOnFailureListener {
+                                                // Handle error
+                                            }
+                                    }
+
+                                }
+                            ) {
+                                Text("Confirm Purchase")
                             }
-                        ) {
-                            Text("Confirm Purchase")
                         }
+
                     }
 
 
