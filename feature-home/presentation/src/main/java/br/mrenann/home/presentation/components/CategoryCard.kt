@@ -1,6 +1,7 @@
 package br.mrenann.home.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -21,11 +22,14 @@ import compose.icons.evaicons.fill.Grid
 import compose.icons.evaicons.fill.PlayCircle
 
 @Composable
-fun CategoryCard(category: String) {
+fun CategoryCard(category: String, onClick: () -> Unit) {
 
     Column(
         modifier = Modifier
             .background(color = Color(0xFFF1F1F1), shape = RoundedCornerShape(8.dp))
+            .clickable {
+                onClick()
+            }
             .padding(horizontal = 4.dp, vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -51,5 +55,7 @@ fun CategoryCard(category: String) {
 @Preview
 @Composable
 fun CategoryCardPreview() {
-    CategoryCard("More")
+    CategoryCard("More") {
+
+    }
 }
