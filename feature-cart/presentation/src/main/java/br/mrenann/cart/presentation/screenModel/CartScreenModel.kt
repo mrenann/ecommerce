@@ -10,7 +10,7 @@ import br.mrenann.cart.domain.usecase.GetProductsFromCartUseCase
 import br.mrenann.cart.presentation.screenModel.CartScreenModel.State.Result
 import br.mrenann.cart.presentation.state.CartEvent
 import br.mrenann.cart.presentation.state.CartState
-import br.mrenann.core.domain.model.Product
+import br.mrenann.core.domain.model.ProductCart
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.flow.collectLatest
@@ -30,7 +30,7 @@ class CartScreenModel(
         data class Result(val state: CartState) : State()
     }
 
-    fun addProduct(product: Product) {
+    fun addProduct(product: ProductCart) {
         event(CartEvent.AddProduct(product))
     }
 

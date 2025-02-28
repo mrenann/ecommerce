@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.mrenann.cart.presentation.mapper.toProductCart
 import br.mrenann.cart.presentation.screenModel.CartScreenModel
 import br.mrenann.core.util.formatBalance
 import br.mrenann.favorites.presentation.screenModel.FavoriteScreenModel
@@ -233,7 +234,7 @@ data class DetailsScreen(
                             Button(
                                 modifier = Modifier.weight(1F),
                                 shape = RoundedCornerShape(10.dp),
-                                onClick = { if (product != null) cartScreenModel.addProduct(product = product) }
+                                onClick = { if (product != null) cartScreenModel.addProduct(product = product.toProductCart()) }
                             ) {
                                 Text("Add to Cart")
                             }

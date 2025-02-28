@@ -6,6 +6,8 @@ data class ProductCart(
     val price: Int,
     val description: String,
     val category: Category,
-    val images: List<String>
+    val images: List<String>,
+    val qtd: Int,
+    val priceFinal: Double
 )
 

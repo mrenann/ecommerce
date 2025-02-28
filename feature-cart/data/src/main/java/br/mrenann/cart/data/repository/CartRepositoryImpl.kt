@@ -2,13 +2,13 @@ package br.mrenann.cart.data.repository
 
 import br.mrenann.cart.domain.repository.CartRepository
 import br.mrenann.cart.domain.source.CartDataSource
-import br.mrenann.core.domain.model.Product
+import br.mrenann.core.domain.model.ProductCart
 import kotlinx.coroutines.flow.Flow
 
 class CartRepositoryImpl(
     private val dataSource: CartDataSource
 ) : CartRepository {
-    override fun getProducts(): Flow<List<Product>> {
+    override fun getProducts(): Flow<List<ProductCart>> {
         return dataSource.getProducts()
     }
 
@@ -16,11 +16,11 @@ class CartRepositoryImpl(
         return dataSource.getCartTotal()
     }
 
-    override suspend fun insertProduct(product: Product) {
+    override suspend fun insertProduct(product: ProductCart) {
         return dataSource.insertProduct(product)
     }
 
-    override suspend fun deleteProduct(product: Product) {
+    override suspend fun deleteProduct(product: ProductCart) {
         return dataSource.deleteProduct(product)
     }
 
