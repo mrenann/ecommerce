@@ -146,7 +146,7 @@ data class ConfirmPurchaseScreen(
                                         ordersRef.set(completeCardData)
                                             .addOnSuccessListener {
                                                 cartScreenModel.clearCart()
-                                                navigator.popAll()
+                                                navigator.replaceAll(PixScreen())
                                             }
                                             .addOnFailureListener {
                                                 // Handle error

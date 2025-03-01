@@ -188,7 +188,10 @@ class HomeScreen : Screen {
                                 verticalArrangement = Arrangement.spacedBy(8.dp),
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(240.dp), // Set a fixed height here
+                                    .heightIn(
+                                        min = 100.dp,
+                                        max = 240.dp
+                                    ), // Set a fixed height here
                                 userScrollEnabled = false
                             ) {
                                 val modifiedCategories = categories.take(5).toMutableList().apply {
