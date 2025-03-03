@@ -29,10 +29,13 @@ import br.mrenann.favorites.presentation.components.ProductCard
 import br.mrenann.favorites.presentation.components.SectionTitle
 import br.mrenann.favorites.presentation.screenModel.FavoriteScreenModel
 import cafe.adriel.voyager.koin.koinScreenModel
+import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import compose.icons.EvaIcons
+import compose.icons.evaicons.Fill
 import compose.icons.evaicons.Outline
+import compose.icons.evaicons.fill.Heart
 import compose.icons.evaicons.outline.Heart
 
 class FavoritesTab : Tab {
@@ -40,13 +43,15 @@ class FavoritesTab : Tab {
         @Composable
         get() {
             val title = "Favoritos"
+            val tabNavigator = LocalTabNavigator.current
             val icon = rememberVectorPainter(EvaIcons.Outline.Heart)
+            val iconChecked = rememberVectorPainter(EvaIcons.Fill.Heart)
 
-            return remember {
+            return remember(tabNavigator.current.key) {
                 TabOptions(
-                    index = 0u,
+                    index = 1u,
                     title = title,
-                    icon = icon
+                    icon = if (tabNavigator.current.key == key) iconChecked else icon
                 )
             }
         }
