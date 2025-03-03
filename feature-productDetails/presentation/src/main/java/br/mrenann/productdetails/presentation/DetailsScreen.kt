@@ -34,6 +34,7 @@ import br.mrenann.cart.presentation.mapper.toProductCart
 import br.mrenann.cart.presentation.screenModel.CartScreenModel
 import br.mrenann.core.util.formatBalance
 import br.mrenann.favorites.presentation.screenModel.FavoriteScreenModel
+import br.mrenann.productdetails.presentation.components.ShimmerEffect
 import br.mrenann.productdetails.presentation.screenModel.DetailsScreenModel
 import br.mrenann.productdetails.presentation.state.DetailsEvent
 import cafe.adriel.voyager.core.screen.Screen
@@ -75,30 +76,32 @@ data class DetailsScreen(
             )
         }
 
-        when (state) {
-            is DetailsScreenModel.State.Init -> {
-                Text("INÍCIO...")
-            }
+        Scaffold(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFF1F1F1))
+        ) { innerPadding ->
+            Column(Modifier.fillMaxSize()) {
 
-            is DetailsScreenModel.State.Loading -> {
-                Text("CARREGANDO...")
-            }
+                when (state) {
+                    is DetailsScreenModel.State.Init -> {
+                        ShimmerEffect(innerPadding) { navigator.pop() }
+                    }
 
-            is DetailsScreenModel.State.Result -> {
-                val product = (state as DetailsScreenModel.State.Result).state.product
-                val checked = (state as DetailsScreenModel.State.Result).state.checked
+                    is DetailsScreenModel.State.Loading -> {
+                        Text("CARREGANDO...")
+                    }
 
-                Scaffold(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color(0xFFF1F1F1))
-                ) { innerPadding ->
-                    Column(Modifier.fillMaxSize()) {
+                    is DetailsScreenModel.State.Result -> {
+                        val product = (state as DetailsScreenModel.State.Result).state.product
+                        val checked = (state as DetailsScreenModel.State.Result).state.checked
+
+
                         Box {
                             AsyncImage(
                                 model = ImageRequest.Builder(LocalContext.current)
                                     .data(
-                                        product?.images[0]
+                                        product?.images?.get(0)
                                             ?: "aaa"
                                     )
                                     .crossfade(true)
@@ -247,4 +250,5 @@ data class DetailsScreen(
         }
 
     }
+
 }
