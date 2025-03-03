@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Ecommerce"
+rootProject.name = "QuickMart"
 include(":app")
 include(":core")
 include(":navigation")
