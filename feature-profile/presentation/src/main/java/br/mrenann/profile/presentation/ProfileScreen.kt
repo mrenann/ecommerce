@@ -44,6 +44,7 @@ import compose.icons.EvaIcons
 import compose.icons.evaicons.Outline
 import compose.icons.evaicons.outline.ChevronRight
 import compose.icons.evaicons.outline.CreditCard
+import compose.icons.evaicons.outline.Home
 import compose.icons.evaicons.outline.LogOut
 import compose.icons.evaicons.outline.Person
 import compose.icons.evaicons.outline.ShoppingBag
@@ -53,7 +54,7 @@ data class MenuItem(
     val icon: ImageVector // Assuming you have icons as drawable resources
 )
 
-class ProfileScreen() : Screen {
+class ProfileScreen : Screen {
     @Composable
     override fun Content() {
         val auth = Firebase.auth
@@ -170,8 +171,14 @@ class ProfileScreen() : Screen {
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // More Tools
-                Text("MORE TOOLS", color = Color.Gray, fontSize = 14.sp)
+                ListItem(
+                    text = "My addresses",
+                    icon = EvaIcons.Outline.Home,
+                    color = Color.DarkGray,
+                    onClick = {
+
+                    })
+
                 ListItem(
                     text = "Logout",
                     icon = EvaIcons.Outline.LogOut,
