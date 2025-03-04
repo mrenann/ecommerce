@@ -48,6 +48,7 @@ import br.mrenann.home.presentation.components.CategoryCard
 import br.mrenann.home.presentation.components.ProductCard
 import br.mrenann.home.presentation.components.SearchBar
 import br.mrenann.home.presentation.components.SectionTitle
+import br.mrenann.home.presentation.components.ShimmerHome
 import br.mrenann.home.presentation.screenModel.HomeScreenModel
 import br.mrenann.navigation.LocalNavigatorParent
 import cafe.adriel.voyager.core.screen.Screen
@@ -94,8 +95,12 @@ class HomeScreen : Screen {
                     .padding(horizontal = 12.dp),
             ) {
                 when (state) {
-                    is HomeScreenModel.State.Init -> {}
-                    is HomeScreenModel.State.Loading -> {}
+                    is HomeScreenModel.State.Init -> ShimmerHome()
+
+                    is HomeScreenModel.State.Loading -> {
+
+                    }
+
                     is HomeScreenModel.State.Result -> {
                         val products = (state as HomeScreenModel.State.Result).products
                         val categories = (state as HomeScreenModel.State.Result).categories
