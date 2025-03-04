@@ -1,6 +1,5 @@
 package br.mrenann.cart.presentation.components
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -41,8 +40,7 @@ import compose.icons.evaicons.outline.Plus
 
 @Composable
 fun CartItem(product: ProductCart, onDecrease: () -> Unit, onIncrement: () -> Unit) {
-    var quantity = remember { mutableIntStateOf(product.qtd) }
-    Log.i("asd", "${product}")
+    val quantity = remember { mutableIntStateOf(product.qtd) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -60,7 +58,6 @@ fun CartItem(product: ProductCart, onDecrease: () -> Unit, onIncrement: () -> Un
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(
                             product.images[0]
-                                ?: "aaa"
                         )
                         .crossfade(true)
                         .build(),
@@ -134,8 +131,7 @@ fun CartItem(product: ProductCart, onDecrease: () -> Unit, onIncrement: () -> Un
                             contentPadding = PaddingValues(0.dp),
                             onClick = {
                                 onDecrease()
-
-                                quantity.intValue = quantity.intValue - 1
+                                quantity.intValue -= 1
                             }
                         ) {
                             Icon(
@@ -164,7 +160,7 @@ fun CartItem(product: ProductCart, onDecrease: () -> Unit, onIncrement: () -> Un
                             shape = RoundedCornerShape(10.dp),
                             onClick = {
                                 onIncrement()
-                                quantity.intValue = quantity.intValue + 1
+                                quantity.intValue += 1
                             }
                         ) {
                             Icon(
