@@ -11,10 +11,9 @@ import kotlinx.coroutines.launch
 class FavoriteScreenModel(
     private val addUseCase: AddFavoriteUseCase,
     private val getUseCase: GetFavoritesUseCase
-) : StateScreenModel<FavoriteScreenModel.State>(State.Init) {
+) : StateScreenModel<FavoriteScreenModel.State>(State.Loading) {
     sealed class State {
-        object Init : State()
-        object Loading : State()
+        data object Loading : State()
         data class Result(val state: FavoriteState) : State()
     }
 
@@ -23,8 +22,9 @@ class FavoriteScreenModel(
 
     }
 
-    private fun fetch() {
+    fun fetch() {
         screenModelScope.launch {
+            mutableState.value = State.Loading
             getUseCase.invoke().collectLatest { products ->
                 mutableState.value = State.Result(
                     state = FavoriteState(
