@@ -25,12 +25,14 @@ import compose.icons.fontawesomeicons.solid.EllipsisH
 import compose.icons.fontawesomeicons.solid.Headphones
 import compose.icons.fontawesomeicons.solid.ShoePrints
 import compose.icons.fontawesomeicons.solid.ThLarge
+import compose.icons.fontawesomeicons.solid.Tshirt
 
 @Composable
 fun CategoryCard(category: String, onClick: () -> Unit) {
     val icon = when (category) {
         "More" -> FontAwesomeIcons.Solid.ThLarge
         "Furniture" -> FontAwesomeIcons.Solid.Couch
+        "Clothes" -> FontAwesomeIcons.Solid.Tshirt
         "Shoes" -> FontAwesomeIcons.Solid.ShoePrints
         "Electronics" -> FontAwesomeIcons.Solid.Headphones
         "Books" -> FontAwesomeIcons.Solid.Book
@@ -55,6 +57,7 @@ fun CategoryCard(category: String, onClick: () -> Unit) {
                 modifier = Modifier.size(26.dp),
                 imageVector = icon,
                 contentDescription = "$category Icon",
+                tint = Color(0xFF1373FF)
             )
         }
         Text(

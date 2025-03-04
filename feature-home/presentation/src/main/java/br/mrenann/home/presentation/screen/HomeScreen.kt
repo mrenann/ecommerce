@@ -117,7 +117,9 @@ class HomeScreen : Screen {
                                                 val cartItemCount =
                                                     (cartState as CartScreenModel.State.Result).state.itemsCount
                                                 if (cartItemCount > 0) { // Exibir apenas se houver itens no carrinho
-                                                    Badge {
+                                                    Badge(
+                                                        containerColor = Color(0xFF1373FF)
+                                                    ) {
                                                         Text(text = cartItemCount.toString())
                                                     }
                                                 }
