@@ -20,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -48,6 +47,7 @@ import br.mrenann.core.util.formatBalance
 import br.mrenann.favorites.presentation.screenModel.FavoriteScreenModel
 import br.mrenann.productdetails.presentation.components.CartBottomSheet
 import br.mrenann.productdetails.presentation.components.ShimmerEffect
+import br.mrenann.productdetails.presentation.components.SnackBarCustom
 import br.mrenann.productdetails.presentation.screenModel.DetailsScreenModel
 import br.mrenann.productdetails.presentation.state.DetailsEvent
 import cafe.adriel.voyager.core.screen.Screen
@@ -78,6 +78,7 @@ data class DetailsScreen(
         val screenModel = koinScreenModel<DetailsScreenModel>()
         val state by screenModel.state.collectAsState()
         var showBottomSheet by remember { mutableStateOf(false) }
+        var snackBarState by remember { mutableStateOf(false) }
         val cartScreenModel = koinScreenModel<CartScreenModel>()
         koinScreenModel<FavoriteScreenModel>()
         val snackbarHostState = remember { SnackbarHostState() }
@@ -91,7 +92,12 @@ data class DetailsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFFF1F1F1)),
-            snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+            snackbarHost = {
+                SnackBarCustom(
+                    snackbarHostState = snackbarHostState,
+                    snackBarState = snackBarState
+                )
+            }
         ) { innerPadding ->
             Column(Modifier.fillMaxSize()) {
 
@@ -151,9 +157,10 @@ data class DetailsScreen(
                                             screenModel.favorite(item = product)
 
                                             coroutineScope.launch {
+                                                snackBarState = !checkedState
                                                 snackbarHostState.currentSnackbarData?.dismiss()
                                                 snackbarHostState.showSnackbar(
-                                                    message = if (checkedState) "Removed from favorites" else "Added to favorites",
+                                                    message = if (checkedState) "Product removed from favorites" else "Product added to favorites",
                                                     duration = SnackbarDuration.Short,
                                                 )
                                             }
