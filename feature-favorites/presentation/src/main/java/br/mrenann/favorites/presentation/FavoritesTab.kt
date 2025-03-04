@@ -45,7 +45,7 @@ class FavoritesTab : Tab {
     override val options: TabOptions
         @Composable
         get() {
-            val title = "Favoritos"
+            val title = "Favorites"
             val tabNavigator = LocalTabNavigator.current
             val icon = rememberVectorPainter(EvaIcons.Outline.Heart)
             val iconChecked = rememberVectorPainter(EvaIcons.Fill.Heart)
