@@ -160,7 +160,11 @@ class ProfileScreen : Screen {
 
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.weight(1F)
+                        modifier = Modifier
+                            .weight(1F)
+                            .clickable {
+                                navigator.push(OrdersScreen())
+                            }
                     ) {
                         Icon(
                             imageVector = EvaIcons.Outline.ShoppingBag,
@@ -176,7 +180,7 @@ class ProfileScreen : Screen {
                     icon = EvaIcons.Outline.Home,
                     color = Color.DarkGray,
                     onClick = {
-
+                        navigator.push(AddressScreen())
                     })
 
                 ListItem(
