@@ -42,7 +42,7 @@ class DetailsScreenModel(
             mutableState.value = State.Result(currentState.state.copy(checked = !isChecked))
 
             if (isChecked) {
-                event(DetailsEvent.RemoveFavorite(item))
+                event(DetailsEvent.RemoveFavorite(item.id))
             } else {
                 event(DetailsEvent.AddFavorite(item))
             }
@@ -122,6 +122,9 @@ class DetailsScreenModel(
                                 )
                             }
                         } else if (resultData.isFailure) {
+                            if (isFavorited) {
+                                event(DetailsEvent.RemoveFavorite(event.id))
+                            }
                             mutableState.value = State.Error(
                                 resultData.exceptionOrNull().toString()
                             )
@@ -136,7 +139,7 @@ class DetailsScreenModel(
                 screenModelScope.launch {
                     removeFromFavoriteUseCase.invoke(
                         params = RemoveFromFavoriteUseCase.Params(
-                            product = event.product
+                            id = event.id
                         )
                     ).collectLatest { result ->
                         val currentState = mutableState.value

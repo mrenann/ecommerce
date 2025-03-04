@@ -6,5 +6,5 @@ sealed class DetailsEvent {
     data class GetDetails(val id: Int) : DetailsEvent()
     data class AddFavorite(val product: Product) : DetailsEvent()
     data class CheckedFavorite(val id: Int) : DetailsEvent()
-    data class RemoveFavorite(val product: Product) : DetailsEvent()
+    data class RemoveFavorite(val id: Int) : DetailsEvent()
 }

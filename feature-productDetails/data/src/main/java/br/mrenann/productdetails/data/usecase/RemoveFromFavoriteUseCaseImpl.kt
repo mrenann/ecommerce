@@ -14,7 +14,7 @@ class RemoveFromFavoriteUseCaseImpl(
     override suspend fun invoke(params: RemoveFromFavoriteUseCase.Params): Flow<Unit> = flow {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return@flow
 
-        repository.removeFavorite(userId, params.product.id.toString())
+        repository.removeFavorite(userId, params.id.toString())
 
         emit(Unit)
     }.flowOn(Dispatchers.IO)
