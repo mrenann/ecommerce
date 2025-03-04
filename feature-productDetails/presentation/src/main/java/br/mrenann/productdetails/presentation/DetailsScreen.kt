@@ -26,6 +26,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -48,6 +49,7 @@ import coil3.request.crossfade
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Fill
 import compose.icons.evaicons.Outline
+import compose.icons.evaicons.fill.AlertTriangle
 import compose.icons.evaicons.fill.Bookmark
 import compose.icons.evaicons.outline.Bookmark
 import compose.icons.evaicons.outline.ChevronLeft
@@ -240,11 +242,76 @@ data class DetailsScreen(
                         }
 
                     }
-                }
 
+                    is DetailsScreenModel.State.Error -> {
+
+
+                        Column {
+                            Box {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .fillMaxHeight(0.35F)
+                                        .background(Color(0xFFF1F1F1)),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+
+                                ) {
+                                    AsyncImage(
+                                        model = ImageRequest.Builder(LocalContext.current)
+                                            .data("") // Se for null, passa uma string vazia
+                                            .crossfade(true)
+                                            .build(),
+                                        contentDescription = "Product Image",
+                                        contentScale = ContentScale.FillHeight,
+                                        error = rememberVectorPainter(image = EvaIcons.Fill.AlertTriangle),
+                                        modifier = Modifier.fillMaxHeight(.3F)
+                                    )
+                                }
+
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = innerPadding.calculateTopPadding()),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    IconButton(onClick = {
+                                        navigator.pop()
+                                    }) {
+                                        Icon(
+                                            tint = Color.Black,
+                                            imageVector = EvaIcons.Outline.ChevronLeft,
+                                            contentDescription = "Localized description",
+                                        )
+                                    }
+                                }
+                            }
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1F)
+                                    .background(
+                                        color = Color.White,
+                                        shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
+                                    )
+                                    .padding(horizontal = 12.dp)
+                                    .padding(top = 16.dp)
+                            ) {
+                                Text(
+                                    text = "PRODUCT NOT FOUND",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    fontSize = 22.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                    }
+
+                }
             }
+
         }
 
     }
-
 }

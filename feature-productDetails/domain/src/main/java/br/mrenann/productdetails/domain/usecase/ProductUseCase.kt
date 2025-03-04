@@ -4,6 +4,6 @@ import br.mrenann.core.domain.model.Product
 import kotlinx.coroutines.flow.Flow
 
 interface ProductUseCase {
-    suspend operator fun invoke(params: Params): Flow<Product>
+    suspend operator fun invoke(params: Params): Flow<Result<Product>>
     data class Params(val id: Int)
 }

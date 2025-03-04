@@ -10,6 +10,7 @@ import br.mrenann.productdetails.presentation.state.DetailsState
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 
@@ -20,9 +21,10 @@ class DetailsScreenModel(
     private val isFavoritedUseCase: IsFavoritedUseCase
 ) : StateScreenModel<DetailsScreenModel.State>(State.Init) {
     sealed class State {
-        object Init : State()
-        object Loading : State()
+        data object Init : State()
+        data object Loading : State()
         data class Result(val state: DetailsState) : State()
+        data class Error(val message: String) : State()
     }
 
     fun checkedFavorite(checkedFavorite: DetailsEvent.CheckedFavorite) {
@@ -98,14 +100,14 @@ class DetailsScreenModel(
                         params = IsFavoritedUseCase.Params(id = event.id)
                     )
 
-                    productFlow.collectLatest { resultData ->
-                        isFavoritedFlow.collectLatest { isFavorited ->
+                    combine(productFlow, isFavoritedFlow) { resultData, isFavorited ->
+                        if (resultData.isSuccess) {
                             val currentState = mutableState.value
                             if (currentState is State.Result) {
                                 mutableState.value = State.Result(
                                     currentState.state.copy(
                                         isLoading = false,
-                                        product = resultData,
+                                        product = resultData.getOrNull(),
                                         checked = isFavorited
                                     )
                                 )
@@ -114,14 +116,18 @@ class DetailsScreenModel(
                                 mutableState.value = State.Result(
                                     DetailsState(
                                         isLoading = false,
-                                        product = resultData,
+                                        product = resultData.getOrNull(),
                                         checked = isFavorited
                                     )
                                 )
                             }
+                        } else if (resultData.isFailure) {
+                            mutableState.value = State.Error(
+                                resultData.exceptionOrNull().toString()
+                            )
                         }
+                    }.collectLatest { }
 
-                    }
 
                 }
             }
