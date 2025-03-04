@@ -42,10 +42,12 @@ import compose.icons.evaicons.fill.Heart
 import compose.icons.evaicons.outline.Heart
 
 class FavoritesTab : Tab {
+
     override val options: TabOptions
         @Composable
         get() {
-            val title = "Favorites"
+            val strings = LocalPresentationStrings.current
+            val title = strings.title
             val tabNavigator = LocalTabNavigator.current
             val icon = rememberVectorPainter(EvaIcons.Outline.Heart)
             val iconChecked = rememberVectorPainter(EvaIcons.Fill.Heart)
@@ -66,6 +68,7 @@ class FavoritesTab : Tab {
         val state by screenModel.state.collectAsState()
         val pullToRefreshState = rememberPullToRefreshState()
         var isRefreshing by remember { mutableStateOf(false) }
+        val strings = LocalPresentationStrings.current
         Scaffold(
             modifier = Modifier.fillMaxSize()
         ) { innerPadding ->
@@ -94,7 +97,7 @@ class FavoritesTab : Tab {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    SectionTitle("Favorites")
+                    SectionTitle(strings.title)
 
                 }
 

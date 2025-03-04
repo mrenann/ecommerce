@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
 
 }
 
@@ -34,6 +35,11 @@ android {
     }
 }
 
+ksp {
+    arg("lyricist.packageName", "br.mrenann.favorites.presentation")
+    arg("lyricist.moduleName", project.name)
+}
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -64,6 +70,9 @@ dependencies {
     implementation(libs.composeIcons.evaIcons)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+
+    implementation(libs.lyricist)
+    ksp(libs.lyricist.processor)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
