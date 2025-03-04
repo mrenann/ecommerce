@@ -69,6 +69,7 @@ data class CategoryScreen(
                             ),
                         )
                     )
+                    .padding(horizontal = 12.dp)
             ) {
 
                 Row(
