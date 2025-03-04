@@ -55,7 +55,7 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
     implementation(libs.voyager.koin)
-
+    implementation(libs.zoomable)
     implementation(project(":navigation"))
     implementation(project(":core"))
     implementation(project(":feature-productDetails:data"))
