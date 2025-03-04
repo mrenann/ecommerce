@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.Category
 import br.mrenann.home.presentation.R
+import br.mrenann.home.presentation.components.ShimmerCategories
 import br.mrenann.home.presentation.screenModel.HomeScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
@@ -100,28 +101,35 @@ class CategoriesScreen : Screen {
             }
             val screenModel = koinScreenModel<HomeScreenModel>()
             val state by screenModel.state.collectAsState()
-            when (state) {
-                is HomeScreenModel.State.Init -> {}
-                is HomeScreenModel.State.Loading -> {}
-                is HomeScreenModel.State.Result -> {
-                    val categories = (state as HomeScreenModel.State.Result).categories
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.padding(horizontal = 12.dp),
-                    ) {
-                        items(categories.size) { index ->
-                            val category = categories[index]
-                            CategoryCard(
-                                category = category
-                            ) {
-                                navigator.push(CategoryScreen(category))
+            Column(
+                modifier = Modifier.padding(horizontal = 12.dp),
+            ) {
+                when (state) {
+                    is HomeScreenModel.State.Init -> {
+                        ShimmerCategories()
+                    }
+
+                    is HomeScreenModel.State.Loading -> {}
+                    is HomeScreenModel.State.Result -> {
+                        val categories = (state as HomeScreenModel.State.Result).categories
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            items(categories.size) { index ->
+                                val category = categories[index]
+                                CategoryCard(
+                                    category = category
+                                ) {
+                                    navigator.push(CategoryScreen(category))
+                                }
                             }
                         }
                     }
                 }
             }
+
         }
 
     }

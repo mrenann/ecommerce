@@ -22,7 +22,6 @@ class HomeScreenModel(
 
     fun getProducts() {
         screenModelScope.launch {
-            mutableState.value = State.Loading
 
             val products = productsUseCase.invoke()
             val categories = categoriesUseCase.invoke()

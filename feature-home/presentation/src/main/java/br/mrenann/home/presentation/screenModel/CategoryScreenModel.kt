@@ -18,8 +18,6 @@ class CategoryScreenModel(
 
     fun getProductsByCategory(id: String) {
         screenModelScope.launch {
-            mutableState.value = State.Loading
-
             val products = productsUseCase.invoke(
                 params = ProductsByCategoryUseCase.Params(
                     id = id

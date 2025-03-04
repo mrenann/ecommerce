@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.Category
 import br.mrenann.core.domain.model.Product
 import br.mrenann.home.presentation.components.ProductCard
+import br.mrenann.home.presentation.components.ShimmerCategoryProducts
 import br.mrenann.home.presentation.screenModel.CategoryScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
@@ -93,7 +94,11 @@ data class CategoryScreen(
                 }
 
                 when (state) {
-                    is CategoryScreenModel.State.Init -> {}
+                    is CategoryScreenModel.State.Init -> {
+                        ShimmerCategoryProducts()
+
+                    }
+
                     is CategoryScreenModel.State.Loading -> {}
                     is CategoryScreenModel.State.Result -> {
                         val products = (state as CategoryScreenModel.State.Result).products
