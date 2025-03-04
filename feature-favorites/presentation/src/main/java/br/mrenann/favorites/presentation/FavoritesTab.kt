@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import br.mrenann.favorites.presentation.components.ProductCard
 import br.mrenann.favorites.presentation.components.SectionTitle
+import br.mrenann.favorites.presentation.components.ShimmerEffect
 import br.mrenann.favorites.presentation.screenModel.FavoriteScreenModel
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
@@ -92,7 +93,10 @@ class FavoritesTab : Tab {
                 }
 
                 when (state) {
-                    is FavoriteScreenModel.State.Init -> Text("INIT")
+                    is FavoriteScreenModel.State.Init -> {
+                        ShimmerEffect()
+                    }
+
                     is FavoriteScreenModel.State.Loading -> Text("LOADING")
                     is FavoriteScreenModel.State.Result -> {
                         val products =
