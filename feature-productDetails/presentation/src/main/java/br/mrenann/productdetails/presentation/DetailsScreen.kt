@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -64,17 +65,10 @@ data class DetailsScreen(
 
         val cartScreenModel = koinScreenModel<CartScreenModel>()
         koinScreenModel<FavoriteScreenModel>()
-
-        LaunchedEffect(
-            key1 = id
-        ) {
+        LaunchedEffect(key1 = id) {
             screenModel.getDetails(DetailsEvent.GetDetails(id))
-            screenModel.checkedFavorite(
-                DetailsEvent.CheckedFavorite(
-                    id
-                )
-            )
         }
+
 
         Scaffold(
             modifier = Modifier
@@ -94,8 +88,10 @@ data class DetailsScreen(
 
                     is DetailsScreenModel.State.Result -> {
                         val product = (state as DetailsScreenModel.State.Result).state.product
-                        val checked = (state as DetailsScreenModel.State.Result).state.checked
-
+                        val checkedState by rememberUpdatedState(
+                            newValue = (state as? DetailsScreenModel.State.Result)?.state?.checked
+                                ?: false
+                        )
 
                         Box {
                             AsyncImage(
@@ -143,8 +139,8 @@ data class DetailsScreen(
                                         innerPadding
                                         Icon(
                                             tint = Color.Black,
-                                            imageVector = if (checked) EvaIcons.Fill.Bookmark else EvaIcons.Outline.Bookmark,
-                                            contentDescription = "Localized description",
+                                            imageVector = if (checkedState) EvaIcons.Fill.Bookmark else EvaIcons.Outline.Bookmark,
+                                            contentDescription = "Bookmark"
                                         )
                                     }
                                     IconButton(onClick = {}) {

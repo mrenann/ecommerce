@@ -34,15 +34,19 @@ class DetailsScreenModel(
     }
 
     fun favorite(item: Product) {
-        if (state.value is State.Result) {
-            if ((state.value as State.Result).state.checked) {
+        val currentState = mutableState.value
+        if (currentState is State.Result) {
+            val isChecked = currentState.state.checked
+            mutableState.value = State.Result(currentState.state.copy(checked = !isChecked))
+
+            if (isChecked) {
                 event(DetailsEvent.RemoveFavorite(item))
             } else {
                 event(DetailsEvent.AddFavorite(item))
             }
         }
-
     }
+
 
     private fun event(event: DetailsEvent) {
         when (event) {
@@ -71,7 +75,7 @@ class DetailsScreenModel(
                         params = IsFavoritedUseCase.Params(
                             id = event.id,
                         )
-                    ).collectLatest { result ->
+                    ).collect { result ->
                         val currentState = mutableState.value
                         if (currentState is State.Result) {
                             mutableState.value = State.Result(
@@ -86,27 +90,35 @@ class DetailsScreenModel(
 
             is DetailsEvent.GetDetails -> {
                 screenModelScope.launch {
-                    productUseCase.invoke(
-                        params = ProductUseCase.Params(
-                            id = event.id
-                        )
-                    ).collect { resultData ->
-                        val currentState = mutableState.value
-                        if (currentState is State.Result) {
-                            mutableState.value = State.Result(
-                                currentState.state.copy(
-                                    isLoading = false,
-                                    product = resultData,
+                    val productFlow = productUseCase.invoke(
+                        params = ProductUseCase.Params(id = event.id)
+                    )
+
+                    val isFavoritedFlow = isFavoritedUseCase.invoke(
+                        params = IsFavoritedUseCase.Params(id = event.id)
+                    )
+
+                    productFlow.collectLatest { resultData ->
+                        isFavoritedFlow.collectLatest { isFavorited ->
+                            val currentState = mutableState.value
+                            if (currentState is State.Result) {
+                                mutableState.value = State.Result(
+                                    currentState.state.copy(
+                                        isLoading = false,
+                                        product = resultData,
+                                        checked = isFavorited
+                                    )
                                 )
-                            )
-                        } else {
-                            // If the state was not in Result before, set it directly
-                            mutableState.value = State.Result(
-                                DetailsState(
-                                    isLoading = false,
-                                    product = resultData,
+                            } else {
+                                // If the state was not in Result before, set it directly
+                                mutableState.value = State.Result(
+                                    DetailsState(
+                                        isLoading = false,
+                                        product = resultData,
+                                        checked = isFavorited
+                                    )
                                 )
-                            )
+                            }
                         }
 
                     }
