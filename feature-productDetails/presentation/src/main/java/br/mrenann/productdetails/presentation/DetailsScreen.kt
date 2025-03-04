@@ -1,5 +1,6 @@
 package br.mrenann.productdetails.presentation
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -45,7 +46,6 @@ import androidx.compose.ui.unit.sp
 import br.mrenann.cart.presentation.mapper.toProductCart
 import br.mrenann.cart.presentation.screenModel.CartScreenModel
 import br.mrenann.core.util.formatBalance
-import br.mrenann.favorites.presentation.screenModel.FavoriteScreenModel
 import br.mrenann.productdetails.presentation.components.CartBottomSheet
 import br.mrenann.productdetails.presentation.components.ShimmerEffect
 import br.mrenann.productdetails.presentation.components.SnackBarCustom
@@ -81,7 +81,7 @@ data class DetailsScreen(
         var showBottomSheet by remember { mutableStateOf(false) }
         var snackBarState by remember { mutableStateOf(false) }
         val cartScreenModel = koinScreenModel<CartScreenModel>()
-        koinScreenModel<FavoriteScreenModel>()
+        val context = LocalContext.current
         val snackbarHostState = remember { SnackbarHostState() }
         val coroutineScope = rememberCoroutineScope()
         LaunchedEffect(key1 = id) {
@@ -182,13 +182,32 @@ data class DetailsScreen(
                                             contentDescription = "Bookmark"
                                         )
                                     }
-                                    IconButton(onClick = {}) {
+                                    IconButton(onClick = {
+                                        product?.let {
+                                            val title =
+                                                "Check this product: \n${it.title}\n${it.price.formatBalance()}"
+
+                                            val shareIntent = Intent().apply {
+                                                action = Intent.ACTION_SEND
+                                                putExtra(Intent.EXTRA_TEXT, title)
+                                                type = "text/plain"
+                                            }
+
+                                            context.startActivity(
+                                                Intent.createChooser(
+                                                    shareIntent,
+                                                    "Share via"
+                                                )
+                                            )
+                                        }
+                                    }) {
                                         Icon(
                                             tint = Color.Black,
                                             imageVector = EvaIcons.Outline.Share,
-                                            contentDescription = "Localized description",
+                                            contentDescription = "Share"
                                         )
                                     }
+
                                 }
                             }
 
