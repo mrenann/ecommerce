@@ -29,6 +29,8 @@ import br.mrenann.core.domain.model.Category
 import br.mrenann.core.domain.model.Product
 import br.mrenann.core.util.formatBalance
 import br.mrenann.navigation.LocalNavigatorParent
+import br.mrenann.navigation.SharedScreen
+import cafe.adriel.voyager.core.registry.rememberScreen
 import cafe.adriel.voyager.navigator.currentOrThrow
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
@@ -40,10 +42,13 @@ import compose.icons.evaicons.fill.Star
 @Composable
 fun ProductCard(product: Product) {
     val navigator = LocalNavigatorParent.currentOrThrow
+    val detailsScreen = rememberScreen(SharedScreen.ProductDetails(id = product.id))
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
+                navigator.push(detailsScreen)
             }
     ) {
         Column(
@@ -60,7 +65,6 @@ fun ProductCard(product: Product) {
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(
                         product.images[0]
-                            ?: "aaa"
                     )
                     .crossfade(true)
                     .build(),

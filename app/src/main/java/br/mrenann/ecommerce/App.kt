@@ -14,6 +14,7 @@ import br.mrenann.home.data.di.productsModule
 import br.mrenann.home.presentation.di.homeModule
 import br.mrenann.navigation.SharedScreen
 import br.mrenann.productdetails.data.di.productModule
+import br.mrenann.productdetails.presentation.DetailsScreen
 import br.mrenann.productdetails.presentation.di.detailsModule
 import cafe.adriel.voyager.core.registry.ScreenRegistry
 import org.koin.android.ext.koin.androidContext
@@ -47,6 +48,9 @@ class App : Application() {
         ScreenRegistry {
             register<SharedScreen.LoginScreen> {
                 LoginScreen()
+            }
+            register<SharedScreen.ProductDetails> { provider ->
+                DetailsScreen(provider.id)
             }
         }
     }

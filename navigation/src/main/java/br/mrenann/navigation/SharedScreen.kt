@@ -8,4 +8,5 @@ val LocalNavigatorParent = staticCompositionLocalOf<Navigator?> { null }
 
 sealed class SharedScreen : ScreenProvider {
     object LoginScreen : SharedScreen()
+    data class ProductDetails(val id: Int) : SharedScreen()
 }
