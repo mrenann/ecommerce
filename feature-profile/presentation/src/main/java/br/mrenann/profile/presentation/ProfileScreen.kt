@@ -42,10 +42,11 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import compose.icons.EvaIcons
+import compose.icons.evaicons.Fill
 import compose.icons.evaicons.Outline
+import compose.icons.evaicons.fill.Map
 import compose.icons.evaicons.outline.ChevronRight
 import compose.icons.evaicons.outline.CreditCard
-import compose.icons.evaicons.outline.Home
 import compose.icons.evaicons.outline.LogOut
 import compose.icons.evaicons.outline.Person
 import compose.icons.evaicons.outline.ShoppingBag
@@ -174,7 +175,7 @@ class ProfileScreen : Screen {
 
                 ListItem(
                     text = "My addresses",
-                    icon = EvaIcons.Outline.Home,
+                    icon = EvaIcons.Fill.Map,
                     color = Color.DarkGray,
                     onClick = {
                         navigator.push(AddressScreen())
