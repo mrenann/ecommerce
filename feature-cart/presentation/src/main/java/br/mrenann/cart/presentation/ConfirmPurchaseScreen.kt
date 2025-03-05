@@ -35,6 +35,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Outline
@@ -141,7 +142,9 @@ data class ConfirmPurchaseScreen(
                                         val completeCardData = Purchase(
                                             priceFinal = (cartState as CartScreenModel.State.Result).state.total,
                                             coupon = "",
-                                            products = products
+                                            products = products,
+                                            createdAt = FieldValue.serverTimestamp(),
+                                            status = "awaiting_payment"
                                         )
                                         ordersRef.set(completeCardData)
                                             .addOnSuccessListener {

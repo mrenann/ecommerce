@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.navigation.LocalNavigatorParent
@@ -101,35 +102,33 @@ class ProfileScreen : Screen {
                         .fillMaxWidth()
                         .padding(16.dp),
                     shape = MaterialTheme.shapes.medium,
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFDADADA))
+                    colors = CardDefaults.cardColors(containerColor = Color.Black)
                 ) {
                     Column(
-                        modifier = Modifier.padding(top = 12.dp)
+                        modifier = Modifier.padding(vertical = 12.dp)
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
+                                tint = Color.White,
                                 imageVector = EvaIcons.Outline.Person,
                                 contentDescription = "Profile Picture",
                                 modifier = Modifier.size(64.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Column {
-                                Text("Ben Loh", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                                Text("Product Designer", fontSize = 14.sp, color = Color.Gray)
-                                Text("hey@mashify.io", fontSize = 14.sp, color = Color.Gray)
+                                Text(
+                                    text = userName,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    maxLines = 1,
+                                    color = Color.White,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                                Text(text = userEmail, fontSize = 14.sp, color = Color.Gray)
                             }
-                        }
-
-                        Row(
-                            modifier = Modifier.padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("Pro Member", color = Color.White, fontWeight = FontWeight.Bold)
-                            Spacer(modifier = Modifier.weight(1f))
-                            Text("View analytics", color = Color.Red)
                         }
                     }
 
