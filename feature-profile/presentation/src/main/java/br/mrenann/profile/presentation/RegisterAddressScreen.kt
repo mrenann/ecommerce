@@ -1,5 +1,6 @@
 package br.mrenann.profile.presentation
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,26 +31,33 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.mrenann.core.domain.model.Address
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Outline
 import compose.icons.evaicons.outline.ChevronLeft
 
-class RegisterAddressScreen : Screen {
+data class RegisterAddressScreen(
+    val address: Address? = null
+) : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
-        var street by remember { mutableStateOf("") }
-        var number by remember { mutableStateOf("") }
-        var district by remember { mutableStateOf("") }
-        var complement by remember { mutableStateOf("") }
-        var city by remember { mutableStateOf("") }
-        var state by remember { mutableStateOf("") }
-        var code by remember { mutableStateOf("") }
-        var type by remember { mutableStateOf("") }
+        var street by remember { mutableStateOf(address?.street ?: "") }
+        var number by remember { mutableStateOf(address?.number?.toString() ?: "") }
+        var district by remember { mutableStateOf(address?.district ?: "") }
+        var complement by remember { mutableStateOf(address?.complement ?: "") }
+        var city by remember { mutableStateOf(address?.city ?: "") }
+        var state by remember { mutableStateOf(address?.state ?: "") }
+        var code by remember { mutableStateOf(address?.code ?: "") }
+        var isMain by remember { mutableStateOf(address?.isMain ?: true) }
+
 
         Scaffold(
             modifier = Modifier.fillMaxSize()
@@ -57,7 +66,6 @@ class RegisterAddressScreen : Screen {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .padding(16.dp)
             ) {
                 // Header
                 Row(
@@ -73,7 +81,7 @@ class RegisterAddressScreen : Screen {
                     }
                     Text(
                         modifier = Modifier.weight(1F),
-                        text = "Add Address",
+                        text = if (address != null) "Edit Address" else "Add Address",
                         style = MaterialTheme.typography.bodyLarge,
                         fontSize = 18.sp
                     )
@@ -82,11 +90,27 @@ class RegisterAddressScreen : Screen {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Address Form
-                Column {
+                Column(
+                    modifier = Modifier.padding(horizontal = 12.dp)
+                ) {
                     Column(
                         modifier = Modifier.weight(1F),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = "Main Address")
+                            Switch(
+                                checked = isMain,
+                                onCheckedChange = { isMain = it }
+                            )
+                        }
+                        
                         OutlinedTextField(
                             value = street,
                             onValueChange = { street = it },
@@ -187,35 +211,84 @@ class RegisterAddressScreen : Screen {
                             ),
                         )
 
-                        OutlinedTextField(
-                            value = type,
-                            onValueChange = { type = it },
-                            placeholder = { Text("Address Type (e.g., Home, Work)") },
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(8.dp),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                unfocusedBorderColor = Color.Transparent,
-                                focusedBorderColor = Color.Transparent,
-                                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-                                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer
-                            ),
-                        )
 
                     }
 
 
-                    Button(
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(10.dp),
-                        enabled = street.isNotEmpty() && number.isNotEmpty() &&
-                                district.isNotEmpty() && city.isNotEmpty() &&
-                                state.isNotEmpty() && code.isNotEmpty() && type.isNotEmpty(),
-                        onClick = {
-
-                        }
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text("Save Address")
+                        // Botão de Remover (Aparece apenas quando editando um endereço existente)
+                        if (address != null) {
+                            Button(
+                                modifier = Modifier.weight(1f),
+                                shape = RoundedCornerShape(10.dp),
+                                onClick = {
+                                    val db = Firebase.firestore
+                                    val userId = Firebase.auth.currentUser?.uid ?: return@Button
+
+                                    db.collection("users").document(userId)
+                                        .collection("addresses")
+                                        .document(address.id)
+                                        .delete()
+                                        .addOnSuccessListener {
+                                            navigator.pop()
+                                        }
+                                        .addOnFailureListener {
+                                            Log.e("Firestore", "Failed to delete address", it)
+                                        }
+                                }
+                            ) {
+                                Text("Remove Address")
+                            }
+                        }
+
+                        // Botão de Salvar
+                        Button(
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(10.dp),
+                            enabled = street.isNotEmpty() && number.isNotEmpty() &&
+                                    district.isNotEmpty() && city.isNotEmpty() &&
+                                    state.isNotEmpty() && code.isNotEmpty(),
+                            onClick = {
+                                val db = Firebase.firestore
+                                val userId = Firebase.auth.currentUser?.uid ?: return@Button
+
+                                val ref = if (address != null) {
+                                    db.collection("users").document(userId).collection("addresses")
+                                        .document(address.id)
+                                } else {
+                                    db.collection("users").document(userId).collection("addresses")
+                                        .document()
+                                }
+
+                                val updatedAddress = Address(
+                                    id = ref.id,
+                                    street = street,
+                                    number = number.toInt(),
+                                    district = district,
+                                    complement = complement,
+                                    city = city,
+                                    state = state,
+                                    code = code,
+                                    type = address?.type ?: "home",
+                                    isMain = isMain
+                                )
+
+                                ref.set(updatedAddress)
+                                    .addOnSuccessListener {
+                                        navigator.pop()
+                                    }
+                                    .addOnFailureListener {
+                                        Log.e("Firestore", "Failed to save address", it)
+                                    }
+                            }
+                        ) {
+                            Text("Save Address")
+                        }
                     }
+
                 }
             }
         }

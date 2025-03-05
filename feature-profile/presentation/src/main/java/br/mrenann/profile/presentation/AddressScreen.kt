@@ -1,6 +1,7 @@
 package br.mrenann.profile.presentation
 
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -101,7 +102,9 @@ class AddressScreen : Screen {
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(addresses) { address ->
-                        AddressItem(address)
+                        AddressItem(address = address, toEdit = {
+                            navigator.push(RegisterAddressScreen(address))
+                        })
                     }
                 }
 
@@ -122,9 +125,13 @@ class AddressScreen : Screen {
 }
 
 @Composable
-fun AddressItem(address: Address) {
+fun AddressItem(address: Address, toEdit: () -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                toEdit()
+            },
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
@@ -136,7 +143,9 @@ fun AddressItem(address: Address) {
                 imageVector = if (address.type == "home") EvaIcons.Fill.Home else EvaIcons.Fill.Briefcase,
                 contentDescription = "Localized description",
             )
-            Column {
+            Column(
+                modifier = Modifier.weight(1F)
+            ) {
                 Text(
                     text = "${address.street}, ${address.number} ${address.complement ?: ""}",
                     fontWeight = FontWeight.Bold
