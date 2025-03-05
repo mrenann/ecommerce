@@ -110,7 +110,9 @@ class AddressScreen : Screen {
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
                     shape = RoundedCornerShape(8.dp),
-                    onClick = {}
+                    onClick = {
+                        navigator.push(RegisterAddressScreen())
+                    }
                 ) {
                     Text("Add Address")
                 }
