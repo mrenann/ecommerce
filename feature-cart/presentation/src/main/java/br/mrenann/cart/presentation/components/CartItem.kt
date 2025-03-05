@@ -49,7 +49,10 @@ fun CartItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color.White, shape = RoundedCornerShape(8.dp))
+            .background(
+                color = MaterialTheme.colorScheme.surfaceContainer,
+                shape = RoundedCornerShape(8.dp)
+            )
             .padding(8.dp)
     ) {
         Row {
@@ -129,7 +132,6 @@ fun CartItem(
                                 containerColor = Color.Transparent,
                                 disabledContainerColor = Color.Transparent,
                                 disabledContentColor = Color.Black,
-                                contentColor = Color.Black
                             ),
                             shape = RoundedCornerShape(10.dp),
                             contentPadding = PaddingValues(0.dp),
@@ -144,7 +146,6 @@ fun CartItem(
                             }
                         ) {
                             Icon(
-                                tint = Color.Black,
                                 imageVector = EvaIcons.Outline.Minus,
                                 contentDescription = "Localized description",
                             )
@@ -163,7 +164,6 @@ fun CartItem(
                                 containerColor = Color.Transparent,
                                 disabledContainerColor = Color.Transparent,
                                 disabledContentColor = Color.Black,
-                                contentColor = Color.Black
                             ),
                             contentPadding = PaddingValues(0.dp),
                             shape = RoundedCornerShape(10.dp),
@@ -173,7 +173,6 @@ fun CartItem(
                             }
                         ) {
                             Icon(
-                                tint = Color.Black,
                                 imageVector = EvaIcons.Outline.Plus,
                                 contentDescription = "Localized description",
                             )
