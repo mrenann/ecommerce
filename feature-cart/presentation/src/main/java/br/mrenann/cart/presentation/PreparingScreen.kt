@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,21 +40,26 @@ class PreparingScreen : Screen {
 
 @Composable
 fun PreparingScreenContent() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        CircularProgressIndicator(color = Color(0xFF00C236))
-        Spacer(modifier = Modifier.height(24.dp))
-        Text(
-            text = "Preparing everything for you...",
-            fontSize = 16.sp,
-            style = MaterialTheme.typography.bodyLarge
-        )
+    Scaffold(
+        modifier = Modifier.fillMaxSize()
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            CircularProgressIndicator(color = Color(0xFF00C236))
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = "Preparing everything for you...",
+                fontSize = 16.sp,
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
     }
+
 }
 
 @Composable

@@ -1,6 +1,5 @@
 package br.mrenann.cart.presentation.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -47,7 +46,7 @@ fun DeliverySelectionCard() {
             .fillMaxWidth(),
         shape = RoundedCornerShape(4.dp)
     ) {
-        Column(modifier = Modifier.background(Color.White)) {
+        Column(modifier = Modifier) {
             // Title and Icon
             Column(
                 modifier = Modifier

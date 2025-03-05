@@ -108,7 +108,7 @@ class AddressScreen : Screen {
             onClick = { navigate(type) },
             shape = RoundedCornerShape(4.dp)
         ) {
-            Column(modifier = Modifier.background(Color.White)) {
+            Column() {
                 Column(
                     modifier = Modifier
                         .padding(horizontal = 12.dp)

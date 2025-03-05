@@ -86,7 +86,7 @@ fun PaymentOption(
         modifier = Modifier
             .fillMaxWidth()
             .padding(12.dp)
-            .background(Color.White, RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainer, RoundedCornerShape(8.dp))
             .clickable { click("pix", null) }
 
             .padding(16.dp),
@@ -169,8 +169,7 @@ fun BankPaymentOption(
             .padding(horizontal = 12.dp, vertical = 2.dp)
             .fillMaxWidth()
             .clickable { click("card", card) }
-
-            .background(Color.White, RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainer, RoundedCornerShape(8.dp))
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -201,7 +200,6 @@ fun TotalAmountSection(value: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White)
             .padding(16.dp)
 
     ) {
@@ -209,8 +207,8 @@ fun TotalAmountSection(value: String) {
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "You will pay", color = Color.Black)
-            Text(text = "$value", color = Color.Black)
+            Text(text = "You will pay")
+            Text(text = "$value")
         }
 
     }

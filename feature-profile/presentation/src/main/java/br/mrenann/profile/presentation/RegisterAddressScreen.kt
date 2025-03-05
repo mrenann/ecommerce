@@ -56,7 +56,7 @@ data class RegisterAddressScreen(
         var city by remember { mutableStateOf(address?.city ?: "") }
         var state by remember { mutableStateOf(address?.state ?: "") }
         var code by remember { mutableStateOf(address?.code ?: "") }
-        var isMain by remember { mutableStateOf(address?.isMain ?: true) }
+        var isMain by remember { mutableStateOf(address?.main ?: true) }
 
 
         Scaffold(
@@ -110,7 +110,7 @@ data class RegisterAddressScreen(
                                 onCheckedChange = { isMain = it }
                             )
                         }
-                        
+
                         OutlinedTextField(
                             value = street,
                             onValueChange = { street = it },
@@ -263,6 +263,7 @@ data class RegisterAddressScreen(
                                         .document()
                                 }
 
+
                                 val updatedAddress = Address(
                                     id = ref.id,
                                     street = street,
@@ -273,12 +274,28 @@ data class RegisterAddressScreen(
                                     state = state,
                                     code = code,
                                     type = address?.type ?: "home",
-                                    isMain = isMain
+                                    main = false
                                 )
 
                                 ref.set(updatedAddress)
                                     .addOnSuccessListener {
-                                        navigator.pop()
+                                        if (isMain) {
+                                            db.collection("users").document(userId)
+                                                .update("mainAddress", ref.id)
+                                                .addOnSuccessListener {
+                                                    // If everything is successful, go back to the previous screen
+                                                    navigator.pop()
+                                                }
+                                                .addOnFailureListener {
+                                                    Log.e(
+                                                        "Firestore",
+                                                        "Failed to update main address",
+                                                        it
+                                                    )
+                                                }
+                                        } else {
+                                            navigator.pop() // Go back if no changes are made to the main address
+                                        }
                                     }
                                     .addOnFailureListener {
                                         Log.e("Firestore", "Failed to save address", it)

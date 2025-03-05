@@ -92,7 +92,7 @@ fun ArriveContent(
         }
 
         Column(
-            modifier = Modifier.background(Color.White).padding(12.dp)
+            modifier = Modifier.padding(12.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 3.dp),

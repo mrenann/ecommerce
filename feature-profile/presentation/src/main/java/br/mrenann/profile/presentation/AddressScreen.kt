@@ -1,6 +1,6 @@
 package br.mrenann.profile.presentation
 
-import android.util.Log
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -57,13 +57,33 @@ class AddressScreen : Screen {
             val userId = Firebase.auth.currentUser?.uid
 
             if (userId != null) {
-                val cardRef =
+                val userRef = db.collection("users")
+                    .document(userId)
+                    .get().await()
+                val mainAddress = userRef.data?.get("mainAddress")
+
+
+                val ref =
                     db.collection("users").document(userId).collection("addresses").get().await()
-                addresses = cardRef.documents.mapNotNull {
+                val fetchedAddresses = ref.documents.mapNotNull {
                     it.toObject(Address::class.java)
                 }
-                Log.i("Firestore", "Fetched Cards: $addresses")
+
+                // If mainAddress is not null, update the corresponding address in the list
+                addresses = if (mainAddress != null) {
+                    fetchedAddresses.map { address ->
+                        if (address.id == mainAddress) {
+                            address.copy(main = true)
+                        } else {
+                            address
+                        }
+                    }
+                } else {
+                    fetchedAddresses
+                }
+
             }
+
         }
 
         Scaffold(
@@ -131,7 +151,14 @@ fun AddressItem(address: Address, toEdit: () -> Unit) {
             .fillMaxWidth()
             .clickable {
                 toEdit()
-            },
+            }
+            .then(
+                if (address.main) Modifier.border(
+                    1.dp,
+                    MaterialTheme.colorScheme.onBackground,
+                    RoundedCornerShape(8.dp)
+                ) else Modifier
+            ),
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {

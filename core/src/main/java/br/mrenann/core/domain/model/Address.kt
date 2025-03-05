@@ -10,5 +10,5 @@ data class Address(
     val state: String = "",
     val code: String = "",
     val type: String = "",
-    val isMain: Boolean = true
+    val main: Boolean = false
 )

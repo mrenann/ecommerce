@@ -61,7 +61,7 @@ fun ConfirmationCard(
                 .fillMaxWidth(),
             shape = RoundedCornerShape(4.dp)
         ) {
-            Column(modifier = Modifier.background(Color.White)) {
+            Column(modifier = Modifier) {
                 // Title and Icon
                 Column(
                     modifier = Modifier
@@ -142,7 +142,7 @@ fun ConfirmationCard(
                                     card.cardNumber.takeLast(
                                         4
                                     )
-                                }", color = Color.Black,
+                                }",
                                 fontSize = 14.sp,
                                 modifier = Modifier.padding(start = 12.dp)
                             )
