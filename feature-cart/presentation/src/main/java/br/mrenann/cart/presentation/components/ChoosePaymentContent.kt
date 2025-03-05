@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.cart.presentation.Card
 import br.mrenann.cart.presentation.R
+import br.mrenann.core.util.formatBalance
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Outline
 import compose.icons.evaicons.outline.ChevronRight
@@ -39,6 +40,7 @@ import compose.icons.evaicons.outline.ChevronRight
 fun ChoosePaymentContent(
     goToNext: (String, Card?) -> Unit,
     cards: List<Card>,
+    value: Double,
 ) {
     Column {
         LazyColumn(
@@ -64,8 +66,7 @@ fun ChoosePaymentContent(
 
         }
 
-        CouponsSection()
-        TotalAmountSection()
+        TotalAmountSection(value.formatBalance())
     }
 
 }
@@ -195,21 +196,8 @@ fun BankPaymentOption(
     }
 }
 
-
 @Composable
-fun CouponsSection() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White)
-            .padding(16.dp)
-    ) {
-        Text(text = "Cupons (1 para aplicar)", color = Color(0xFF000080)) // Dark blue
-    }
-}
-
-@Composable
-fun TotalAmountSection() {
+fun TotalAmountSection(value: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -221,8 +209,8 @@ fun TotalAmountSection() {
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Você pagará", color = Color.Black)
-            Text(text = "R\$ 12780", color = Color.Black)
+            Text(text = "You will pay", color = Color.Black)
+            Text(text = "$value", color = Color.Black)
         }
 
     }
