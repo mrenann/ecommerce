@@ -6,6 +6,7 @@ import br.mrenann.cart.domain.usecase.AddCartUseCase.Params
 import br.mrenann.cart.domain.usecase.ApplyCouponUseCase
 import br.mrenann.cart.domain.usecase.ClearCartUseCase
 import br.mrenann.cart.domain.usecase.DecreaseUseCase
+import br.mrenann.cart.domain.usecase.DeleteCartUseCase
 import br.mrenann.cart.domain.usecase.GetCartTotalUseCase
 import br.mrenann.cart.domain.usecase.GetProductsFromCartUseCase
 import br.mrenann.cart.domain.usecase.IncreaseUseCase
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 
 class CartScreenModel(
     private val addUseCase: AddCartUseCase,
+    private val removeUseCase: DeleteCartUseCase,
     private val clearUseCase: ClearCartUseCase,
     private val getUseCase: GetProductsFromCartUseCase,
     private val applyCouponUseCase: ApplyCouponUseCase,
@@ -58,8 +60,8 @@ class CartScreenModel(
         event(CartEvent.ApplyCoupon(userId, code, subtotal))
     }
 
-    fun removeProduct() {
-        event(CartEvent.RemoveProduct)
+    fun removeProduct(product: ProductCart) {
+        event(CartEvent.RemoveProduct(product))
     }
 
     fun increaseQuantity(id: String) {
@@ -171,7 +173,13 @@ class CartScreenModel(
                 }
             }
 
-            is CartEvent.RemoveProduct -> {}
+            is CartEvent.RemoveProduct -> {
+                screenModelScope.launch {
+                    removeUseCase.invoke(DeleteCartUseCase.Params(event.product))
+                        .collectLatest { }
+                }
+            }
+
             is CartEvent.decreaseQuantity -> {
                 screenModelScope.launch {
                     decreaseUseCase.invoke(DecreaseUseCase.Params(event.id))

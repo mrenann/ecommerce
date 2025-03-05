@@ -39,7 +39,12 @@ import compose.icons.evaicons.outline.Minus
 import compose.icons.evaicons.outline.Plus
 
 @Composable
-fun CartItem(product: ProductCart, onDecrease: () -> Unit, onIncrement: () -> Unit) {
+fun CartItem(
+    product: ProductCart,
+    onDecrease: () -> Unit,
+    onIncrement: () -> Unit,
+    remove: () -> Unit
+) {
     val quantity = remember { mutableIntStateOf(product.qtd) }
     Column(
         modifier = Modifier
@@ -118,7 +123,7 @@ fun CartItem(product: ProductCart, onDecrease: () -> Unit, onIncrement: () -> Un
                             modifier = Modifier.size(36.dp),
                             border = BorderStroke(
                                 1.dp,
-                                if (quantity.intValue == 1) Color.LightGray else Color(0xFF3F51B5)
+                                Color(0xFF3F51B5)
                             ),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.Transparent,
@@ -126,12 +131,16 @@ fun CartItem(product: ProductCart, onDecrease: () -> Unit, onIncrement: () -> Un
                                 disabledContentColor = Color.Black,
                                 contentColor = Color.Black
                             ),
-                            enabled = quantity.intValue != 1,
                             shape = RoundedCornerShape(10.dp),
                             contentPadding = PaddingValues(0.dp),
                             onClick = {
-                                onDecrease()
-                                quantity.intValue -= 1
+                                if (quantity.intValue == 1) {
+                                    remove()
+                                } else {
+                                    onDecrease()
+                                    quantity.intValue -= 1
+                                }
+
                             }
                         ) {
                             Icon(
