@@ -76,7 +76,7 @@ class CartScreen : Screen {
         val deliveryFee = 0.00
         val total = (subtotal - discountPercentage) + deliveryFee
 
-        
+
 
         Scaffold(
             modifier = Modifier
@@ -135,7 +135,9 @@ class CartScreen : Screen {
                                     },
                                     onDecrease = {
                                         screenModel.decreaseQuantity(product.id.toString())
-
+                                    },
+                                    remove = {
+                                        screenModel.removeProduct(product)
                                     }
                                 )
                             }
@@ -167,7 +169,7 @@ class CartScreen : Screen {
                                 )
                                 if (state is CartScreenModel.State.Result) {
                                     discountPercentage =
-                                        (state as CartScreenModel.State.Result)?.state?.discountApplied
+                                        (state as CartScreenModel.State.Result).state.discountApplied
                                             ?: 0.0
                                 }
                             }) {
