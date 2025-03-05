@@ -7,6 +7,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import br.mrenann.core.ui.theme.Primary
 import cafe.adriel.voyager.navigator.tab.Tab
 
 @Composable
@@ -15,8 +16,8 @@ fun RowScope.TabNavigationItem(
     selected: Boolean,
     onClick: () -> Unit,
 ) {
-    val selectedColor = Color(0xFF1373FF)
-    val unselectedColor = Color.DarkGray
+    val selectedColor = Primary
+    val unselectedColor = Color.Gray
 
     NavigationBarItem(
         selected = selected,

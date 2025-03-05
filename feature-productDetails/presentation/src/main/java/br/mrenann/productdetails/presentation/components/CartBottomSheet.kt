@@ -72,7 +72,6 @@ fun CartBottomSheet(product: Product?, onClose: () -> Unit) {
                 modifier = Modifier
                     .size(42.dp)
                     .background(Color(0xFFF1F1F1))
-                    .clip(RoundedCornerShape(8.dp))
             )
             Column {
                 Text(

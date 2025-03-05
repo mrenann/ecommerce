@@ -2,7 +2,9 @@ package br.mrenann.auth.presentation
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -22,6 +25,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -35,12 +39,14 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Fill
+import compose.icons.evaicons.Outline
 import compose.icons.evaicons.fill.Email
 import compose.icons.evaicons.fill.Lock
+import compose.icons.evaicons.outline.ChevronLeft
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class RegisterScreen() : Screen {
+class RegisterScreen : Screen {
     @Composable
     override fun Content() {
         var name by remember { mutableStateOf("") } // Novo campo para nome
@@ -54,135 +60,154 @@ class RegisterScreen() : Screen {
         val navigation = LocalNavigator.currentOrThrow
 
         Scaffold { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(8.dp),
-                verticalArrangement = Arrangement.Center
+            Box(
+                modifier = Modifier.padding(innerPadding)
             ) {
-                Text(
-                    text = "Create Account",
-                    fontSize = 36.sp,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Text(
-                    text = "Please fill the form to create your account",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Spacer(modifier = Modifier.size(18.dp))
-                Column(
-                    modifier = Modifier,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Campo para Nome
-                    OutlinedTextField(
-                        value = name,
-                        onValueChange = { value -> name = value },
-                        placeholder = { Text("Name") },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = EvaIcons.Fill.Email,
-                                contentDescription = "User Icon"
-                            )
-                        },
-                        shape = RoundedCornerShape(8.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent,
-                            unfocusedContainerColor = Color(0xFFF1F1F1),
-                            focusedContainerColor = Color(0xFFF1F1F1)
-                        ),
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    IconButton(onClick = { navigation.pop() }) {
+                        Icon(
+                            imageVector = EvaIcons.Outline.ChevronLeft,
+                            contentDescription = "Back"
+                        )
+                    }
 
-                    OutlinedTextField(
-                        value = email,
-                        onValueChange = { value -> email = value },
-                        placeholder = { Text("Email") },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = EvaIcons.Fill.Email,
-                                contentDescription = "Email Icon"
-                            )
-                        },
-                        shape = RoundedCornerShape(8.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent,
-                            unfocusedContainerColor = Color(0xFFF1F1F1),
-                            focusedContainerColor = Color(0xFFF1F1F1)
-                        ),
-                        modifier = Modifier.fillMaxWidth()
-                    )
 
-                    OutlinedTextField(
-                        value = password,
-                        onValueChange = { value -> password = value },
-                        placeholder = { Text("Password") },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = EvaIcons.Fill.Lock,
-                                contentDescription = "Password Icon"
-                            )
-                        },
-                        shape = RoundedCornerShape(8.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent,
-                            unfocusedContainerColor = Color(0xFFF1F1F1),
-                            focusedContainerColor = Color(0xFFF1F1F1)
-                        ),
-                        visualTransformation = PasswordVisualTransformation(),
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                }
 
-                    OutlinedTextField(
-                        value = confirmPassword,
-                        onValueChange = { value -> confirmPassword = value },
-                        placeholder = { Text("Confirm Password") },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = EvaIcons.Fill.Lock,
-                                contentDescription = "Confirm Password Icon"
-                            )
-                        },
-                        shape = RoundedCornerShape(8.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent,
-                            unfocusedContainerColor = Color(0xFFF1F1F1),
-                            focusedContainerColor = Color(0xFFF1F1F1)
-                        ),
-                        visualTransformation = PasswordVisualTransformation(),
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
 
+                        .padding(8.dp),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "Create Account",
+                        fontSize = 36.sp,
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        text = "Please fill the form to create your account",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                     Spacer(modifier = Modifier.size(18.dp))
-
-                    Button(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(10.dp),
-                        enabled = name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && password == confirmPassword,
-                        onClick = {
-                            authenticationManager.createAccountWithEmail(name, email, password)
-                                .onEach { response ->
-                                    when (response) {
-                                        is AuthResponse.Success -> {
-                                            navigation.replace(MainScreen())
-                                        }
-
-                                        is AuthResponse.Error -> {
-                                            Log.i("RegisterScreen", "Error")
-                                        }
-                                    }
-                                }.launchIn(coroutineScope)
-                        }
+                    Column(
+                        modifier = Modifier,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text("Register")
+                        // Campo para Nome
+                        OutlinedTextField(
+                            value = name,
+                            onValueChange = { value -> name = value },
+                            placeholder = { Text("Name") },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = EvaIcons.Fill.Email,
+                                    contentDescription = "User Icon"
+                                )
+                            },
+                            shape = RoundedCornerShape(8.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                unfocusedBorderColor = Color.Transparent,
+                                focusedBorderColor = Color.Transparent,
+                                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
+                        OutlinedTextField(
+                            value = email,
+                            onValueChange = { value -> email = value },
+                            placeholder = { Text("Email") },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = EvaIcons.Fill.Email,
+                                    contentDescription = "Email Icon"
+                                )
+                            },
+                            shape = RoundedCornerShape(8.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                unfocusedBorderColor = Color.Transparent,
+                                focusedBorderColor = Color.Transparent,
+                                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
+                        OutlinedTextField(
+                            value = password,
+                            onValueChange = { value -> password = value },
+                            placeholder = { Text("Password") },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = EvaIcons.Fill.Lock,
+                                    contentDescription = "Password Icon"
+                                )
+                            },
+                            shape = RoundedCornerShape(8.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                unfocusedBorderColor = Color.Transparent,
+                                focusedBorderColor = Color.Transparent,
+                                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer
+                            ),
+                            visualTransformation = PasswordVisualTransformation(),
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
+                        OutlinedTextField(
+                            value = confirmPassword,
+                            onValueChange = { value -> confirmPassword = value },
+                            placeholder = { Text("Confirm Password") },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = EvaIcons.Fill.Lock,
+                                    contentDescription = "Confirm Password Icon"
+                                )
+                            },
+                            shape = RoundedCornerShape(8.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                unfocusedBorderColor = Color.Transparent,
+                                focusedBorderColor = Color.Transparent,
+                                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer
+                            ),
+                            visualTransformation = PasswordVisualTransformation(),
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
+                        Spacer(modifier = Modifier.size(18.dp))
+
+                        Button(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp),
+                            enabled = name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && password == confirmPassword,
+                            onClick = {
+                                authenticationManager.createAccountWithEmail(name, email, password)
+                                    .onEach { response ->
+                                        when (response) {
+                                            is AuthResponse.Success -> {
+                                                navigation.replaceAll(MainScreen())
+                                            }
+
+                                            is AuthResponse.Error -> {
+                                                Log.i("RegisterScreen", "Error")
+                                            }
+                                        }
+                                    }.launchIn(coroutineScope)
+                            }
+                        ) {
+                            Text("Register")
+                        }
                     }
                 }
             }

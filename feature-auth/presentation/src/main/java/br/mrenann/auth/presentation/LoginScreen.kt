@@ -57,7 +57,7 @@ import kotlinx.coroutines.flow.onEach
 import java.security.MessageDigest
 import java.util.UUID
 
-class LoginScreen() : Screen {
+class LoginScreen : Screen {
     @Composable
     override fun Content() {
         var email by remember {
@@ -116,8 +116,8 @@ class LoginScreen() : Screen {
                         colors = OutlinedTextFieldDefaults.colors(
                             unfocusedBorderColor = Color.Transparent,
                             focusedBorderColor = Color.Transparent,
-                            unfocusedContainerColor = Color(0xFFF1F1F1),
-                            focusedContainerColor = Color(0xFFF1F1F1)
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -140,8 +140,8 @@ class LoginScreen() : Screen {
                         colors = OutlinedTextFieldDefaults.colors(
                             unfocusedBorderColor = Color.Transparent,
                             focusedBorderColor = Color.Transparent,
-                            unfocusedContainerColor = Color(0xFFF1F1F1),
-                            focusedContainerColor = Color(0xFFF1F1F1)
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer
                         ),
                         visualTransformation = PasswordVisualTransformation(),
                         modifier = Modifier
@@ -178,7 +178,7 @@ class LoginScreen() : Screen {
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(10.dp),
                         onClick = {
-                            navigation.replace(RegisterScreen())
+                            navigation.push(RegisterScreen())
 //                            authenticationManager.signInWithGoogle()
 //                                .onEach { response ->
 //                                    when (response) {
@@ -194,7 +194,7 @@ class LoginScreen() : Screen {
 //                                }.launchIn(coroutineScope)
                         }
                     ) {
-                        Text("Google")
+                        Text("Create Account")
                     }
                 }
             }
@@ -301,18 +301,18 @@ class AuthenticationManager(val context: Context) {
                                 } else {
                                     trySend(
                                         AuthResponse.Error(
-                                            message = "more inside" + it.exception?.message ?: ""
+                                            message = "more inside" + it.exception?.message
                                         )
                                     )
                                 }
                             }
                     } catch (e: GoogleIdTokenParsingException) {
-                        trySend(AuthResponse.Error(message = "inside" + e.message ?: ""))
+                        trySend(AuthResponse.Error(message = "inside" + e.message))
                     }
                 }
             }
         } catch (e: Exception) {
-            trySend(AuthResponse.Error(message = "outside" + e.message ?: ""))
+            trySend(AuthResponse.Error(message = "outside" + e.message))
         }
 
         awaitClose()
