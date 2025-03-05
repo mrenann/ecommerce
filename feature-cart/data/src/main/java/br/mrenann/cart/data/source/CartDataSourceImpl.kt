@@ -28,7 +28,7 @@ class CartDataSourceImpl(
     }
 
     override suspend fun deleteProduct(product: ProductCart) {
-        dao.removeFromCart(product.toCartItemEntity())
+        dao.removeFromCart(product.id.toString())
     }
 
     override suspend fun addQuantity(productId: String) {
