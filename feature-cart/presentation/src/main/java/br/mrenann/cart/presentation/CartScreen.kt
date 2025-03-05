@@ -106,7 +106,6 @@ class CartScreen : Screen {
                     )
                     IconButton(onClick = { screenModel.clearCart() }) {
                         Icon(
-                            tint = Color.Black,
                             imageVector = EvaIcons.Outline.Trash,
                             contentDescription = "Clear Cart"
                         )
