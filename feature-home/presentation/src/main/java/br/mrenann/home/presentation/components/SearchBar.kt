@@ -3,6 +3,7 @@ package br.mrenann.home.presentation.components
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -33,11 +34,10 @@ fun SearchBar(
         shape = RoundedCornerShape(8.dp),
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedBorderColor = Color.Transparent,
-            focusedBorderColor = Color(0xFFF1F1F1),
-            unfocusedContainerColor = Color(0xFFF1F1F1),
-            focusedContainerColor = Color(0xFFF1F1F1)
+            focusedBorderColor = MaterialTheme.colorScheme.surfaceContainer,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer
         ),
-
         modifier = Modifier
             .fillMaxWidth()
     )

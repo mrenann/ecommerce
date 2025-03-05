@@ -20,7 +20,9 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,7 +49,7 @@ data class PixScreen(val total: Double) : Screen {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xFF008000)) // Verde Pix
+                    .background(Color(0xFF1DBC60)) // Verde Pix
                     .padding(innerPadding)
                     .padding(horizontal = 12.dp)
             ) {
@@ -57,7 +59,7 @@ data class PixScreen(val total: Double) : Screen {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(onClick = { navigator?.popAll() }) {
-                        androidx.compose.material3.Icon(
+                        Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "Fechar",
                             tint = Color.White
@@ -81,7 +83,7 @@ data class PixScreen(val total: Double) : Screen {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {

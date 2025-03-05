@@ -102,7 +102,7 @@ class ProfileScreen : Screen {
                         .fillMaxWidth()
                         .padding(16.dp),
                     shape = MaterialTheme.shapes.medium,
-                    colors = CardDefaults.cardColors(containerColor = Color.Black)
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
                 ) {
                     Column(
                         modifier = Modifier.padding(vertical = 12.dp)
@@ -112,7 +112,6 @@ class ProfileScreen : Screen {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                tint = Color.White,
                                 imageVector = EvaIcons.Outline.Person,
                                 contentDescription = "Profile Picture",
                                 modifier = Modifier.size(64.dp)
@@ -124,10 +123,9 @@ class ProfileScreen : Screen {
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Bold,
                                     maxLines = 1,
-                                    color = Color.White,
                                     overflow = TextOverflow.Ellipsis
                                 )
-                                Text(text = userEmail, fontSize = 14.sp, color = Color.Gray)
+                                Text(text = userEmail, fontSize = 14.sp)
                             }
                         }
                     }

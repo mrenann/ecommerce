@@ -1,6 +1,5 @@
 package br.mrenann.profile.presentation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -35,7 +33,6 @@ class AddressScreen : Screen {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xFFF5F8FE))
                     .padding(innerPadding)
             ) {
                 // Header
@@ -47,7 +44,6 @@ class AddressScreen : Screen {
                 ) {
                     IconButton(onClick = { navigator.pop() }) {
                         Icon(
-                            tint = Color.Black,
                             imageVector = EvaIcons.Outline.ChevronLeft,
                             contentDescription = "Back"
                         )

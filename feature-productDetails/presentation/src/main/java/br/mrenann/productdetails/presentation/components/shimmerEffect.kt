@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -82,7 +81,6 @@ fun ShimmerEffect(innerPadding: PaddingValues, pop: () -> Boolean) {
                 }) {
                     innerPadding
                     Icon(
-                        tint = Color.Black,
                         imageVector = EvaIcons.Outline.ChevronLeft,
                         contentDescription = "Localized description",
                     )
@@ -95,10 +93,7 @@ fun ShimmerEffect(innerPadding: PaddingValues, pop: () -> Boolean) {
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1F)
-                .background(
-                    color = Color.White,
-                    shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
-                )
+
                 .padding(horizontal = 12.dp)
                 .padding(top = 16.dp)
         ) {

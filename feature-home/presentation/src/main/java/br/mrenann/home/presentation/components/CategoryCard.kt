@@ -42,7 +42,7 @@ fun CategoryCard(category: String, onClick: () -> Unit) {
 
     Column(
         modifier = Modifier
-            .background(color = Color(0xFFF1F1F1), shape = RoundedCornerShape(8.dp))
+            .background(color = MaterialTheme.colorScheme.surfaceContainer, shape = RoundedCornerShape(8.dp))
             .clickable { onClick() }
             .padding(horizontal = 4.dp, vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,

@@ -31,7 +31,7 @@ fun RowScope.TabNavigationItem(
         label = {
             Text(
                 tab.options.title,
-                color = if (selected) selectedColor else unselectedColor
+                color = if (selected) selectedColor else Color.Unspecified
             )
         },
         alwaysShowLabel = true,

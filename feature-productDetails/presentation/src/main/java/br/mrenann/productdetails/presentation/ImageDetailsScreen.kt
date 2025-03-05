@@ -87,7 +87,6 @@ data class ImageDetailsScreen(val images: List<String>) : Screen {
                         navigator.pop()
                     }) {
                         Icon(
-                            tint = Color.White,
                             imageVector = EvaIcons.Outline.ChevronLeft,
                             contentDescription = "Localized description",
                         )

@@ -60,7 +60,6 @@ class CategoriesScreen : Screen {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xFFF5F8FE))
                     .padding(innerPadding)
             ) {
 
@@ -87,7 +86,6 @@ class CategoriesScreen : Screen {
             ) {
                 IconButton(onClick = { navigatePop() }) {
                     Icon(
-                        tint = Color.Black,
                         imageVector = EvaIcons.Outline.ChevronLeft,
                         contentDescription = "Back"
                     )

@@ -27,7 +27,6 @@ data class WhenArriveScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xFFF5F8FE))
                     .padding(innerPadding)
             ) {
 

@@ -57,7 +57,6 @@ data class CategoryScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xFFF5F8FE))
                     .padding(
                         PaddingValues(
                             top = innerPadding.calculateTopPadding(),
@@ -80,7 +79,6 @@ data class CategoryScreen(
                 ) {
                     IconButton(onClick = { navigator.pop() }) {
                         Icon(
-                            tint = Color.Black,
                             imageVector = EvaIcons.Outline.ChevronLeft,
                             contentDescription = "Back"
                         )

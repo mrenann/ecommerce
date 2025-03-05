@@ -80,6 +80,8 @@ class HomeScreen : Screen {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
+
                     .padding(
                         PaddingValues(
                             top = innerPadding.calculateTopPadding(),
@@ -135,7 +137,6 @@ class HomeScreen : Screen {
                                             }
                                         ) {
                                             Icon(
-                                                tint = Color.Black,
                                                 imageVector = EvaIcons.Outline.ShoppingCart,
                                                 contentDescription = "Shopping Cart",
                                             )

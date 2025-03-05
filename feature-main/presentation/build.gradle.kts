@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.voyager.navigator)
     implementation(libs.voyager.tabNavigator)
     implementation(project(":navigation"))
+    implementation(project(":core"))
     implementation(project(":feature-home:presentation"))
     implementation(project(":feature-favorites:presentation"))
     implementation(project(":feature-profile:presentation"))

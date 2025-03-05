@@ -1,7 +1,6 @@
 package br.mrenann.profile.presentation
 
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -82,7 +81,6 @@ class OrdersScreen : Screen { // Pass the orders list
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xFFF5F8FE))
                     .padding(innerPadding)
             ) {
                 Row(
@@ -93,7 +91,6 @@ class OrdersScreen : Screen { // Pass the orders list
                 ) {
                     IconButton(onClick = { navigator.pop() }) {
                         Icon(
-                            tint = Color.Black,
                             imageVector = EvaIcons.Outline.ChevronLeft,
                             contentDescription = "Back"
                         )

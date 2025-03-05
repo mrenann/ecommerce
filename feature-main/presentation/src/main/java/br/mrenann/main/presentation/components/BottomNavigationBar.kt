@@ -2,7 +2,6 @@ package br.mrenann.main.presentation.components
 
 import androidx.compose.material3.NavigationBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 
@@ -10,9 +9,7 @@ import cafe.adriel.voyager.navigator.tab.Tab
 internal fun BottomNavigationBar(tabs: List<Tab>) {
     val tabNavigator = LocalTabNavigator.current
 
-    NavigationBar(
-        containerColor = Color.White
-    ) {
+    NavigationBar {
         tabs.forEach { tab ->
             TabNavigationItem(
                 tab = tab,

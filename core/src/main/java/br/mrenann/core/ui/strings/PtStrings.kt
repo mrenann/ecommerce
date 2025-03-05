@@ -1,4 +1,4 @@
-package br.mrenann.ecommerce.ui.strings
+package br.mrenann.core.ui.strings
 
 import cafe.adriel.lyricist.LyricistStrings
 

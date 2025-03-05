@@ -50,7 +50,6 @@ fun ArriveContent(
         ) {
             IconButton(onClick = { navigatePop() }) {
                 Icon(
-                    tint = Color.Black,
                     imageVector = EvaIcons.Outline.ChevronLeft,
                     contentDescription = "Back"
                 )

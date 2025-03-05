@@ -1,4 +1,4 @@
-package br.mrenann.ecommerce.ui.strings
+package br.mrenann.core.ui.strings
 
 data class Strings(
     val homeTab: HomeTabStrings,

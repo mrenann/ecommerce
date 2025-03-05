@@ -155,7 +155,6 @@ data class DetailsScreen(
                                 }) {
                                     innerPadding
                                     Icon(
-                                        tint = Color.Black,
                                         imageVector = EvaIcons.Outline.ChevronLeft,
                                         contentDescription = "Localized description",
                                     )
@@ -178,7 +177,6 @@ data class DetailsScreen(
                                     }) {
                                         innerPadding
                                         Icon(
-                                            tint = Color.Black,
                                             imageVector = if (checkedState) EvaIcons.Fill.Bookmark else EvaIcons.Outline.Bookmark,
                                             contentDescription = "Bookmark"
                                         )
@@ -203,7 +201,6 @@ data class DetailsScreen(
                                         }
                                     }) {
                                         Icon(
-                                            tint = Color.Black,
                                             imageVector = EvaIcons.Outline.Share,
                                             contentDescription = "Share"
                                         )
@@ -218,10 +215,7 @@ data class DetailsScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .weight(1F)
-                                .background(
-                                    color = Color.White,
-                                    shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
-                                )
+
                                 .padding(horizontal = 12.dp)
                                 .padding(top = 16.dp)
                         ) {
@@ -268,14 +262,11 @@ data class DetailsScreen(
                         }
                         HorizontalDivider(
                             modifier = Modifier
-                                .background(Color.White)
                                 .padding(horizontal = 12.dp, vertical = 16.dp),
                             thickness = 1.dp,
-                            color = Color(0xFFF1F1F1)
                         )
                         Row(
                             modifier = Modifier
-                                .background(Color.White)
                                 .padding(
                                     bottom = innerPadding.calculateBottomPadding(),
                                 )
@@ -353,7 +344,6 @@ data class DetailsScreen(
                                         navigator.pop()
                                     }) {
                                         Icon(
-                                            tint = Color.Black,
                                             imageVector = EvaIcons.Outline.ChevronLeft,
                                             contentDescription = "Localized description",
                                         )

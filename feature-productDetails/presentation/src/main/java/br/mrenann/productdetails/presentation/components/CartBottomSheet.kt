@@ -51,7 +51,6 @@ fun CartBottomSheet(product: Product?, onClose: () -> Unit) {
                 modifier = Modifier.size(16.dp),
                 onClick = {onClose()}) {
                 Icon(
-                    tint = Color.Black,
                     imageVector = EvaIcons.Outline.Close,
                     contentDescription = "Localized description",
                 )

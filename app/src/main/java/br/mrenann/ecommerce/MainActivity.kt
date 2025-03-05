@@ -7,8 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import br.mrenann.auth.presentation.LoginScreen
-import br.mrenann.ecommerce.ui.strings.Strings
-import br.mrenann.ecommerce.ui.theme.EcommerceTheme
+import br.mrenann.core.ui.strings.Strings
+import br.mrenann.core.ui.theme.EcommerceTheme
 import br.mrenann.main.presentation.MainScreen
 import cafe.adriel.lyricist.Lyricist
 import cafe.adriel.lyricist.rememberStrings

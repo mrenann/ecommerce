@@ -1,4 +1,4 @@
-package br.mrenann.ecommerce.ui.theme
+package br.mrenann.core.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
@@ -6,7 +6,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import br.mrenann.ecommerce.R
+import br.mrenann.core.R
 
 
 val sfprodisplayFontFamily = FontFamily(
