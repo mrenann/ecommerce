@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -70,7 +69,7 @@ class OrdersScreen : Screen { // Pass the orders list
                     db.collection("users").document(userId).collection("orders").get().await()
                 orders = orderRef.documents.mapNotNull {
                     it.toObject(Order::class.java)
-                }
+                }.sortedByDescending { it.createdAt }
                 Log.i("Firestore", "Fetched Cards: $orders")
             }
         }
@@ -161,9 +160,8 @@ fun OrderCard(order: Order) {
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
             .fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
 
-    ) {
+        ) {
         Column(
             modifier = Modifier.padding(2.dp)
         ) {
