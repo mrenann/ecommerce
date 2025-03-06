@@ -5,4 +5,5 @@ import br.mrenann.core.domain.model.Product
 interface ProductsRepository {
     suspend fun getProducts(): List<Product>
     suspend fun getProductsByCategory(id: String): List<Product>
+    suspend fun getProductsByQuery(query: String): List<Product>
 }

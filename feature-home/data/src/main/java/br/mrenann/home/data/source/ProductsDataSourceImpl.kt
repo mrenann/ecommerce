@@ -18,6 +18,10 @@ class ProductsDataSourceImpl(
         return service.getProductsByCategory(id.toInt()).map { it.toDomain() }
     }
 
+    override suspend fun getProductsByQuery(query: String): List<Product> {
+        return service.getProductsByTitle(query).map { it.toDomain() }
+    }
+
 
     private fun ProductItem.toDomain(): Product {
         return Product(

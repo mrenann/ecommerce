@@ -28,9 +28,6 @@ import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.Category
 import br.mrenann.core.domain.model.Product
 import br.mrenann.core.util.formatBalance
-import br.mrenann.navigation.LocalNavigatorParent
-import br.mrenann.productdetails.presentation.DetailsScreen
-import cafe.adriel.voyager.navigator.currentOrThrow
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -39,13 +36,12 @@ import compose.icons.evaicons.Fill
 import compose.icons.evaicons.fill.Star
 
 @Composable
-fun ProductCard(product: Product) {
-    val navigator = LocalNavigatorParent.currentOrThrow
+fun ProductCard(product: Product, navigate: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                navigator.push(DetailsScreen(product.id))
+                navigate()
             }
     ) {
         Column(
@@ -62,7 +58,6 @@ fun ProductCard(product: Product) {
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(
                         product.images[0]
-                            ?: "aaa"
                     )
                     .crossfade(true)
                     .build(),
@@ -143,5 +138,7 @@ fun ProductCardPreview() {
                 "https://placeimg.com/640/480/any?r=0.8807778235430017"
             )
         )
-    )
+    ) {
+
+    }
 }

@@ -22,10 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import br.mrenann.core.domain.model.Category
 import br.mrenann.home.presentation.components.ProductsContent
 import br.mrenann.home.presentation.components.ShimmerCategoryProducts
-import br.mrenann.home.presentation.screenModel.CategoryScreenModel
+import br.mrenann.home.presentation.screenModel.SearchScreenModel
 import br.mrenann.navigation.LocalNavigatorParent
 import br.mrenann.productdetails.presentation.DetailsScreen
 import cafe.adriel.voyager.core.screen.Screen
@@ -36,15 +35,15 @@ import compose.icons.EvaIcons
 import compose.icons.evaicons.Outline
 import compose.icons.evaicons.outline.ChevronLeft
 
-data class CategoryScreen(
-    val category: Category
+data class SearchScreen(
+    val query: String
 ) : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigatorParent.currentOrThrow
         val navigatorChildren = LocalNavigator.currentOrThrow
-        val screenModel = koinScreenModel<CategoryScreenModel>()
-        screenModel.getProductsByCategory(category.id.toString())
+        val screenModel = koinScreenModel<SearchScreenModel>()
+        screenModel.getProducts(query)
         val state by screenModel.state.collectAsState()
 
         Scaffold(
@@ -81,7 +80,7 @@ data class CategoryScreen(
                         )
                     }
                     Text(
-                        text = "${category.name}",
+                        text = "$query",
                         style = MaterialTheme.typography.bodyLarge,
                         fontSize = 18.sp
                     )
@@ -89,23 +88,25 @@ data class CategoryScreen(
                 }
 
                 when (state) {
-                    is CategoryScreenModel.State.Init -> {
+                    is SearchScreenModel.State.Init -> {
                         ShimmerCategoryProducts()
 
                     }
 
-                    is CategoryScreenModel.State.Loading -> {}
-                    is CategoryScreenModel.State.Result -> {
-                        val products = (state as CategoryScreenModel.State.Result).products
+                    is SearchScreenModel.State.Loading -> {}
+                    is SearchScreenModel.State.Result -> {
+                        val products = (state as SearchScreenModel.State.Result).products
                         ProductsContent(
                             products = products,
-                            navigate = { id -> navigator.push(DetailsScreen(id)) }
+                            navigate = { id: Int -> navigator.push(DetailsScreen(id)) }
                         )
                     }
                 }
 
+
             }
         }
     }
+
 
 }

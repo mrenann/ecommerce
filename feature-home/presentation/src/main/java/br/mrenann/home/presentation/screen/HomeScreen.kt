@@ -51,6 +51,7 @@ import br.mrenann.home.presentation.components.SectionTitle
 import br.mrenann.home.presentation.components.ShimmerHome
 import br.mrenann.home.presentation.screenModel.HomeScreenModel
 import br.mrenann.navigation.LocalNavigatorParent
+import br.mrenann.productdetails.presentation.DetailsScreen
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -146,7 +147,13 @@ class HomeScreen : Screen {
                             }
 
                             item {
-                                SearchBar(query = searchQuery, onQueryChange = { searchQuery = it })
+                                SearchBar(
+                                    query = searchQuery,
+                                    onQueryChange = { searchQuery = it },
+                                    onSearch = {
+                                        navigatorChildren.push(SearchScreen(it))
+                                    }
+                                )
                             }
 
                             item {
@@ -244,7 +251,13 @@ class HomeScreen : Screen {
                                     ) {
                                         val productsSize =
                                             if (products.size > 8) 8 else products.size // Limit to 8 items
-                                        items(productsSize) { index -> ProductCard(products[index]) }
+                                        items(productsSize) { index ->
+                                            ProductCard(products[index]) {
+                                                navigator.push(
+                                                    DetailsScreen(products[index].id)
+                                                )
+                                            }
+                                        }
                                     }
                                 }
 

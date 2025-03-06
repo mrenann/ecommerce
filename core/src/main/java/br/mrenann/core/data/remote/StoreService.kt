@@ -23,4 +23,9 @@ interface StoreService {
 
     @GET("categories")
     suspend fun getCategories(): CategoriesResponse
+
+    @GET("products")
+    suspend fun getProductsByTitle(
+        @Query("title") title: String
+    ): ProductsResponse
 }

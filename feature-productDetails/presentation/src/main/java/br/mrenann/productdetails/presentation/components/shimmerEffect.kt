@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -122,13 +121,6 @@ fun ShimmerEffect(innerPadding: PaddingValues, pop: () -> Boolean) {
                     .background(skeletonColor)
             )
         }
-        HorizontalDivider(
-            modifier = Modifier
-                .background(Color.White)
-                .padding(horizontal = 12.dp, vertical = 16.dp),
-            thickness = 1.dp,
-            color = Color(0xFFF1F1F1)
-        )
 
     }
 
