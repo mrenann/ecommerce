@@ -1,4 +1,4 @@
-package br.mrenann.profile.presentation
+package br.mrenann.profile.presentation.screens
 
 import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState

@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import br.mrenann.profile.presentation.MenuItem
+import br.mrenann.profile.presentation.screens.MenuItem
 
 @Composable
 fun UserProfileSection(name: String, email: String) {

@@ -1,4 +1,4 @@
-package br.mrenann.profile.presentation
+package br.mrenann.profile.presentation.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,17 +25,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.OffsetMapping
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.input.TransformedText
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.profile.presentation.components.flipCard.Card
 import br.mrenann.profile.presentation.components.flipCard.CardFace
+import br.mrenann.profile.presentation.util.DigitsAndSpacesTransformation
+import br.mrenann.profile.presentation.util.formatCardNumber
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -98,7 +94,7 @@ class CardScreen : Screen {
                 ) {
                     OutlinedTextField(
                         singleLine = true,
-                        value = formatCardNumber(number),
+                        value = number.formatCardNumber(),
                         minLines = 1,
                         maxLines = 1,
                         onValueChange = { textFieldValue -> // Receive TextFieldValue
@@ -214,42 +210,5 @@ class CardScreen : Screen {
         }
     }
 
-    fun formatCardNumber(number: String): TextFieldValue {  // Return TextFieldValue
-        val formattedNumber = number.replace(" ", "").chunked(4).joinToString(" ")
-        return TextFieldValue(
-            text = formattedNumber,
-            selection = TextRange(formattedNumber.length) // Set cursor to end
-        )
-    }
 
-    class DigitsAndSpacesTransformation : VisualTransformation {
-        override fun filter(text: AnnotatedString): TransformedText {
-            // Allow only digits and spaces
-            val filteredText = text.text.filter { it.isDigit() || it.isWhitespace() }
-            val offsetMapping = object : OffsetMapping {
-                override fun originalToTransformed(offset: Int): Int {
-                    var transformedOffset = 0
-                    for (i in 0 until offset) {
-                        if (text.text[i].isDigit() || text.text[i].isWhitespace()) {
-                            transformedOffset++
-                        }
-                    }
-                    return transformedOffset
-                }
-
-                override fun transformedToOriginal(offset: Int): Int {
-                    var originalOffset = 0
-                    var transformedOffset = 0
-                    while (transformedOffset < offset && originalOffset < text.text.length) {
-                        if (text.text[originalOffset].isDigit() || text.text[originalOffset].isWhitespace()) {
-                            transformedOffset++
-                        }
-                        originalOffset++
-                    }
-                    return originalOffset
-                }
-            }
-            return TransformedText(AnnotatedString(filteredText), offsetMapping)
-        }
-    }
 }
