@@ -10,7 +10,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,24 +26,34 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import br.mrenann.core.domain.model.Order
+import br.mrenann.core.domain.model.OrderProduct
+import br.mrenann.core.util.formatBalance
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 
 
 @Composable
 fun PizzaReceiptView(
+    order: Order,
     orderNumber: String,
     pizzaName: String,
     pizzaQuantity: Int,
     pizzaPrice: String,
     totalAmount: String,
-    backgroundColor: Color = Color(0xFFF5F5F5),
-    contentColor: Color = Color.Black
-) {
+    contentColor: Color = Color.Black,
+    content: @Composable () -> Unit = @Composable {},
+
+    ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -60,37 +71,56 @@ fun PizzaReceiptView(
         )
         {
             // Order Number
-            Text(
-                text = "№$orderNumber",
-                style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold,
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Pizza Details
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                // Pizza Image and Description
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text(
-                        text = "$pizzaQuantity x $pizzaName",
-                        style = MaterialTheme.typography.bodyLarge,
+                items(order.products.size) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        // Pizza Image and Description
+                        Row(verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            AsyncImage(
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(order.products[it].images[0])
+                                    .crossfade(true)
+                                    .build(),
+                                contentDescription = "",
+                                contentScale = ContentScale.FillWidth,
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .background(Color(0xFFF1F1F1))
+                                    .clip(RoundedCornerShape(6.dp))
+                            )
+                            Text(
+                                text = order.products[it].title,
+                                style = MaterialTheme.typography.bodyLarge,
+                            )
+                        }
 
-                        )
+                        // Pizza Price
+                        Text(
+                            text = order.products[it].price.formatBalance(),
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+
+                            )
+                    }
+
                 }
-
-                // Pizza Price
-                Text(
-                    text = pizzaPrice,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
-
-                    )
             }
+//            Text(
+//                text = "№$orderNumber",
+//                style = MaterialTheme.typography.headlineLarge,
+//                fontWeight = FontWeight.Bold,
+//            )
+//            Spacer(modifier = Modifier.height(16.dp))
+//
+//            // Pizza Details
+
 
             Spacer(modifier = Modifier.height(16.dp))
             DashedLine(color = contentColor)
@@ -191,8 +221,38 @@ fun PizzaReceiptViewPreview() {
             pizzaQuantity = 2,
             pizzaPrice = "25 $",
             totalAmount = "25 $",
-            backgroundColor = Color.White,
-            contentColor = Color.DarkGray
+            contentColor = Color.DarkGray,
+            order = Order(
+                priceFinal = 22.0,
+                status = "delivered",
+                coupon = "",
+                products = listOf(
+                    OrderProduct(
+                        category = br.mrenann.core.domain.model.Category(
+                            id = 0,
+                            image = "",
+                            name = ""
+                        ),
+                        id = 0,
+                        image = "https://gratisography.com/wp-content/uploads/2025/02/gratisography-when-pigs-fly-1170x780.jpg",
+                        name = "Bone clássico",
+                        description = "asdasdsadasd",
+                        price = 22.0,
+                    ),
+                    OrderProduct(
+                        category = br.mrenann.core.domain.model.Category(
+                            id = 0,
+                            image = "",
+                            name = ""
+                        ),
+                        id = 0,
+                        image = "https://gratisography.com/wp-content/uploads/2025/02/gratisography-when-pigs-fly-1170x780.jpg",
+                        name = "Bone clássico",
+                        description = "asdasdsadasd",
+                        price = 22.0,
+                    )
+                ),
+            )
         )
     }
 }

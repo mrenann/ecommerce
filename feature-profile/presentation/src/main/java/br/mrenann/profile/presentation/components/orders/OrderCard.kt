@@ -21,7 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import br.mrenann.core.domain.model.Order
-import br.mrenann.profile.presentation.util.formatOrderStatus
+import br.mrenann.core.domain.model.formatOrderStatus
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade

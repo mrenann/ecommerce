@@ -8,5 +8,6 @@ data class Order(
     val status: String = "",
     val coupon: String = "",
     val products: List<OrderProduct> = emptyList(),
-    @ServerTimestamp val createdAt: Date? = null // Add this field to store the created date
+    @ServerTimestamp val createdAt: Date? = null,
+    @ServerTimestamp val deliveredAt: Date? = null,
 )

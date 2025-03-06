@@ -15,8 +15,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.Order
+import br.mrenann.core.domain.model.OrderStatus
+import br.mrenann.core.domain.model.toOrderStatus
+import br.mrenann.core.util.formatToReadableDate
+import br.mrenann.profile.presentation.components.orders.OrderStatusInfo
 import br.mrenann.profile.presentation.components.orders.PizzaReceiptView
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -59,7 +64,25 @@ data class OrderScreen(
                         fontSize = 18.sp
                     )
                 }
+
+                Column(
+                    modifier = Modifier.padding(horizontal = 12.dp)
+                ) {
+                    val orderStatus = order.status.toOrderStatus()
+                    OrderStatusInfo(
+                        status = orderStatus,
+                        subtitle = if (order.deliveredAt != null && orderStatus == OrderStatus.DELIVERED) {
+                            order.deliveredAt?.formatToReadableDate() ?: ""
+                        } else if (orderStatus == OrderStatus.UNKNOWN_STATUS) {
+                            "We're checking on this for you"
+                        } else {
+                            ""
+                        }
+                    )
+                }
+
                 PizzaReceiptView(
+                    order = order,
                     orderNumber = "12345",
                     pizzaName = "Americano",
                     pizzaQuantity = 2,
