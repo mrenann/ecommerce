@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import br.mrenann.auth.presentation.LoginScreen
 import br.mrenann.core.ui.strings.Strings
 import br.mrenann.core.ui.theme.EcommerceTheme
@@ -25,6 +26,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
         enableEdgeToEdge()
         val auth = Firebase.auth
         val initialScreen = if (auth.currentUser != null) MainScreen() else LoginScreen()
