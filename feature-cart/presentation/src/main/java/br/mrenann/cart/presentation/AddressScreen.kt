@@ -1,6 +1,5 @@
 package br.mrenann.cart.presentation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,9 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.mrenann.core.domain.model.Address
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -32,7 +31,9 @@ import compose.icons.EvaIcons
 import compose.icons.evaicons.Outline
 import compose.icons.evaicons.outline.ChevronLeft
 
-class AddressScreen : Screen {
+data class AddressScreen(
+    val address: Address? = null
+) : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
@@ -48,11 +49,14 @@ class AddressScreen : Screen {
             ) {
 
 
-                AddressContent(navigatePop = { navigator.pop() }, navigateToChooseArrive = { address->
-                    navigator.push(
-                        WhenArriveScreen(address)
-                    )
-                })
+                AddressContent(
+                    address = address,
+                    navigatePop = { navigator.pop() },
+                    navigateToChooseArrive = { address ->
+                        navigator.push(
+                            WhenArriveScreen(address)
+                        )
+                    })
 
             }
         }
@@ -61,7 +65,8 @@ class AddressScreen : Screen {
     @Composable
     fun AddressContent(
         navigatePop: () -> Boolean,
-        navigateToChooseArrive: (String) -> Unit
+        navigateToChooseArrive: (String) -> Unit,
+        address: Address?
     ) {
         Column {
             Row(
@@ -83,12 +88,36 @@ class AddressScreen : Screen {
 
             }
 
-            AddressCard(
-                title = "Send to my address",
-                location = "100-198 W Commercial St, Langston, OK 73050, USA",
-                type = "Residence",
-                navigate = navigateToChooseArrive
-            )
+            if (address != null) {
+                AddressCard(
+                    title = "Send to my address",
+                    location = "${address.street},${address.number}, ${address.district}, ${address.city}",
+                    type = "Residence",
+                    navigate = navigateToChooseArrive
+                )
+            } else {
+                Card(
+                    modifier = Modifier
+                        .padding(12.dp)
+                        .fillMaxWidth(),
+                    shape = RoundedCornerShape(4.dp)
+                ) {
+                    Column {
+                        Column(
+                            modifier = Modifier
+                                .padding(horizontal = 12.dp)
+                                .padding(vertical = 12.dp)
+                        ) {
+                            Text(
+                                text = "You dont have main address",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+
+                    }
+                }
+            }
             AddressCard(
                 title = "Pick up at Ecommerce Agency",
                 location = "224001-224499 E County Rd 345, Mooreland, OK 73852, USA",
@@ -100,7 +129,12 @@ class AddressScreen : Screen {
     }
 
     @Composable
-    private fun AddressCard(title: String, location: String, type: String, navigate: (String) -> Unit) {
+    private fun AddressCard(
+        title: String,
+        location: String,
+        type: String,
+        navigate: (String) -> Unit
+    ) {
         Card(
             modifier = Modifier
                 .padding(12.dp)
@@ -108,7 +142,7 @@ class AddressScreen : Screen {
             onClick = { navigate(type) },
             shape = RoundedCornerShape(4.dp)
         ) {
-            Column() {
+            Column {
                 Column(
                     modifier = Modifier
                         .padding(horizontal = 12.dp)
@@ -145,10 +179,4 @@ class AddressScreen : Screen {
         }
     }
 
-
-    @Composable
-    @Preview
-    fun AddressContentPreview() {
-        AddressContent({ false }, {})
-    }
 }
