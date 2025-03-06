@@ -1,7 +1,9 @@
 package br.mrenann.profile.presentation
 
 import android.util.Log
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,29 +12,38 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -42,21 +53,31 @@ import com.google.firebase.firestore.firestore
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Outline
 import compose.icons.evaicons.outline.ChevronLeft
+import compose.icons.evaicons.outline.Plus
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlin.math.abs
+import kotlin.math.roundToInt
 
 data class Card(
     val cardNumber: String = "",
     val cvv: String = "",
     val expiryDate: String = "",
-    val type: String = ""
+    val type: String = "",
+    val id: String = "" // Add an ID field
 )
-
 
 class CardListScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         var cards by remember { mutableStateOf<List<Card>>(emptyList()) }
+        var showDialog by remember { mutableStateOf(false) }
+        var draggedCardIndex by remember { mutableStateOf(-1) }
+        val cardOffsets = remember { mutableStateMapOf<Int, Float>() }
+        val coroutineScope = rememberCoroutineScope()
+
+        Log.i("card", "${draggedCardIndex}")
 
         LaunchedEffect(true) {
             val db = Firebase.firestore
@@ -65,8 +86,10 @@ class CardListScreen : Screen {
             if (userId != null) {
                 val cardRef =
                     db.collection("users").document(userId).collection("cards").get().await()
-                cards = cardRef.documents.mapNotNull {
-                    it.toObject(Card::class.java)
+                // Use .map instead of mapNotNull and set the ID
+                cards = cardRef.documents.map {
+                    val card = it.toObject(Card::class.java)
+                    card?.copy(id = it.id) ?: Card() // Important: Handle null and set ID
                 }
                 Log.i("Firestore", "Fetched Cards: $cards")
             }
@@ -80,7 +103,7 @@ class CardListScreen : Screen {
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                // Header
+                // Header (same as before)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -102,22 +125,168 @@ class CardListScreen : Screen {
                 }
 
                 // Card List
-                if (cards.isNotEmpty()) {
-                    LazyRow(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        contentPadding = PaddingValues(horizontal = 16.dp)
-                    ) {
-                        itemsIndexed(cards) { index, card ->
-                            CardItem(card = card, index = index)
+                Column(
+                    modifier = Modifier.height(195.dp),
+                ) {
+                    if (cards.isNotEmpty()) {
+                        LazyRow(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1F),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            contentPadding = PaddingValues(horizontal = 16.dp)
+                        ) {
+                            itemsIndexed(cards) { index, card ->
+                                val animatedOffsetY by animateFloatAsState(
+                                    targetValue = cardOffsets[index] ?: 0f,
+                                    label = ""
+                                )
+
+                                CardItem(
+                                    card = card,
+                                    index = index,
+                                    modifier = Modifier
+                                        .offset { IntOffset(0, animatedOffsetY.roundToInt()) }
+                                        .zIndex(if (cardOffsets[index] != 0f) 1f else 0f)
+                                        .pointerInput(Unit) {
+                                            detectDragGestures(
+                                                onDragStart = {
+                                                    cardOffsets[index] = 0f
+                                                    draggedCardIndex = index
+                                                },
+                                                onDrag = { change, dragAmount ->
+                                                    if (abs(dragAmount.y) > 0) {
+                                                        cardOffsets[index] =
+                                                            (cardOffsets[index]
+                                                                ?: 0f) + dragAmount.y
+                                                        change.consume()
+                                                    }
+                                                },
+                                                onDragEnd = {
+                                                    coroutineScope.launch {
+                                                        if ((cardOffsets[index] ?: 0f) < -120) {
+                                                            showDialog = true
+                                                        } else {
+                                                            draggedCardIndex = -1
+                                                        }
+                                                        cardOffsets[index] = 0f
+                                                    }
+                                                },
+                                                onDragCancel = {
+                                                    coroutineScope.launch {
+                                                        cardOffsets[index] = 0f
+                                                        draggedCardIndex = -1
+                                                    }
+                                                }
+                                            )
+                                        }
+                                )
+                            }
                         }
+                    } else {
+                        //No cards (Same as before)
+                        Text(
+                            text = "No cards available",
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            fontSize = 16.sp,
+                            color = Color.Gray
+                        )
                     }
-                } else {
-                    Text(
-                        text = "No cards available",
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        fontSize = 16.sp,
-                        color = Color.Gray
+                }
+
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 12.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.surfaceContainer,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .padding(12.dp),
+                    text = "To remove a card, drag it up."
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1F)
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    IconButton(
+                        onClick = {},
+                        colors = IconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary,
+                            disabledContainerColor = MaterialTheme.colorScheme.primary,
+                            disabledContentColor = MaterialTheme.colorScheme.onPrimary
+                        )
+                    ) {
+                        Icon(
+                            imageVector = EvaIcons.Outline.Plus,
+                            contentDescription = "Localized description",
+                        )
+                    }
+                }
+
+
+                // Dialog - Now with Firebase deletion
+                if (showDialog) {
+                    AlertDialog(
+                        onDismissRequest = {
+                            showDialog = false
+                            draggedCardIndex = -1
+
+                        },
+                        title = { Text("Delete Card") }, // More specific title
+                        text = {
+                            Text(
+                                "Are you sure you want to delete card ending in ${
+                                    cards.getOrNull(
+                                        draggedCardIndex
+                                    )?.cardNumber?.takeLast(4) ?: "N/A"
+                                }?"
+                            )
+                        },
+                        confirmButton = {
+                            Button(onClick = {
+                                coroutineScope.launch { // Use coroutine for deletion
+                                    showDialog = false
+                                    if (draggedCardIndex != -1) {
+                                        val cardToDelete = cards.getOrNull(draggedCardIndex)
+                                        cardToDelete?.id?.let { cardId ->  // Use the ID
+                                            val db = Firebase.firestore
+                                            val userId = Firebase.auth.currentUser?.uid
+                                            if (userId != null) {
+                                                try {
+                                                    db.collection("users").document(userId)
+                                                        .collection("cards").document(cardId)
+                                                        .delete()
+                                                        .await() // Await the deletion
+
+                                                    // Update local list *after* successful deletion
+                                                    val mutableCards = cards.toMutableList()
+                                                    mutableCards.removeAt(draggedCardIndex)
+                                                    cards = mutableCards.toList()
+                                                } catch (e: Exception) {
+                                                    Log.e("Firestore", "Error deleting card", e)
+                                                    // Handle the error (e.g., show a Toast)
+                                                }
+                                            }
+                                        }
+                                        draggedCardIndex = -1 // Reset after deletion
+                                    }
+                                }
+                            }) {
+                                Text("Delete")
+                            }
+                        },
+                        dismissButton = {
+                            Button(onClick = { showDialog = false; draggedCardIndex = -1 }) {
+                                Text("Cancel")
+                            }
+                        }
                     )
                 }
             }
@@ -125,17 +294,13 @@ class CardListScreen : Screen {
     }
 
     @Composable
-    fun CardItem(card: Card, index: Int) {
-        val backgroundColor = if (index % 2 == 0) {
-            Color(0xFFFF7F33)
-        } else {
-            Color(0xFF735DFF)
-        }
+    fun CardItem(card: Card, index: Int, modifier: Modifier = Modifier) {
+        val backgroundColor = if (index % 2 == 0) Color(0xFFFF7F33) else Color(0xFF735DFF)
 
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .width(200.dp)
-                .height(120.dp)
+                .height(185.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .background(backgroundColor)
                 .padding(16.dp)
@@ -154,11 +319,7 @@ class CardListScreen : Screen {
                 color = Color.White
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "Exp ${card.expiryDate}",
-                fontSize = 14.sp,
-                color = Color.White
-            )
+            Text(text = "Exp ${card.expiryDate}", fontSize = 14.sp, color = Color.White)
         }
     }
 }
