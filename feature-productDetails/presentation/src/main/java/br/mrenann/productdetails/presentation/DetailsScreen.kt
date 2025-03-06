@@ -10,8 +10,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -118,30 +122,40 @@ data class DetailsScreen(
                             newValue = (state as? DetailsScreenModel.State.Result)?.state?.checked
                                 ?: false
                         )
+                        val imagesSize = product?.images?.size ?: 0
+                        val pagerState = rememberPagerState(
+                            initialPage = 0,
+                            pageCount = { imagesSize }
+                        )
 
                         Box {
-                            AsyncImage(
-                                model = ImageRequest.Builder(LocalContext.current)
-                                    .data(
-                                        product?.images?.get(0)
-                                            ?: "aaa"
-                                    )
-                                    .crossfade(true)
-                                    .build(),
-                                contentDescription = "",
-                                contentScale = ContentScale.FillWidth,
+                            HorizontalPager(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .fillMaxHeight(0.35F)
-                                    .background(Color(0xFFF1F1F1))
-                                    .clickable {
-                                        navigator.push(
-                                            ImageDetailsScreen(
-                                                images = product?.images ?: emptyList()
+                                    .background(Color(0xFFF1F1F1)),
+                                state = pagerState,
+                                key = { product?.images?.get(it) ?: "" }
+                            ) { index ->
+
+                                AsyncImage(
+                                    model = ImageRequest.Builder(LocalContext.current)
+                                        .data(product?.images?.get(index))
+                                        .crossfade(true)
+                                        .build(),
+                                    contentDescription = "Product Image",
+                                    modifier = Modifier
+                                        .clickable {
+                                            navigator.push(
+                                                ImageDetailsScreen(
+                                                    images = product?.images ?: emptyList()
+                                                )
                                             )
-                                        )
-                                    }
-                            )
+                                        },
+                                    contentScale = ContentScale.FillWidth,
+                                )
+
+                            }
 
                             Row(
                                 modifier = Modifier
@@ -206,6 +220,27 @@ data class DetailsScreen(
                                         )
                                     }
 
+                                }
+                            }
+
+                            Row(
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .padding(bottom = 4.dp),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                product?.images?.indices?.forEach { index ->
+                                    val isSelected = pagerState.currentPage == index
+                                    Box(
+                                        modifier = Modifier
+                                            .padding(4.dp)
+                                            .height(4.dp)
+                                            .width(22.dp)
+                                            .background(
+                                                color = if (isSelected) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.onBackground,
+
+                                                )
+                                    )
                                 }
                             }
 
