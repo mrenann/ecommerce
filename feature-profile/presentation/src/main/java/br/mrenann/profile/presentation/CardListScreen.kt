@@ -40,6 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -184,27 +185,41 @@ class CardListScreen : Screen {
                             }
                         }
                     } else {
-                        //No cards (Same as before)
-                        Text(
-                            text = "No cards available",
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            fontSize = 16.sp,
-                            color = Color.Gray
-                        )
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(185.dp)
+                                .padding(horizontal = 16.dp, vertical = 12.dp)
+                                .background(
+                                    color = MaterialTheme.colorScheme.surfaceContainer,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .padding(12.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "No cards available",
+                                textAlign = TextAlign.Center,
+                            )
+                        }
+
                     }
                 }
 
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 12.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.surfaceContainer,
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                        .padding(12.dp),
-                    text = "To remove a card, drag it up."
-                )
+                if (cards.isNotEmpty()) {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 12.dp)
+                            .background(
+                                color = MaterialTheme.colorScheme.surfaceContainer,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .padding(12.dp),
+                        text = "To remove a card, drag it up."
+                    )
+                }
 
                 Row(
                     modifier = Modifier
@@ -215,7 +230,9 @@ class CardListScreen : Screen {
                     verticalAlignment = Alignment.Bottom
                 ) {
                     IconButton(
-                        onClick = {},
+                        onClick = {
+                            navigator.push(CardScreen())
+                        },
                         colors = IconButtonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = MaterialTheme.colorScheme.onPrimary,
