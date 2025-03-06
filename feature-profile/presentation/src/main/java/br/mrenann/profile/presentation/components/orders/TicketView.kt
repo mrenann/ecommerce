@@ -75,17 +75,20 @@ fun PizzaReceiptView(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 items(order.products.size) {
+                    val orderProduct = order.products[it]
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         // Pizza Image and Description
-                        Row(verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
                             AsyncImage(
                                 model = ImageRequest.Builder(LocalContext.current)
-                                    .data(order.products[it].images[0])
+                                    .data(orderProduct.images[0])
                                     .crossfade(true)
                                     .build(),
                                 contentDescription = "",
@@ -96,14 +99,14 @@ fun PizzaReceiptView(
                                     .clip(RoundedCornerShape(6.dp))
                             )
                             Text(
-                                text = order.products[it].title,
+                                text = "${orderProduct.qtd}x ${orderProduct.title}",
                                 style = MaterialTheme.typography.bodyLarge,
                             )
                         }
 
                         // Pizza Price
                         Text(
-                            text = order.products[it].price.formatBalance(),
+                            text = orderProduct.price.formatBalance(),
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
 
