@@ -10,8 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,16 +23,13 @@ import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
-fun CardBack(finish: (CardFace, String) -> Unit) { // Add finish parameter
+fun CardBack(finish: (CardFace, String) -> Unit, cvv: String) { // Add finish parameter
     var code by remember { mutableStateOf("") }
     Column(
         modifier = Modifier
@@ -99,38 +95,16 @@ fun CardBack(finish: (CardFace, String) -> Unit) { // Add finish parameter
                 .padding(10.dp),
             horizontalArrangement = Arrangement.End
         ) {
-            BasicTextField(
-                value = code,
-                onValueChange = {
-                    if (it.length <= 3) code = it.filter { it.isDigit() }
-
-                    if (code.length == 3) {
-                        finish(CardFace.Back, code) // Call finish with CVV
-                    }
-                },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Done
-                ),
-                textStyle = TextStyle(
-                    color = Color.Black,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold
-                ),
-                decorationBox = { innerTextField ->
-                    Row(
-                        modifier = Modifier
-                            .padding(0.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        innerTextField()
-                    }
-                },
-
+            Text(
                 modifier = Modifier
                     .background(Color.White)
                     .padding(6.dp)
-                    .width(40.dp)
+                    .width(40.dp),
+                text = cvv,
+                textAlign = TextAlign.Center,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                fontSize = 17.sp
             )
         }
         Spacer(modifier = Modifier.height(24.dp))

@@ -7,12 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,24 +19,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.input.TransformedText
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,7 +41,7 @@ import compose.icons.evaicons.fill.Archive
 import compose.icons.evaicons.fill.Email
 
 @Composable
-fun CardFront(finish: (CardFace, CardData) -> Unit) {
+fun CardFront(finish: (CardFace, CardData) -> Unit, number: String, expiry: String) {
     val auth = Firebase.auth
     val firestore = Firebase.firestore
     val userId = auth.currentUser?.uid
@@ -138,101 +124,84 @@ fun CardFront(finish: (CardFace, CardData) -> Unit) {
                 contentDescription = "Search Icon"
             )
         }
-        OutlinedTextField(
-            singleLine = true,
-            value = formatCardNumber(cardNumber),
-            onValueChange = { textFieldValue -> // Receive TextFieldValue
-                val unformatted = textFieldValue.text.replace(" ", "")
-                if (unformatted.length <= 16) {
-                    cardNumber = unformatted
-                }
-            },
-            placeholder = {
-                Text(
-                    text = "1234 5678 9012 3456",
-                    fontSize = 24.sp,
-                    fontFamily = FontFamily(
-                        Font(R.font.atkinson_hyperlegible),
-                    ),
-                    textAlign = TextAlign.Center,
 
-
-                    )
-            },
-
-            shape = OutlinedTextFieldDefaults.shape,
-            colors = OutlinedTextFieldDefaults.colors(
-                unfocusedBorderColor = Color.Transparent,
-                focusedBorderColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                focusedContainerColor = Color.Transparent
-            ),
-            visualTransformation = DigitsAndSpacesTransformation(), // Key change!
-            textStyle = TextStyle(
-                fontFamily = FontFamily(Font(R.font.atkinson_hyperlegible)),
-                fontSize = 24.sp,
-                textAlign = TextAlign.Center,
-                color = Color.White
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(30.dp, 70.dp)
-                .focusRequester(focusRequester1)
-                .onFocusChanged {
-                    isCardNumberFocused = it.isFocused
-                },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Next
-            ),
-            keyboardActions = KeyboardActions(
-                onNext = {
-                    if (cardNumber.length == 16) {
-                        focusRequester2.requestFocus()
-                    }
-                }
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            text = formatCardNumber(number).text,
+            color = Color.White,
+            fontSize = 24.sp,
+            fontFamily = FontFamily(
+                Font(R.font.atkinson_hyperlegible),
             )
+//        OutlinedTextField(
+//            singleLine = true,
+//            value = formatCardNumber(cardNumber),
+//            onValueChange = { textFieldValue -> // Receive TextFieldValue
+//                val unformatted = textFieldValue.text.replace(" ", "")
+//                if (unformatted.length <= 16) {
+//                    cardNumber = unformatted
+//                }
+//            },
+//            placeholder = {
+//                Text(
+//                    text = "1234 5678 9012 3456",
+//                    fontSize = 24.sp,
+//                    fontFamily = FontFamily(
+//                        Font(R.font.atkinson_hyperlegible),
+//                    ),
+//                    textAlign = TextAlign.Center,
+//
+//
+//                    )
+//            },
+//
+//            shape = OutlinedTextFieldDefaults.shape,
+//            colors = OutlinedTextFieldDefaults.colors(
+//                unfocusedBorderColor = Color.Transparent,
+//                focusedBorderColor = Color.Transparent,
+//                unfocusedContainerColor = Color.Transparent,
+//                focusedContainerColor = Color.Transparent
+//            ),
+//            visualTransformation = DigitsAndSpacesTransformation(), // Key change!
+//            textStyle = TextStyle(
+//                fontFamily = FontFamily(Font(R.font.atkinson_hyperlegible)),
+//                fontSize = 24.sp,
+//                textAlign = TextAlign.Center,
+//                color = Color.White
+//            ),
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .heightIn(30.dp, 70.dp)
+//                .focusRequester(focusRequester1)
+//                .onFocusChanged {
+//                    isCardNumberFocused = it.isFocused
+//                },
+//            keyboardOptions = KeyboardOptions(
+//                keyboardType = KeyboardType.Number,
+//                imeAction = ImeAction.Next
+//            ),
+//            keyboardActions = KeyboardActions(
+//                onNext = {
+//                    if (cardNumber.length == 16) {
+//                        focusRequester2.requestFocus()
+//                    }
+//                }
+//            )
         )
         Row(
             modifier = Modifier
                 .padding(horizontal = 18.dp)
                 .padding(bottom = 8.dp)
         ) {
-            Row {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
                 NameDisplay(userName)
-                BasicTextField(
-                    value = expiryDate,
-                    onValueChange = {
-                        if (it.length <= 5) {
-                            expiryDate = it.replace(Regex("[^0-9/]"), "") // Only numbers and /
-                                .replace(Regex("^([0-9]{2})([0-9]{2})"), "$1/$2") // Format as MM/YY
-                        }
-
-                        if (expiryDate.length == 5 && cardNumber.length == 16) {
-                            val cardData =
-                                CardData(cardNumber, expiryDate, "") // Create CardData object
-                            finish(CardFace.Front, cardData) // Pass CardData to finish
-                        }
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Done
-                    ),
-                    enabled = cardNumber.length >= 16, // Enable when card number is complete
-                    textStyle = TextStyle(
-                        color = Color.White
-                    ),
-                    decorationBox = { innerTextField ->
-                        Row(
-                            modifier = Modifier
-                                .padding(0.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            innerTextField()
-                        }
-                    },
-                    modifier = Modifier
-                        .focusRequester(focusRequester2)
+                Text(
+                    text = expiry,
+                    color = Color.White,
+                    fontSize = 17.sp
                 )
             }
         }
@@ -240,37 +209,6 @@ fun CardFront(finish: (CardFace, CardData) -> Unit) {
     }
 }
 
-
-class DigitsAndSpacesTransformation : VisualTransformation {
-    override fun filter(text: AnnotatedString): TransformedText {
-        // Allow only digits and spaces
-        val filteredText = text.text.filter { it.isDigit() || it.isWhitespace() }
-        val offsetMapping = object : OffsetMapping {
-            override fun originalToTransformed(offset: Int): Int {
-                var transformedOffset = 0
-                for (i in 0 until offset) {
-                    if (text.text[i].isDigit() || text.text[i].isWhitespace()) {
-                        transformedOffset++
-                    }
-                }
-                return transformedOffset
-            }
-
-            override fun transformedToOriginal(offset: Int): Int {
-                var originalOffset = 0
-                var transformedOffset = 0
-                while (transformedOffset < offset && originalOffset < text.text.length) {
-                    if (text.text[originalOffset].isDigit() || text.text[originalOffset].isWhitespace()) {
-                        transformedOffset++
-                    }
-                    originalOffset++
-                }
-                return originalOffset
-            }
-        }
-        return TransformedText(AnnotatedString(filteredText), offsetMapping)
-    }
-}
 
 fun formatCardNumber(number: String): TextFieldValue {  // Return TextFieldValue
     val formattedNumber = number.replace(" ", "").chunked(4).joinToString(" ")
