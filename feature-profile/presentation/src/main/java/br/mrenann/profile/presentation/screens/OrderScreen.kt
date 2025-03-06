@@ -14,8 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.Order
+import br.mrenann.profile.presentation.components.orders.PizzaReceiptView
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -57,8 +59,14 @@ data class OrderScreen(
                         fontSize = 18.sp
                     )
                 }
-
-
+                PizzaReceiptView(
+                    orderNumber = "12345",
+                    pizzaName = "Americano",
+                    pizzaQuantity = 2,
+                    pizzaPrice = "25 $",
+                    totalAmount = "25 $",
+                    contentColor = Color.DarkGray
+                )
             }
         }
     }
