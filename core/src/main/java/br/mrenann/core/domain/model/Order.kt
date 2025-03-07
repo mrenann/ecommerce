@@ -4,10 +4,14 @@ import com.google.firebase.firestore.ServerTimestamp
 import java.util.Date
 
 data class Order(
-    val priceFinal: Double = 0.0,
-    val status: String = "",
+    val card: String = "",
     val coupon: String = "",
-    val products: List<OrderProduct> = emptyList(),
     @ServerTimestamp val createdAt: Date? = null,
+    val discount: Double = 0.0,
+    val paymentMethid: String = "",
+    val price: Double = 0.0,
+    val priceFinal: Double = 0.0,
+    val products: List<OrderProduct> = emptyList(),
     @ServerTimestamp val deliveredAt: Date? = null,
+    val status: String = "",
 )

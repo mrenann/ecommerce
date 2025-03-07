@@ -23,7 +23,7 @@ import br.mrenann.core.domain.model.toOrderStatus
 import br.mrenann.core.util.formatToReadableDate
 import br.mrenann.navigation.LocalNavigatorParent
 import br.mrenann.profile.presentation.components.orders.OrderStatusInfo
-import br.mrenann.profile.presentation.components.orders.PizzaReceiptView
+import br.mrenann.profile.presentation.components.orders.ReceiptView
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -84,7 +84,7 @@ data class OrderScreen(
                     )
                 }
 
-                PizzaReceiptView(
+                ReceiptView(
                     order = order,
                     totalAmount = "25 $",
                     contentColor = Color.DarkGray

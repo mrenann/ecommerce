@@ -48,7 +48,7 @@ import coil3.request.crossfade
 
 
 @Composable
-fun PizzaReceiptView(
+fun ReceiptView(
     order: Order,
     totalAmount: String,
     contentColor: Color = Color.Black,
@@ -134,23 +134,64 @@ fun PizzaReceiptView(
 //            // Pizza Details
 
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             DashedLine(color = contentColor)
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            // Total Amount
+            if ((order.discount != 0.0) && order.priceFinal != order.price) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Sub total",
+                        style = MaterialTheme.typography.bodyLarge,
+
+                        )
+                    Text(
+                        text = order.price.formatBalance(),
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Bold,
+
+                        )
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = order.coupon,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.Red
+                    )
+                    Text(
+                        text = "- " + order.discount.formatBalance(),
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Red
+
+
+                    )
+                }
+
+            }
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "The order amount",
+                    text = "Total",
                     style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold,
 
                     )
                 Text(
-                    text = totalAmount,
+                    text = order.priceFinal.formatBalance(),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
 
@@ -227,7 +268,7 @@ class TriangleCutBottomShape(private val triangleHeightPx: Float) : Shape {
 @Composable
 fun PizzaReceiptViewPreview() {
     MaterialTheme {
-        PizzaReceiptView(
+        ReceiptView(
             order = Order(
                 priceFinal = 22.0,
                 status = "delivered",
