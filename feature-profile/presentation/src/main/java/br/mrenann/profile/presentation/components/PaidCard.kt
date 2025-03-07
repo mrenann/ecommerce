@@ -54,7 +54,7 @@ fun PaidCard(order: Order, color: Color) {
                 colorFilter = ColorFilter.tint(color)
             )
             Text(
-                text = if (order.card.isNullOrBlank()) order.card ?: "Pix" else order.card ?: "",
+                text = if (order.card.isNullOrBlank()) "Pix" else order.card ?: "",
                 fontSize = 14.sp,
                 lineHeight = 14.sp,
                 style = MaterialTheme.typography.bodyLarge,
