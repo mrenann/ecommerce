@@ -181,7 +181,7 @@ class CartScreen : Screen {
                         suffix = {
                             if (state is CartScreenModel.State.Result) {
                                 val result = state as CartScreenModel.State.Result
-                                if (result.state.discountApplied != null) {
+                                if (result.state.discountApplied != 0.0) {
                                     Text("PROMO APPLIED")
                                 }
                             }
