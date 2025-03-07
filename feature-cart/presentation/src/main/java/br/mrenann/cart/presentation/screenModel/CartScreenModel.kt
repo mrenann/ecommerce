@@ -47,6 +47,18 @@ class CartScreenModel(
 //        getProducts()
 //    }
 
+    fun setAddress(typeAddress: String, address: String) {
+        val currentState = state.value
+        if (currentState is Result) {
+            mutableState.value = Result(
+                currentState.state.copy(
+                    typeAddress = typeAddress,
+                    location = address
+                )
+            )
+        }
+    }
+
     fun resetCouponError() {
         val currentState = state.value
         if (currentState is Result) {

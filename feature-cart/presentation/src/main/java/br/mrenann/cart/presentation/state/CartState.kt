@@ -9,5 +9,7 @@ data class CartState(
     val discountApplied: Double = 0.0,
     val total: Double = 0.0,
     val couponCode: String? = null,
+    val typeAddress: String? = "",
+    val location: String? = "",
     val couponError: DiscountReason? = null
 )

@@ -12,5 +12,8 @@ data class Purchase(
     val status: String = "",
     val paymentMethod: String = "",
     val card: String? = "",
+    val typeAddress: String = "",
+    val location: String = "",
+    val sendTo: String = "",
 )
 

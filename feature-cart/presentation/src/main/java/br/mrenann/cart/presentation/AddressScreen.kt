@@ -52,9 +52,9 @@ data class AddressScreen(
                 AddressContent(
                     address = address,
                     navigatePop = { navigator.pop() },
-                    navigateToChooseArrive = { address ->
+                    navigateToChooseArrive = { type, address ->
                         navigator.push(
-                            WhenArriveScreen(address)
+                            WhenArriveScreen(type,address)
                         )
                     })
 
@@ -65,7 +65,7 @@ data class AddressScreen(
     @Composable
     fun AddressContent(
         navigatePop: () -> Boolean,
-        navigateToChooseArrive: (String) -> Unit,
+        navigateToChooseArrive: (String,String) -> Unit,
         address: Address?
     ) {
         Column {
@@ -133,13 +133,13 @@ data class AddressScreen(
         title: String,
         location: String,
         type: String,
-        navigate: (String) -> Unit
+        navigate: (String,String) -> Unit
     ) {
         Card(
             modifier = Modifier
                 .padding(12.dp)
                 .fillMaxWidth(),
-            onClick = { navigate(type) },
+            onClick = { navigate(type,location) },
             shape = RoundedCornerShape(4.dp)
         ) {
             Column {

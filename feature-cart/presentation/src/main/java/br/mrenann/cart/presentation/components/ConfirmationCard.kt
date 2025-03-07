@@ -228,6 +228,9 @@ fun ConfirmationCard(
                                     card = if (card != null) "**** ${card.cardNumber.takeLast(4)}" else null,
                                     paymentMethod = paymentMethod,
                                     createdAt = FieldValue.serverTimestamp(),
+                                    typeAddress = cartState.typeAddress ?: "",
+                                    location = cartState.location ?: "",
+                                    sendTo = Firebase.auth.currentUser?.displayName ?: "",
                                     status = "awaiting_payment"
                                 )
                                 ordersRef.set(completeCardData)
