@@ -49,11 +49,10 @@ data class PixScreen(val total: Double) : Screen {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xFF1DBC60)) // Verde Pix
+                    .background(Color(0xFF1DBC60))
                     .padding(innerPadding)
                     .padding(horizontal = 12.dp)
             ) {
-                // Header (Fechar)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -61,7 +60,7 @@ data class PixScreen(val total: Double) : Screen {
                     IconButton(onClick = { navigator?.popAll() }) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "Fechar",
+                            contentDescription = "Close",
                             tint = Color.White
                         )
                     }
@@ -71,7 +70,7 @@ data class PixScreen(val total: Double) : Screen {
 
                 // Título
                 Text(
-                    text = "Pague ${total.formatBalance()} via Pix para garantir sua compra",
+                    text = "Pay ${total.formatBalance()} via Pix to secure your purchase",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
@@ -87,13 +86,12 @@ data class PixScreen(val total: Double) : Screen {
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text("Copie este código para pagar", fontWeight = FontWeight.Bold)
-
+                        Text("Copy this code to pay", fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        Text("1. Acesse seu Internet Banking ou app de pagamentos.")
-                        Text("2. Escolha pagar via Pix.")
-                        Text("3. Cole o seguinte código:")
+                        Text("1. Access your Internet Banking or payment app.")
+                        Text("2. Choose to pay via Pix.")
+                        Text("3. Paste the following code:")
 
                         Spacer(modifier = Modifier.height(8.dp))
 
@@ -115,7 +113,7 @@ data class PixScreen(val total: Double) : Screen {
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        Text("💳 Pague e será creditado na hora", fontSize = 12.sp)
+                        Text("💳 Pay and it will be credited instantly", fontSize = 12.sp)
 
                         Spacer(modifier = Modifier.height(16.dp))
 
@@ -126,13 +124,13 @@ data class PixScreen(val total: Double) : Screen {
                                     context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                                 val clip = ClipData.newPlainText("Pix Code", pixCode)
                                 clipboard.setPrimaryClip(clip)
-                                Toast.makeText(context, "Código copiado!", Toast.LENGTH_SHORT)
+                                Toast.makeText(context, "Code copied!", Toast.LENGTH_SHORT)
                                     .show()
                             },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(8.dp)
                         ) {
-                            Text("Copiar código")
+                            Text("Copy code")
                         }
 
                         Spacer(modifier = Modifier.height(8.dp))

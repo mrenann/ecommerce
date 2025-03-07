@@ -55,7 +55,7 @@ fun ChoosePaymentContent(
                 PaymentOption(
                     icon = painterResource(R.drawable.ic_pix), // Replace
                     title = "Pix",
-                    subtitle = "Aprovação imediata",
+                    subtitle = "Immediate approval",
                     cashback = "",
                     recommended = true,
                     click = goToNext
@@ -145,7 +145,7 @@ fun PaymentOption(
 
         if (recommended) {
             Text(
-                text = "RECOMENDADO",
+                text = "RECOMMENDED",
                 color = Color.White,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,

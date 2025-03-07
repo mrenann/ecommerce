@@ -74,7 +74,7 @@ data class CardScreen(val total: Double, val card: Card) : Screen {
 
                 // Título
                 Text(
-                    text = "Será cobrado ${total.formatBalance()} do seu cartão",
+                    text = "Your card will be charged ${total.formatBalance()}",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
