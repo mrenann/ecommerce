@@ -147,7 +147,8 @@ class CartScreenModel(
                     ).collectLatest { result ->
                         when (result) {
                             is ApplyCouponUseCase.Result.Invalid -> {
-                                Log.i("COUPON", "INVALID")
+                                val (errorTitle, errorMessage) = result.reason.toPair()
+
                             }
 
                             is ApplyCouponUseCase.Result.Success -> {

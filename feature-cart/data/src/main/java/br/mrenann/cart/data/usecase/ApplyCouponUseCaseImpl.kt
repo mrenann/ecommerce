@@ -4,6 +4,7 @@ import android.util.Log
 import br.mrenann.cart.domain.repository.CartRepository
 import br.mrenann.cart.domain.usecase.ApplyCouponUseCase
 import br.mrenann.core.data.firestore.repository.FavoritesFirestoreRepository
+import br.mrenann.core.domain.model.DiscountReason
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -12,14 +13,14 @@ import java.util.Calendar
 import java.util.Locale
 
 class ApplyCouponUseCaseImpl(
-    private val firestoreRepository: FavoritesFirestoreRepository, // Renamed for clarity
+    private val firestoreRepository: FavoritesFirestoreRepository,
     private val cartRepository: CartRepository
 ) : ApplyCouponUseCase {
     override suspend fun invoke(params: ApplyCouponUseCase.Params): Flow<ApplyCouponUseCase.Result> {
         return flow {
             val coupon = firestoreRepository.getCoupon(params.code)
             if (coupon == null) {
-                emit(ApplyCouponUseCase.Result.Invalid)
+                emit(ApplyCouponUseCase.Result.Invalid(DiscountReason.COUPON_NOT_FOUND))
                 return@flow
             }
 
@@ -29,7 +30,6 @@ class ApplyCouponUseCaseImpl(
             val maxDiscount = (coupon.maxDiscount as? Number)?.toDouble() ?: Double.MAX_VALUE
             val expirationDateStr = coupon.expirationDate as? String ?: ""
 
-
             // Validate expiration date
             val currentDate = Calendar.getInstance().time
             val expiryDate =
@@ -37,20 +37,20 @@ class ApplyCouponUseCaseImpl(
                     expirationDateStr
                 )
             if (expiryDate != null && expiryDate.before(currentDate)) {
-                emit(ApplyCouponUseCase.Result.Invalid)
+                emit(ApplyCouponUseCase.Result.Invalid(DiscountReason.COUPON_EXPIRED))
                 return@flow
             }
 
             // Validate minimum purchase
             if (params.subtotal < minPurchase) {
-                emit(ApplyCouponUseCase.Result.Invalid)
+                emit(ApplyCouponUseCase.Result.Invalid(DiscountReason.MIN_PURCHASE_NOT_MET))
                 return@flow
             }
 
             // Check if the user can redeem the coupon (using Firestore)
             val isRedeemed = firestoreRepository.redeemCoupon(params.userId, params.code)
             if (!isRedeemed) {
-                emit(ApplyCouponUseCase.Result.Invalid)
+                emit(ApplyCouponUseCase.Result.Invalid(DiscountReason.COUPON_ALREADY_REDEEMED))
                 return@flow
             }
 
@@ -75,7 +75,7 @@ class ApplyCouponUseCaseImpl(
                 }
 
                 else -> {
-                    emit(ApplyCouponUseCase.Result.Invalid) // Unknown discount type
+                    emit(ApplyCouponUseCase.Result.Invalid(DiscountReason.INVALID_DISCOUNT_TYPE))
                     return@flow // Exit the flow
                 }
             }
@@ -83,10 +83,9 @@ class ApplyCouponUseCaseImpl(
             cartRepository.addCoupon(params.code, discountPercentage, discountAmount, isFixedAmount)
             emit(ApplyCouponUseCase.Result.Success(coupon, discountAmount)) // Emit success
 
-        }.catch { e ->  //Catch the exceptions
+        }.catch { e ->  // Catch the exceptions
             Log.e("ApplyCouponUseCase", "Error applying coupon: ${e.message}", e)
-            emit(ApplyCouponUseCase.Result.Invalid)
+            emit(ApplyCouponUseCase.Result.Invalid(DiscountReason.UNKNOWN_ERROR))
         }
     }
 }
-
