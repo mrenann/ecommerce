@@ -216,8 +216,12 @@ fun ConfirmationCard(
                                 .document()
                         val completeCardData = Purchase(
                             priceFinal = cartState.total,
-                            coupon = "",
+                            price = cartState.total + cartState.discountApplied,
+                            discount = cartState.discountApplied,
+                            coupon = cartState.couponCode ?: "",
                             products = products,
+                            card = if (card != null) "**** ${card.cardNumber.takeLast(4)}" else null,
+                            paymentMethod = paymentMethod,
                             createdAt = FieldValue.serverTimestamp(),
                             status = "awaiting_payment"
                         )
@@ -246,48 +250,49 @@ fun ConfirmationCard(
         }
     }
 }
-    @Preview
-    @Composable
-    fun ConfirmationCardPreview() {
-        ConfirmationCard(
-            card = null,
-            paymentMethod = "pix",
-            cartState = CartState(
-                total = 100.0,
-                itemsCount = 2,
-                products = listOf<ProductCart>(
-                    ProductCart(
+
+@Preview
+@Composable
+fun ConfirmationCardPreview() {
+    ConfirmationCard(
+        card = null,
+        paymentMethod = "pix",
+        cartState = CartState(
+            total = 100.0,
+            itemsCount = 2,
+            products = listOf<ProductCart>(
+                ProductCart(
+                    id = 1,
+                    title = "Title",
+                    price = 10.0,
+                    description = "Description",
+                    category = Category(
                         id = 1,
-                        title = "Title",
-                        price = 10.0,
-                        description = "Description",
-                        category = Category(
-                            id = 1,
-                            name = "category"
-                        ),
-                        images = listOf("image1", "image2"),
-                        qtd = 1,
-                        priceFinal = 10.0,
+                        name = "category"
                     ),
-                    ProductCart(
-                        id = 2,
-                        title = "Title",
-                        price = 10.0,
-                        description = "Description",
-                        images = listOf("image1", "image2"),
-                        qtd = 1,
-                        priceFinal = 10.0,
-                        category = Category(
-                            id = 1,
-                            name = "category"
-                        ),
-
-                        ),
+                    images = listOf("image1", "image2"),
+                    qtd = 1,
+                    priceFinal = 10.0,
+                ),
+                ProductCart(
+                    id = 2,
+                    title = "Title",
+                    price = 10.0,
+                    description = "Description",
+                    images = listOf("image1", "image2"),
+                    qtd = 1,
+                    priceFinal = 10.0,
+                    category = Category(
+                        id = 1,
+                        name = "category"
+                    ),
 
                     ),
-                discountApplied = 10.0,
-                couponCode = "DISCOUNT10"
-            ),
-            replaceAll = {}
-        )
-    }
+
+                ),
+            discountApplied = 10.0,
+            couponCode = "DISCOUNT10"
+        ),
+        replaceAll = {}
+    )
+}
