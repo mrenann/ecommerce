@@ -21,6 +21,7 @@ import br.mrenann.core.domain.model.Order
 import br.mrenann.core.domain.model.OrderStatus
 import br.mrenann.core.domain.model.toOrderStatus
 import br.mrenann.core.util.formatToReadableDate
+import br.mrenann.navigation.LocalNavigatorParent
 import br.mrenann.profile.presentation.components.orders.OrderStatusInfo
 import br.mrenann.profile.presentation.components.orders.PizzaReceiptView
 import cafe.adriel.voyager.core.screen.Screen
@@ -36,6 +37,8 @@ data class OrderScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        val navigatorParent = LocalNavigatorParent.currentOrThrow
+
 
         Scaffold(
             modifier = Modifier.fillMaxSize()
@@ -83,10 +86,6 @@ data class OrderScreen(
 
                 PizzaReceiptView(
                     order = order,
-                    orderNumber = "12345",
-                    pizzaName = "Americano",
-                    pizzaQuantity = 2,
-                    pizzaPrice = "25 $",
                     totalAmount = "25 $",
                     contentColor = Color.DarkGray
                 )

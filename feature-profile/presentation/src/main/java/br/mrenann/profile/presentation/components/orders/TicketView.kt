@@ -2,6 +2,7 @@ package br.mrenann.profile.presentation.components.orders
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +38,10 @@ import androidx.compose.ui.unit.dp
 import br.mrenann.core.domain.model.Order
 import br.mrenann.core.domain.model.OrderProduct
 import br.mrenann.core.util.formatBalance
+import br.mrenann.navigation.LocalNavigatorParent
+import br.mrenann.navigation.SharedScreen
+import cafe.adriel.voyager.core.registry.rememberScreen
+import cafe.adriel.voyager.navigator.currentOrThrow
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -45,15 +50,12 @@ import coil3.request.crossfade
 @Composable
 fun PizzaReceiptView(
     order: Order,
-    orderNumber: String,
-    pizzaName: String,
-    pizzaQuantity: Int,
-    pizzaPrice: String,
     totalAmount: String,
     contentColor: Color = Color.Black,
     content: @Composable () -> Unit = @Composable {},
 
     ) {
+    val navigator = LocalNavigatorParent.currentOrThrow
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -76,10 +78,17 @@ fun PizzaReceiptView(
             ) {
                 items(order.products.size) {
                     val orderProduct = order.products[it]
+                    val detailsScreen =
+                        rememberScreen(SharedScreen.ProductDetails(id = orderProduct.id))
+
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                navigator.push(detailsScreen)
+                            }
                     ) {
                         // Pizza Image and Description
                         Row(
@@ -219,12 +228,6 @@ class TriangleCutBottomShape(private val triangleHeightPx: Float) : Shape {
 fun PizzaReceiptViewPreview() {
     MaterialTheme {
         PizzaReceiptView(
-            orderNumber = "12345",
-            pizzaName = "Americano",
-            pizzaQuantity = 2,
-            pizzaPrice = "25 $",
-            totalAmount = "25 $",
-            contentColor = Color.DarkGray,
             order = Order(
                 priceFinal = 22.0,
                 status = "delivered",
@@ -255,7 +258,9 @@ fun PizzaReceiptViewPreview() {
                         price = 22.0,
                     )
                 ),
-            )
+            ),
+            totalAmount = "25 $",
+            contentColor = Color.DarkGray,
         )
     }
 }

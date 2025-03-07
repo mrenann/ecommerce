@@ -16,7 +16,7 @@ fun OrderList(orders: List<Order>, navigateToDetails: (Order) -> Unit) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(12.dp)
+            .padding(horizontal = 12.dp)
     ) {
         items(orders) { order ->
             OrderCard(

@@ -62,7 +62,7 @@ class OrdersScreen : Screen { // Pass the orders list
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
+                    .padding(top = innerPadding.calculateTopPadding())
             ) {
                 Row(
                     modifier = Modifier
