@@ -5,7 +5,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.OrderStatus
+import br.mrenann.profile.presentation.components.TimelineView
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Outline
 import compose.icons.evaicons.outline.Link
@@ -99,11 +99,52 @@ fun OrderStatusInfo(
             }
         }
 
+        if (status == OrderStatus.ON_THE_WAY) {
+            TimelineView(
+                listOf(
+                    TimelineStep(
+                        OrderStatusEnum.SHIPPED.name,
+                        true,
+                        "Your order has been confirmed and is now being prepared."
+                    ),
+                    TimelineStep(
+                        OrderStatusEnum.ON_THE_ROAD.name,
+                        true,
+                        "Your order is on the way! Expect a quick delivery soon."
+                    ),
+                    TimelineStep(
+                        OrderStatusEnum.DISPATCHED.name,
+                        false,
+                        "We're getting everything ready for your delivery."
+                    ),
+                    TimelineStep(
+                        OrderStatusEnum.EN_ROUTE.name,
+                        false,
+                        "Your order is on the road! It's scheduled to arrive shortly."
+                    ),
+                )
+            )
+        }
     }
 }
+
+
+data class TimelineStep(
+    val status: String,
+    val isCompleted: Boolean,
+    val description: String? = null // Optional description for the step
+)
+
+enum class OrderStatusEnum {
+    SHIPPED,
+    ON_THE_ROAD,
+    DISPATCHED,
+    EN_ROUTE,
+}
+
 
 @Composable
 @Preview
 fun OrderStatusInfoPreview() {
-    OrderStatusInfo(status = OrderStatus.PAID, subtitle = "Tuesday, October 1, 16:45")
+    OrderStatusInfo(status = OrderStatus.ON_THE_WAY, subtitle = "")
 }

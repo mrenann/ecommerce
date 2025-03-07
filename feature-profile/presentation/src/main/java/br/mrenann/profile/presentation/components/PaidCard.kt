@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.Order
+import br.mrenann.core.util.formatBalance
 import br.mrenann.profile.presentation.R
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Fill
@@ -53,12 +54,20 @@ fun PaidCard(order: Order, color: Color) {
                 modifier = Modifier.size(24.dp),
                 colorFilter = ColorFilter.tint(color)
             )
-            Text(
-                text = if (order.card.isNullOrBlank()) "Pix" else order.card ?: "",
-                fontSize = 14.sp,
-                lineHeight = 14.sp,
-                style = MaterialTheme.typography.bodyLarge,
-            )
+            Column {
+                Text(
+                    text = if (order.card.isNullOrBlank()) "Pix" else order.card ?: "",
+                    fontSize = 14.sp,
+                    lineHeight = 14.sp,
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+                Text(
+                    text = order.priceFinal.formatBalance(),
+                    fontSize = 14.sp,
+                    lineHeight = 14.sp,
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            }
 
         }
     }
