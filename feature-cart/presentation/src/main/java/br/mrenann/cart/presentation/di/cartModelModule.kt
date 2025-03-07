@@ -3,6 +3,7 @@ package br.mrenann.cart.presentation.di
 import br.mrenann.cart.domain.usecase.AddCartUseCase
 import br.mrenann.cart.domain.usecase.ApplyCouponUseCase
 import br.mrenann.cart.domain.usecase.ClearCartUseCase
+import br.mrenann.cart.domain.usecase.ClearCouponUseCase
 import br.mrenann.cart.domain.usecase.DecreaseUseCase
 import br.mrenann.cart.domain.usecase.DeleteCartUseCase
 import br.mrenann.cart.domain.usecase.GetCartTotalUseCase
@@ -21,7 +22,9 @@ val cartModelModule = module {
             get<ApplyCouponUseCase>(),
             get<GetCartTotalUseCase>(),
             get<IncreaseUseCase>(),
-            get<DecreaseUseCase>()
+            get<DecreaseUseCase>(),
+            get<ClearCouponUseCase>()
+
 
         )
     }

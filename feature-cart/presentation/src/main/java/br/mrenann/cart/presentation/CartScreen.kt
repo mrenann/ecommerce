@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -20,7 +21,6 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,28 +54,6 @@ class CartScreen : Screen {
         val state by screenModel.state.collectAsState()
 
         var promoCode by remember { mutableStateOf("") }
-        var discountPercentage by remember { mutableStateOf(0.0) }
-
-        // Update the discountPercentage whenever the state changes
-        LaunchedEffect(state) {
-            if (state is CartScreenModel.State.Result) {
-                val newDiscount =
-                    (state as CartScreenModel.State.Result).state.discountApplied
-                if (newDiscount != discountPercentage) {
-                    discountPercentage = newDiscount
-                }
-            }
-        }
-
-        val subtotal = state.let {
-            if (it is CartScreenModel.State.Result) {
-                it.state.products.sumOf { product -> (product.price * product.qtd) }
-            } else 0.0
-        }
-        val deliveryFee = 0.00
-        val total = (subtotal - discountPercentage) + deliveryFee
-
-
 
         Scaffold(
             modifier = Modifier
@@ -114,6 +92,11 @@ class CartScreen : Screen {
 
                 // Cart Items
                 when (state) {
+                    is CartScreenModel.State.Loading -> {
+                        // Show loading indicator
+                        CircularProgressIndicator()
+                    }
+
                     is CartScreenModel.State.Result -> {
                         val result = state as CartScreenModel.State.Result
                         LazyColumn(
@@ -140,7 +123,9 @@ class CartScreen : Screen {
                         }
                     }
 
-                    else -> {}
+                    is CartScreenModel.State.Init -> {
+                        Text("Your cart is empty.")
+                    }
                 }
 
                 // Promo Code Input and Checkout Summary
@@ -158,22 +143,28 @@ class CartScreen : Screen {
                         placeholder = { Text("Has Promo Code") },
                         trailingIcon = {
                             IconButton(onClick = {
-                                if (promoCode.isNotBlank()) {
-                                    screenModel.applyCoupon(
-                                        userId = "123",
-                                        code = promoCode,
-                                        subtotal = subtotal.toDouble()
-                                    )
-                                    if (state is CartScreenModel.State.Result) {
-                                        discountPercentage =
-                                            (state as CartScreenModel.State.Result).state.discountApplied
+                                if (state is CartScreenModel.State.Result) {
+                                    val result = state as CartScreenModel.State.Result
+
+                                    if (promoCode.isNotBlank() && result.state.discountApplied == 0.0) {
+                                        screenModel.applyCoupon(
+                                            userId = "123", // Replace with actual user ID
+                                            code = promoCode,
+                                        )
+                                    }
+
+
+                                    if (result.state.discountApplied > 0) {
+                                        screenModel.removeCoupon()
                                     }
                                 }
                             }) {
+                                val hasDiscount =
+                                    (state as? CartScreenModel.State.Result)?.state?.discountApplied ?: 0.0 > 0.0
                                 Icon(
                                     imageVector = EvaIcons.Fill.CheckmarkCircle2,
                                     contentDescription = "Apply Promo",
-                                    tint = if (discountPercentage != 0.0) Color(0xFF48D861) else Color.Gray
+                                    tint = if (hasDiscount) Color(0xFF48D861) else Color.Gray
                                 )
 
                             }
@@ -200,44 +191,47 @@ class CartScreen : Screen {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Price Breakdown
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("Subtotal:", style = MaterialTheme.typography.bodyMedium)
-                            Text(subtotal.formatBalance())
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("Delivery Fee:", style = MaterialTheme.typography.bodyMedium)
-                            Text(text = "Free", color = Color(0xFF48D861))
-                        }
-                        if (discountPercentage != 0.0) {
+                    if (state is CartScreenModel.State.Result) {
+                        val resultState = (state as CartScreenModel.State.Result).state
+                        Column(modifier = Modifier.fillMaxWidth()) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text("Discount:", style = MaterialTheme.typography.bodyMedium)
-                                Text("- " + discountPercentage.formatBalance())
+                                Text("Subtotal:", style = MaterialTheme.typography.bodyMedium)
+                                Text(resultState.products.sumOf { it.price * it.qtd }
+                                    .formatBalance())
                             }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text("Delivery Fee:", style = MaterialTheme.typography.bodyMedium)
+                                Text(text = "Free", color = Color(0xFF48D861))
+                            }
+                            if (resultState.discountApplied != 0.0) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text("Discount:", style = MaterialTheme.typography.bodyMedium)
+                                    Text("- " + resultState.discountApplied.formatBalance())
+                                }
+                            }
+
                         }
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Checkout Button
 
 
-                    if (state is CartScreenModel.State.Result) {
-                        val resultState = (state as CartScreenModel.State.Result).state
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Checkout Button
+
+
                         val text =
                             if (resultState.products.isEmpty()) {
                                 "Cart Empty"
                             } else {
-                                "Checkout for ${total.formatBalance()}"
+                                "Checkout for ${resultState.total.formatBalance()}"
                             }
                         Button(
                             onClick = { navigator.push(PreparingScreen()) },
@@ -254,11 +248,8 @@ class CartScreen : Screen {
                             )
                         }
                     }
-
                 }
             }
         }
     }
-
-
 }

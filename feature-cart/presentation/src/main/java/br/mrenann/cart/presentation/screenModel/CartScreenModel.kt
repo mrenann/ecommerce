@@ -5,6 +5,7 @@ import br.mrenann.cart.domain.usecase.AddCartUseCase
 import br.mrenann.cart.domain.usecase.AddCartUseCase.Params
 import br.mrenann.cart.domain.usecase.ApplyCouponUseCase
 import br.mrenann.cart.domain.usecase.ClearCartUseCase
+import br.mrenann.cart.domain.usecase.ClearCouponUseCase
 import br.mrenann.cart.domain.usecase.DecreaseUseCase
 import br.mrenann.cart.domain.usecase.DeleteCartUseCase
 import br.mrenann.cart.domain.usecase.GetCartTotalUseCase
@@ -28,20 +29,28 @@ class CartScreenModel(
     private val applyCouponUseCase: ApplyCouponUseCase,
     private val getCartTotalUseCase: GetCartTotalUseCase,
     private val increaseUseCase: IncreaseUseCase,
-    private val decreaseUseCase: DecreaseUseCase
+    private val decreaseUseCase: DecreaseUseCase,
+    private val clearCouponUseCase: ClearCouponUseCase
 ) : StateScreenModel<CartScreenModel.State>(State.Init) {
+
     sealed class State {
         object Init : State()
         object Loading : State()
         data class Result(val state: CartState) : State()
     }
 
-    fun addProduct(product: ProductCart) {
-        event(CartEvent.AddProduct(product))
-    }
+    private var currentSubtotal: Double = 0.0
 
     init {
         getProducts()
+    }
+
+    fun removeCoupon() { // Add removeCoupon function
+        event(CartEvent.RemoveCoupon)
+    }
+
+    fun addProduct(product: ProductCart) {
+        event(CartEvent.AddProduct(product))
     }
 
     fun getProducts() {
@@ -56,9 +65,11 @@ class CartScreenModel(
         event(CartEvent.CountItems)
     }
 
-    fun applyCoupon(userId: String, code: String, subtotal: Double) {
-        event(CartEvent.ApplyCoupon(userId, code, subtotal))
+    fun applyCoupon(userId: String, code: String) {
+        // Use the stored subtotal
+        event(CartEvent.ApplyCoupon(userId, code, currentSubtotal))
     }
+
 
     fun removeProduct(product: ProductCart) {
         event(CartEvent.RemoveProduct(product))
@@ -73,128 +84,100 @@ class CartScreenModel(
     }
 
     private fun event(event: CartEvent) {
-        when (event) {
-            is CartEvent.AddProduct -> {
-                screenModelScope.launch {
-                    addUseCase.invoke(Params(event.product))
-                        .collectLatest { result -> }
+        screenModelScope.launch { // All events now launch coroutines
+            when (event) {
+                is CartEvent.AddProduct -> {
+                    addUseCase.invoke(Params(event.product)).collectLatest { }
                 }
-            }
 
-            is CartEvent.GetProducts -> {
-                screenModelScope.launch {
-                    val cartTotal = getCartTotalUseCase.invoke().first()
-                    getUseCase.invoke().collectLatest { result ->
+                is CartEvent.GetProducts -> {
+                    getUseCase.invoke().collectLatest { products ->
+                        // Recalculate subtotal whenever products change
+                        currentSubtotal = products.sumOf { it.price * it.qtd }
+                        val cartTotal = getCartTotalUseCase.invoke().first()
                         mutableState.value = Result(
                             CartState(
-                                products = result,
-                                itemsCount = result.size,
+                                products = products,
+                                itemsCount = products.size,
                                 total = cartTotal
                             )
-                        )
+                        ) //Pass cart total here
                     }
                 }
-            }
 
-            CartEvent.ClearCart -> {
-                screenModelScope.launch {
+                CartEvent.ClearCart -> {
                     clearUseCase.invoke().collectLatest {
-                        mutableState.value = Result(
-                            CartState(
-                                products = emptyList(),
-                                itemsCount = 0
-                            )
-                        )
+                        mutableState.value =
+                            Result(CartState(products = emptyList(), itemsCount = 0))
                     }
                 }
-            }
 
-            CartEvent.CountItems -> {
-                screenModelScope.launch {
-                    getUseCase.invoke().collectLatest { result ->
-                        mutableState.value = Result(
-                            CartState(
-                                products = emptyList(),
-                                itemsCount = result.size
+                CartEvent.RemoveCoupon -> { // Handle RemoveCoupon event
+                    clearCouponUseCase().collectLatest {
+                        // Reset discountApplied and update the total
+                        val currentState = state.value
+                        if (currentState is Result) {
+                            mutableState.value = Result(
+                                currentState.state.copy(
+                                    discountApplied = 0.0,
+                                    total = currentSubtotal // Reset to subtotal
+                                )
                             )
-                        )
+                        }
                     }
                 }
-            }
 
-            is CartEvent.ApplyCoupon -> {
-                screenModelScope.launch {
-                    applyCouponUseCase.invoke(
+                CartEvent.CountItems -> {
+                    getUseCase.invoke().collectLatest { products ->
+                        mutableState.value =
+                            Result(CartState(products = emptyList(), itemsCount = products.size))
+                    }
+                }
+
+                is CartEvent.ApplyCoupon -> {
+                    applyCouponUseCase(
                         ApplyCouponUseCase.Params(
                             userId = event.userId,
                             code = event.code,
                             subtotal = event.subtotal
                         )
                     ).collectLatest { result ->
-                        val currentState = mutableState.value
-
-
                         when (result) {
                             is ApplyCouponUseCase.Result.Invalid -> {
                                 Log.i("COUPON", "INVALID")
-                                if (currentState is Result) {
-                                    mutableState.value = Result(
-                                        currentState.state.copy(
-                                            discountApplied = 0.0
-                                        )
-                                    )
-                                }
+                                //  Could add an error message state here
                             }
 
                             is ApplyCouponUseCase.Result.Success -> {
                                 Log.i("COUPON", "SUCCESS")
-
+                                // Update the UI state to reflect the applied coupon
+                                // We no longer need to modify individual product prices.
+                                val currentState = state.value
                                 if (currentState is Result) {
-                                    val updatedProducts =
-                                        currentState.state.products.map { product ->
-                                            val discountFactor =
-                                                1 - (result.discountAmount / currentState.state.total)
-                                            product.copy(priceFinal = product.price * discountFactor)
-                                        }
-
                                     mutableState.value = Result(
                                         currentState.state.copy(
-                                            products = updatedProducts,
-                                            discountApplied = result.discountAmount,
-                                            total = currentState.state.total - result.discountAmount
+                                            discountApplied = result.discountAmount, // Store discount
+                                            total = currentSubtotal - result.discountAmount//update the total.
                                         )
                                     )
                                 }
                             }
-
                         }
-
                     }
                 }
-            }
 
-            is CartEvent.RemoveProduct -> {
-                screenModelScope.launch {
-                    removeUseCase.invoke(DeleteCartUseCase.Params(event.product))
-                        .collectLatest { }
+                is CartEvent.RemoveProduct -> {
+                    removeUseCase.invoke(DeleteCartUseCase.Params(event.product)).collectLatest {}
                 }
-            }
 
-            is CartEvent.decreaseQuantity -> {
-                screenModelScope.launch {
-                    decreaseUseCase.invoke(DecreaseUseCase.Params(event.id))
-                        .collectLatest { result -> }
+                is CartEvent.decreaseQuantity -> {
+                    decreaseUseCase.invoke(DecreaseUseCase.Params(event.id)).collectLatest { }
                 }
-            }
 
-            is CartEvent.increaseQuantity -> {
-                screenModelScope.launch {
-                    increaseUseCase.invoke(IncreaseUseCase.Params(event.id))
-                        .collectLatest { result -> }
+                is CartEvent.increaseQuantity -> {
+                    increaseUseCase.invoke(IncreaseUseCase.Params(event.id)).collectLatest { }
                 }
             }
         }
     }
-
-
 }
