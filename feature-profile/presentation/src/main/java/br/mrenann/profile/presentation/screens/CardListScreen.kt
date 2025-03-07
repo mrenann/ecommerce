@@ -8,13 +8,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,15 +34,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import br.mrenann.profile.presentation.components.CardItem
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -310,33 +306,5 @@ class CardListScreen : Screen {
         }
     }
 
-    @Composable
-    fun CardItem(card: Card, index: Int, modifier: Modifier = Modifier) {
-        val backgroundColor = if (index % 2 == 0) Color(0xFFFF7F33) else Color(0xFF735DFF)
 
-        Column(
-            modifier = modifier
-                .width(200.dp)
-                .height(185.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(backgroundColor)
-                .padding(16.dp)
-        ) {
-            Text(
-                text = card.type,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "**** ${card.cardNumber.takeLast(4)}",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.White
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "Exp ${card.expiryDate}", fontSize = 14.sp, color = Color.White)
-        }
-    }
 }

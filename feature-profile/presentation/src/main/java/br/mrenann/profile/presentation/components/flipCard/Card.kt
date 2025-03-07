@@ -16,7 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import br.mrenann.core.domain.model.CardBrand
 
-data class CardData(val cardNumber: String, val expiryDate: String, val cvv: String)
+data class CardData(
+    val type: String,
+    val cardNumber: String,
+    val expiryDate: String,
+    val cvv: String
+)
 
 @Composable
 fun Card(
@@ -48,38 +53,13 @@ fun Card(
                 CardFront(
                     cardBrand = cardBrand,
                     number = number,
-                    expiry = expiry,
-                    finish = { cardFace, data -> // Update lambda to receive CardData
-
-//                        state = cardFace.flip()
-                    })
+                    expiry = expiry
+                )
             },
             back = {
                 CardBack(
-                    cvv = cvv,
-                    finish = { cardFace, code ->
-//                    cvv = code // Store CVV from CardBack
-//                    // Combine cardData and cvv and send to Firestore
-//                    val db = Firebase.firestore
-//                    val userId = Firebase.auth.currentUser?.uid
-//
-//                    if (userId != null && cardData != null) { // Check if cardData is available
-//                        val cardRef =
-//                            db.collection("users").document(userId).collection("cards").document()
-//                        val completeCardData = cardData!!.copy(cvv = cvv) // Add cvv to cardData
-//                        cardRef.set(completeCardData)
-//                            .addOnSuccessListener {
-//                                // Handle success
-////                                state = cardFace.flip()
-//                            }
-//                            .addOnFailureListener {
-//                                // Handle error
-//                            }
-//                    } else {
-//                        // Handle error: User not logged in or cardData not available
-//                    }
-
-                    })
+                    cvv = cvv
+                )
             }
         )
     }

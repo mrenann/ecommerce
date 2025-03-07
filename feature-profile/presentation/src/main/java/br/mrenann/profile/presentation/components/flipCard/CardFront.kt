@@ -48,7 +48,6 @@ import compose.icons.simpleicons.Visa
 
 @Composable
 fun CardFront(
-    finish: (CardFace, CardData) -> Unit,
     number: String,
     expiry: String,
     cardBrand: CardBrand

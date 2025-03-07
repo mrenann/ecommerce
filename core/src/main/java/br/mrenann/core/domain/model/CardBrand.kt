@@ -1,6 +1,6 @@
 package br.mrenann.core.domain.model
 
-enum class CardBrand(val regex: Regex) {
+enum class CardBrand(val regex: Regex = "".toRegex()) {
     VISA("^4[0-9]{6,}$".toRegex()),
     MASTERCARD("^5[1-5][0-9]{5,}$".toRegex()),
     AMEX("^3[47][0-9]{5,}$".toRegex()),

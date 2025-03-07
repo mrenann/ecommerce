@@ -3,11 +3,13 @@ package br.mrenann.profile.presentation.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,12 +32,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.CardBrand
 import br.mrenann.profile.presentation.components.flipCard.Card
+import br.mrenann.profile.presentation.components.flipCard.CardData
 import br.mrenann.profile.presentation.components.flipCard.CardFace
 import br.mrenann.profile.presentation.util.DigitsAndSpacesTransformation
 import br.mrenann.profile.presentation.util.formatCardNumber
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Fill
 import compose.icons.evaicons.Outline
@@ -208,6 +214,43 @@ class CardScreen : Screen {
                             )
                         )
                     }
+                }
+
+                Spacer(modifier = Modifier.weight(1F))
+
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
+                    shape = RoundedCornerShape(10.dp),
+                    enabled = cvv.length == 3 && number.length == 16 && expiry.length >= 4,
+                    onClick = {
+                        val db = Firebase.firestore
+                        val userId = Firebase.auth.currentUser?.uid
+
+                        if (userId != null) { // Check if cardData is available
+                            val cardRef =
+                                db.collection("users").document(userId).collection("cards")
+                                    .document()
+                            val completeCardData = CardData(
+                                cardNumber = number,
+                                expiryDate = expiry,
+                                cvv = cvv,
+                                type = cardBrand.name
+                            )
+                            cardRef.set(completeCardData)
+                                .addOnSuccessListener {
+                                    navigator.pop()
+                                }
+                                .addOnFailureListener {
+                                    // Handle error
+                                }
+                        } else {
+                            // Handle error: User not logged in or cardData not available
+                        }
+                    }
+                ) {
+                    Text("Add Card")
                 }
             }
         }

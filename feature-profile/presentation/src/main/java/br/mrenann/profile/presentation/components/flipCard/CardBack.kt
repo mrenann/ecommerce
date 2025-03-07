@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CardBack(finish: (CardFace, String) -> Unit, cvv: String) { // Add finish parameter
+fun CardBack(cvv: String) { // Add finish parameter
     var code by remember { mutableStateOf("") }
     Column(
         modifier = Modifier
