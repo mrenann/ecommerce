@@ -1,5 +1,6 @@
 package br.mrenann.cart.presentation.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,6 +50,8 @@ import com.google.firebase.firestore.firestore
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Fill
 import compose.icons.evaicons.fill.CreditCard
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 
 @Composable
@@ -58,6 +62,7 @@ fun ConfirmationCard(
     replaceAll: () -> Unit,
 ) {
     var loading by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
     Column {
         Card(
             modifier = Modifier
@@ -205,36 +210,54 @@ fun ConfirmationCard(
                 enabled = loading.not(),
                 onClick = {
                     loading = true
-                    val db = Firebase.firestore
-                    val userId = Firebase.auth.currentUser?.uid
-                    if (userId != null) {
-                        val products =
-                            cartState.products
-                        val ordersRef =
-                            db.collection("users").document(userId)
-                                .collection("orders")
-                                .document()
-                        val completeCardData = Purchase(
-                            priceFinal = cartState.total,
-                            price = cartState.total + cartState.discountApplied,
-                            discount = cartState.discountApplied,
-                            coupon = cartState.couponCode ?: "",
-                            products = products,
-                            card = if (card != null) "**** ${card.cardNumber.takeLast(4)}" else null,
-                            paymentMethod = paymentMethod,
-                            createdAt = FieldValue.serverTimestamp(),
-                            status = "awaiting_payment"
-                        )
-                        ordersRef.set(completeCardData)
-                            .addOnSuccessListener {
-                                loading = false
-                                replaceAll()
-                            }
-                            .addOnFailureListener {
-                                // Handle error
-                            }
-                    }
+                    coroutineScope.launch { // Launch a coroutine
+                        val db = Firebase.firestore
+                        val userId = Firebase.auth.currentUser?.uid
+                        if (userId != null) {
+                            try {
+                                val products = cartState.products
+                                val ordersRef = db.collection("users").document(userId)
+                                    .collection("orders")
+                                    .document()
+                                val completeCardData = Purchase(
+                                    priceFinal = cartState.total,
+                                    price = cartState.total + cartState.discountApplied,
+                                    discount = cartState.discountApplied,
+                                    coupon = cartState.couponCode ?: "",
+                                    products = products,
+                                    card = if (card != null) "**** ${card.cardNumber.takeLast(4)}" else null,
+                                    paymentMethod = paymentMethod,
+                                    createdAt = FieldValue.serverTimestamp(),
+                                    status = "awaiting_payment"
+                                )
+                                ordersRef.set(completeCardData)
+                                    .await() // Use await() in a coroutine
 
+                                // Update coupon redemption status
+                                val couponRef =
+                                    db.collection("coupons").document(cartState.couponCode ?: "")
+                                val snapshot = couponRef.get().await()
+                                val data = snapshot.data ?: emptyMap()
+                                val redeemedBy =
+                                    (data["redeemedBy"] as? List<*>)?.map { it.toString() }
+                                        ?: emptyList()
+
+                                couponRef.update("redeemedBy", redeemedBy + userId)
+                                    .await() // Use await() in a coroutine
+
+                                loading = false
+                                replaceAll() // Call the callback after successful operation
+                            } catch (e: Exception) {
+                                // Handle error
+                                loading = false
+                                Log.e(
+                                    "ConfirmationCard",
+                                    "Error confirming purchase: ${e.message}",
+                                    e
+                                )
+                            }
+                        }
+                    }
                 }
             ) {
                 if (loading.not()) {

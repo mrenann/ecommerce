@@ -40,6 +40,8 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Fill
 import compose.icons.evaicons.Outline
@@ -150,10 +152,11 @@ class CartScreen : Screen {
                             IconButton(onClick = {
                                 if (state is CartScreenModel.State.Result) {
                                     val result = state as CartScreenModel.State.Result
+                                    val userId = Firebase.auth.currentUser?.uid
 
                                     if (promoCode.isNotBlank() && result.state.discountApplied == 0.0) {
                                         screenModel.applyCoupon(
-                                            userId = "123", // Replace with actual user ID
+                                            userId = userId.toString(), // Replace with actual user ID
                                             code = promoCode,
                                         )
                                     }
