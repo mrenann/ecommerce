@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.mrenann.core.domain.model.CardBrand
 import br.mrenann.profile.presentation.components.flipCard.Card
 import br.mrenann.profile.presentation.components.flipCard.CardFace
 import br.mrenann.profile.presentation.util.DigitsAndSpacesTransformation
@@ -51,6 +52,7 @@ class CardScreen : Screen {
         var cvv by remember { mutableStateOf("") }
         var expiry by remember { mutableStateOf("") }
         var state: CardFace by remember { mutableStateOf(CardFace.Front) }
+        val cardBrand = CardBrand.fromCardNumber(number)
 
         Scaffold(
             modifier = Modifier.fillMaxSize()
@@ -83,6 +85,7 @@ class CardScreen : Screen {
 
                 Card(
                     state = state,
+                    cardBrand = cardBrand,
                     number = number,
                     cvv = cvv,
                     expiry = expiry

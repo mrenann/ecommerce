@@ -32,16 +32,27 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.R
+import br.mrenann.core.domain.model.CardBrand
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
-import compose.icons.EvaIcons
-import compose.icons.evaicons.Fill
-import compose.icons.evaicons.fill.Archive
-import compose.icons.evaicons.fill.Email
+import compose.icons.SimpleIcons
+import compose.icons.simpleicons.Americanexpress
+import compose.icons.simpleicons.Bandcamp
+import compose.icons.simpleicons.Contactlesspayment
+import compose.icons.simpleicons.Discover
+import compose.icons.simpleicons.Ello
+import compose.icons.simpleicons.Jcb
+import compose.icons.simpleicons.Mastercard
+import compose.icons.simpleicons.Visa
 
 @Composable
-fun CardFront(finish: (CardFace, CardData) -> Unit, number: String, expiry: String) {
+fun CardFront(
+    finish: (CardFace, CardData) -> Unit,
+    number: String,
+    expiry: String,
+    cardBrand: CardBrand
+) {
     val auth = Firebase.auth
     val firestore = Firebase.firestore
     val userId = auth.currentUser?.uid
@@ -108,19 +119,30 @@ fun CardFront(finish: (CardFace, CardData) -> Unit, number: String, expiry: Stri
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp)
+                .padding(top = 6.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            val icon = when (cardBrand) {
+                CardBrand.VISA -> SimpleIcons.Visa
+                CardBrand.MASTERCARD -> SimpleIcons.Mastercard
+                CardBrand.AMEX -> SimpleIcons.Americanexpress
+                CardBrand.ELO -> SimpleIcons.Ello
+                CardBrand.HIPERCARD -> SimpleIcons.Mastercard
+                CardBrand.DINERS -> SimpleIcons.Mastercard
+                CardBrand.DISCOVER -> SimpleIcons.Discover
+                CardBrand.JCB -> SimpleIcons.Jcb
+                CardBrand.UNKNOWN -> SimpleIcons.Bandcamp
+            }
             Icon(
                 tint = Color.White,
-
-                imageVector = EvaIcons.Fill.Archive,
+                imageVector = icon,
                 contentDescription = "Search Icon"
             )
             Icon(
                 tint = Color.White,
-                imageVector = EvaIcons.Fill.Email,
+                imageVector = SimpleIcons.Contactlesspayment,
                 contentDescription = "Search Icon"
             )
         }

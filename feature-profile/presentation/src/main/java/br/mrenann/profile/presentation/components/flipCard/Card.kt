@@ -14,11 +14,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import br.mrenann.core.domain.model.CardBrand
 
 data class CardData(val cardNumber: String, val expiryDate: String, val cvv: String)
 
 @Composable
-fun Card(state: CardFace = CardFace.Front, number: String, cvv: String, expiry: String) {
+fun Card(
+    state: CardFace = CardFace.Front,
+    number: String,
+    cvv: String,
+    expiry: String,
+    cardBrand: CardBrand
+) {
 
     var cardData by remember { mutableStateOf<CardData?>(null) } // Store card data
 
@@ -39,6 +46,7 @@ fun Card(state: CardFace = CardFace.Front, number: String, cvv: String, expiry: 
             },
             front = {
                 CardFront(
+                    cardBrand = cardBrand,
                     number = number,
                     expiry = expiry,
                     finish = { cardFace, data -> // Update lambda to receive CardData
