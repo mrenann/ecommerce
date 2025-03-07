@@ -41,9 +41,9 @@ class CartScreenModel(
 
     private var currentSubtotal: Double = 0.0
 
-    init {
-        getProducts()
-    }
+//    init {
+//        getProducts()
+//    }
 
     fun removeCoupon() { // Add removeCoupon function
         event(CartEvent.RemoveCoupon)

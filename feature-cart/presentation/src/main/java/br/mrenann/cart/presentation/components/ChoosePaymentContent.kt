@@ -26,7 +26,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.cart.presentation.Card
@@ -41,6 +44,8 @@ fun ChoosePaymentContent(
     goToNext: (String, Card?) -> Unit,
     cards: List<Card>,
     value: Double,
+    discountValue: Double = 0.0,
+    discountCode: String?,
 ) {
     Column {
         LazyColumn(
@@ -66,7 +71,10 @@ fun ChoosePaymentContent(
 
         }
 
-        TotalAmountSection(value.formatBalance())
+        TotalAmountSection(
+            value = value,
+            discountValue = discountValue,
+        )
     }
 
 }
@@ -196,7 +204,8 @@ fun BankPaymentOption(
 }
 
 @Composable
-fun TotalAmountSection(value: String) {
+fun TotalAmountSection(value: Double, discountValue: Double = 0.0) {
+    val totalValue = discountValue + value
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -208,8 +217,27 @@ fun TotalAmountSection(value: String) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "You will pay")
-            Text(text = "$value")
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(2.dp)
+            ){
+                Text(text = value.formatBalance())
+                if(totalValue != value){
+                    Text(text = totalValue.formatBalance(), fontSize = 12.sp, color = Color.Gray, textDecoration = TextDecoration.LineThrough)
+                }
+            }
+
+
         }
 
     }
 }
+
+@Preview
+@Composable
+fun PreviewChoosePaymentContent() {
+    TotalAmountSection(
+        value = 100.0,
+    )
+}
+
+

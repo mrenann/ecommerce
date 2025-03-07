@@ -13,7 +13,7 @@ import br.mrenann.cart.presentation.screenModel.CartScreenModel
 import org.koin.dsl.module
 
 val cartModelModule = module {
-    factory {
+    single {
         CartScreenModel(
             get<AddCartUseCase>(),
             get<DeleteCartUseCase>(),
@@ -24,8 +24,6 @@ val cartModelModule = module {
             get<IncreaseUseCase>(),
             get<DecreaseUseCase>(),
             get<ClearCouponUseCase>()
-
-
         )
     }
 }

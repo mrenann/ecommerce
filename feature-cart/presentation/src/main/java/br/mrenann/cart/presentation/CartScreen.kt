@@ -21,6 +21,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,6 +55,10 @@ class CartScreen : Screen {
         val state by screenModel.state.collectAsState()
 
         var promoCode by remember { mutableStateOf("") }
+
+        LaunchedEffect(Unit) {
+            screenModel.getProducts()
+        }
 
         Scaffold(
             modifier = Modifier
