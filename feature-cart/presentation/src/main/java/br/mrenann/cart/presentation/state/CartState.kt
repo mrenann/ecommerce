@@ -1,6 +1,6 @@
 package br.mrenann.cart.presentation.state
 
-import br.mrenann.core.domain.model.Discount
+import br.mrenann.core.domain.model.DiscountReason
 import br.mrenann.core.domain.model.ProductCart
 
 data class CartState(
@@ -8,5 +8,6 @@ data class CartState(
     val itemsCount: Int,
     val discountApplied: Double = 0.0,
     val total: Double = 0.0,
-    val couponCode: String? = null
+    val couponCode: String? = null,
+    val couponError: DiscountReason? = null
 )

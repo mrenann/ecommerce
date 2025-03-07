@@ -19,6 +19,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,6 +28,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,19 +38,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.cart.presentation.components.CartItem
 import br.mrenann.cart.presentation.screenModel.CartScreenModel
+import br.mrenann.core.ui.components.SnackBarCustom
 import br.mrenann.core.util.formatBalance
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Fill
 import compose.icons.evaicons.Outline
 import compose.icons.evaicons.fill.CheckmarkCircle2
 import compose.icons.evaicons.outline.ChevronLeft
 import compose.icons.evaicons.outline.Trash
+import kotlinx.coroutines.launch
 
 class CartScreen : Screen {
     @Composable
@@ -55,8 +58,9 @@ class CartScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val screenModel = koinScreenModel<CartScreenModel>()
         val state by screenModel.state.collectAsState()
-
+        val snackbarHostState = remember { SnackbarHostState() }
         var promoCode by remember { mutableStateOf("") }
+        val coroutineScope = rememberCoroutineScope()
 
         LaunchedEffect(Unit) {
             screenModel.getProducts()
@@ -64,7 +68,13 @@ class CartScreen : Screen {
 
         Scaffold(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
+            snackbarHost = {
+                SnackBarCustom(
+                    snackbarHostState = snackbarHostState,
+                    snackBarState = false
+                )
+            }
         ) { innerPadding ->
             Column(
                 modifier = Modifier
@@ -152,11 +162,9 @@ class CartScreen : Screen {
                             IconButton(onClick = {
                                 if (state is CartScreenModel.State.Result) {
                                     val result = state as CartScreenModel.State.Result
-                                    val userId = Firebase.auth.currentUser?.uid
 
                                     if (promoCode.isNotBlank() && result.state.discountApplied == 0.0) {
                                         screenModel.applyCoupon(
-                                            userId = userId.toString(), // Replace with actual user ID
                                             code = promoCode,
                                         )
                                     }
@@ -168,7 +176,8 @@ class CartScreen : Screen {
                                 }
                             }) {
                                 val hasDiscount =
-                                    (state as? CartScreenModel.State.Result)?.state?.discountApplied ?: 0.0 > 0.0
+                                    ((state as? CartScreenModel.State.Result)?.state?.discountApplied
+                                        ?: 0.0) > 0.0
                                 Icon(
                                     imageVector = EvaIcons.Fill.CheckmarkCircle2,
                                     contentDescription = "Apply Promo",
@@ -255,7 +264,24 @@ class CartScreen : Screen {
                                 color = Color.White
                             )
                         }
+
+                        LaunchedEffect(state) {
+                            val result = (state as CartScreenModel.State.Result).state
+                            if (result.couponError != null) {
+                                val (errorTitle, errorMessage) = result.couponError.toPair()
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = errorMessage,
+                                        duration = SnackbarDuration.Short
+                                    )
+                                    // Reset the coupon error after showing the Snackbar
+                                    screenModel.resetCouponError()
+                                }
+                            }
+                        }
+
                     }
+
                 }
             }
         }

@@ -50,10 +50,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.cart.presentation.mapper.toProductCart
 import br.mrenann.cart.presentation.screenModel.CartScreenModel
+import br.mrenann.core.ui.components.SnackBarCustom
 import br.mrenann.core.util.formatBalance
 import br.mrenann.productdetails.presentation.components.CartBottomSheet
 import br.mrenann.productdetails.presentation.components.ShimmerEffect
-import br.mrenann.productdetails.presentation.components.SnackBarCustom
 import br.mrenann.productdetails.presentation.screenModel.DetailsScreenModel
 import br.mrenann.productdetails.presentation.state.DetailsEvent
 import cafe.adriel.voyager.core.screen.Screen

@@ -17,6 +17,8 @@ import br.mrenann.cart.presentation.state.CartState
 import br.mrenann.core.domain.model.ProductCart
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -45,6 +47,17 @@ class CartScreenModel(
 //        getProducts()
 //    }
 
+    fun resetCouponError() {
+        val currentState = state.value
+        if (currentState is Result) {
+            mutableState.value = Result(
+                currentState.state.copy(
+                    couponError = null // Reset the coupon error
+                )
+            )
+        }
+    }
+
     fun removeCoupon() { // Add removeCoupon function
         event(CartEvent.RemoveCoupon)
     }
@@ -65,8 +78,9 @@ class CartScreenModel(
         event(CartEvent.CountItems)
     }
 
-    fun applyCoupon(userId: String, code: String) {
-        // Use the stored subtotal
+    fun applyCoupon(code: String) {
+        val userId = Firebase.auth.currentUser?.uid.toString()
+
         event(CartEvent.ApplyCoupon(userId, code, currentSubtotal))
     }
 
@@ -84,7 +98,7 @@ class CartScreenModel(
     }
 
     private fun event(event: CartEvent) {
-        screenModelScope.launch { // All events now launch coroutines
+        screenModelScope.launch {
             when (event) {
                 is CartEvent.AddProduct -> {
                     addUseCase.invoke(Params(event.product)).collectLatest { }
@@ -92,16 +106,16 @@ class CartScreenModel(
 
                 is CartEvent.GetProducts -> {
                     getUseCase.invoke().collectLatest { products ->
-                        // Recalculate subtotal whenever products change
                         currentSubtotal = products.sumOf { it.price * it.qtd }
                         val cartTotal = getCartTotalUseCase.invoke().first()
                         mutableState.value = Result(
                             CartState(
                                 products = products,
                                 itemsCount = products.size,
-                                total = cartTotal
+                                total = cartTotal,
+                                couponError = null
                             )
-                        ) //Pass cart total here
+                        )
                     }
                 }
 
@@ -119,8 +133,9 @@ class CartScreenModel(
                             mutableState.value = Result(
                                 currentState.state.copy(
                                     discountApplied = 0.0,
-                                    total = currentSubtotal, // Reset to subtotal
-                                    couponCode = null // Clear the coupon code
+                                    total = currentSubtotal,
+                                    couponError = null,
+                                    couponCode = null
                                 )
                             )
                         }
@@ -147,7 +162,16 @@ class CartScreenModel(
                     ).collectLatest { result ->
                         when (result) {
                             is ApplyCouponUseCase.Result.Invalid -> {
-                                val (errorTitle, errorMessage) = result.reason.toPair()
+                                Log.i("COUPON", "INVALID")
+                                Log.i("COUPON", "${result.reason}")
+                                val currentState = state.value
+                                if (currentState is Result) {
+                                    mutableState.value = Result(
+                                        currentState.state.copy(
+                                            couponError = result.reason // Store the error reason
+                                        )
+                                    )
+                                }
 
                             }
 
@@ -159,7 +183,8 @@ class CartScreenModel(
                                         currentState.state.copy(
                                             discountApplied = result.discountAmount,
                                             total = currentSubtotal - result.discountAmount,
-                                            couponCode = event.code // Store the coupon code here
+                                            couponCode = event.code,
+                                            couponError = null
                                         )
                                     )
                                 }
@@ -190,12 +215,9 @@ class CartScreenModel(
     private fun reapplyCouponIfNeeded() {
         val currentState = state.value
         if (currentState is Result && currentState.state.discountApplied > 0) {
-            // Retrieve the stored coupon code
             val couponCode = currentState.state.couponCode
             if (couponCode != null) {
-                // Reapply the coupon with the updated subtotal
-                val userId = "123" // Replace with actual user ID
-                applyCoupon(userId, couponCode)
+                applyCoupon(couponCode)
             }
         }
     }
