@@ -78,22 +78,28 @@ data class OrderScreen(
                             order.deliveredAt != null && orderStatus == OrderStatus.DELIVERED -> {
                                 order.deliveredAt?.formatToReadableDate() ?: ""
                             }
+
                             orderStatus == OrderStatus.UNKNOWN_STATUS -> {
                                 "We're checking on this for you"
                             }
+
                             order.paidAt != null && orderStatus == OrderStatus.PAID -> {
                                 order.paidAt?.formatToReadableDate() ?: ""
                             }
+
                             order.cancelledAt != null && orderStatus == OrderStatus.PAYMENT_CANCELLED -> {
                                 order.cancelledAt?.formatToReadableDate() ?: ""
                             }
+
                             orderStatus == OrderStatus.AWAITING_PAYMENT && order.card.isNullOrBlank() -> {
                                 "Pay your order with Pix"
                             }
+
                             orderStatus == OrderStatus.AWAITING_PAYMENT && order.card.isNullOrBlank()
                                 .not() -> {
                                 "Ensure your payment method has sufficient limit"
                             }
+
                             else -> {
                                 ""
                             }
@@ -111,6 +117,7 @@ data class OrderScreen(
                 DeliveryCard(order, orderStatus.color)
                 if (order.paidAt != null) PaidCard(order, orderStatus.color)
                 if (order.status == "awaiting_payment") PaymentCard(order, orderStatus.color)
+
 
             }
         }

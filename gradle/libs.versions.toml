@@ -30,6 +30,7 @@ firebase = "33.9.0"
 room = "2.6.1"
 zoomable = "2.2.0"
 splash = "1.0.1"
+zxing = "3.5.0"
 
 [libraries]
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentialsPlayServicesAuth" }
@@ -120,6 +121,7 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 zoomable = { module = "net.engawapg.lib:zoomable", version.ref = "zoomable" }
 androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splash" }
 
+google-zxing-core = { module = "com.google.zxing:core", version.ref = "zxing" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
