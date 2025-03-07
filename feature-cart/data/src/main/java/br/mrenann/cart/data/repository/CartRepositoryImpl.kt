@@ -43,4 +43,18 @@ class CartRepositoryImpl(
     override suspend fun clear() {
         return dataSource.clear()
     }
+
+    override suspend fun addCoupon(
+        code: String,
+        discountPercentage: Double?,
+        discountAmount: Double?,
+        isFixedAmount: Boolean?
+    ) {
+        return dataSource.addCoupon(code, discountPercentage, discountAmount, isFixedAmount)
+
+    }
+
+    override suspend fun clearAppliedCoupon() {
+        return dataSource.clearAppliedCoupon()
+    }
 }

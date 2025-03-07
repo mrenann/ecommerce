@@ -27,7 +27,8 @@ val cartModule = module {
 
     single<CartDataSource> {
         CartDataSourceImpl(
-            dao = get()
+            dao = get(),
+            cupomDao = get()
         )
     }
 

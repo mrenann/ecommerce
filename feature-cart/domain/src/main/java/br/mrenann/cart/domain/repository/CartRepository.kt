@@ -13,5 +13,13 @@ interface CartRepository {
     suspend fun applyCoupon(productId: String, discount: Double, coupon: String)
     suspend fun exists(productId: String): Boolean
     suspend fun clear()
+    suspend fun addCoupon(
+        code: String,
+        discountPercentage: Double?,
+        discountAmount: Double?,
+        isFixedAmount: Boolean?
+    )
+
+    suspend fun clearAppliedCoupon()
 
 }
