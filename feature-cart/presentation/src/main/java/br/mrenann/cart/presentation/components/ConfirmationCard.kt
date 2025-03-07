@@ -30,11 +30,15 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.cart.presentation.Card
 import br.mrenann.cart.presentation.R
 import br.mrenann.cart.presentation.state.CartState
+import br.mrenann.core.domain.model.Category
+import br.mrenann.core.domain.model.ProductCart
 import br.mrenann.core.domain.model.Purchase
 import br.mrenann.core.util.formatBalance
 import com.google.firebase.Firebase
@@ -79,9 +83,30 @@ fun ConfirmationCard(
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = cartState.total.formatBalance(),
+                            text = (cartState.total + cartState.discountApplied).formatBalance(),
                             fontSize = 16.sp,
                         )
+                    }
+                    if (cartState.discountApplied > 0 && cartState.couponCode.isNullOrBlank()
+                            .not()
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "${cartState.couponCode}",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Red
+                            )
+                            Text(
+                                text = "- " + (cartState.discountApplied).formatBalance(),
+                                fontSize = 16.sp,
+                                color = Color.Red
+                            )
+                        }
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -103,12 +128,31 @@ fun ConfirmationCard(
                         thickness = .5.dp,
                         color = Color.LightGray
                     )
-                    Text(
-                        modifier = Modifier.padding(vertical = 8.dp),
-                        text = cartState.total.formatBalance(),
-                        fontSize = 32.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(2.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(vertical = 8.dp),
+                            text = cartState.total.formatBalance(),
+                            fontSize = 32.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        if (cartState.discountApplied > 0 && cartState.couponCode.isNullOrBlank()
+                                .not()
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(vertical = 12.dp),
+                                text = (cartState.total + cartState.discountApplied).formatBalance(),
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Gray,
+                                textDecoration = TextDecoration.LineThrough
+                            )
+
+                        }
+
+                    }
 
                     Column(
                         modifier = Modifier.padding(bottom = 8.dp)
@@ -148,58 +192,102 @@ fun ConfirmationCard(
                             )
                         }
                     }
+
                 }
 
 
             }
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                shape = RoundedCornerShape(10.dp),
+                enabled = loading.not(),
+                onClick = {
+                    loading = true
+                    val db = Firebase.firestore
+                    val userId = Firebase.auth.currentUser?.uid
+                    if (userId != null) {
+                        val products =
+                            cartState.products
+                        val ordersRef =
+                            db.collection("users").document(userId)
+                                .collection("orders")
+                                .document()
+                        val completeCardData = Purchase(
+                            priceFinal = cartState.total,
+                            coupon = "",
+                            products = products,
+                            createdAt = FieldValue.serverTimestamp(),
+                            status = "awaiting_payment"
+                        )
+                        ordersRef.set(completeCardData)
+                            .addOnSuccessListener {
+                                loading = false
+                                replaceAll()
+                            }
+                            .addOnFailureListener {
+                                // Handle error
+                            }
+                    }
 
-
-        }
-        Button(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            shape = RoundedCornerShape(10.dp),
-            enabled = loading.not(),
-            onClick = {
-                loading = true
-                val db = Firebase.firestore
-                val userId = Firebase.auth.currentUser?.uid
-                if (userId != null) {
-                    val products =
-                        cartState.products
-                    val ordersRef =
-                        db.collection("users").document(userId)
-                            .collection("orders")
-                            .document()
-                    val completeCardData = Purchase(
-                        priceFinal = cartState.total,
-                        coupon = "",
-                        products = products,
-                        createdAt = FieldValue.serverTimestamp(),
-                        status = "awaiting_payment"
+                }
+            ) {
+                if (loading.not()) {
+                    Text("Confirm Purchase")
+                } else {
+                    CircularProgressIndicator(
+                        color = Color.White,
+                        modifier = Modifier.size(24.dp)
                     )
-                    ordersRef.set(completeCardData)
-                        .addOnSuccessListener {
-                            loading = false
-                            replaceAll()
-                        }
-                        .addOnFailureListener {
-                            // Handle error
-                        }
                 }
+            }
 
-            }
-        ) {
-            if (loading.not()) {
-                Text("Confirm Purchase")
-            } else {
-                CircularProgressIndicator(
-                    color = Color.White,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
         }
-
     }
 }
+    @Preview
+    @Composable
+    fun ConfirmationCardPreview() {
+        ConfirmationCard(
+            card = null,
+            paymentMethod = "pix",
+            cartState = CartState(
+                total = 100.0,
+                itemsCount = 2,
+                products = listOf<ProductCart>(
+                    ProductCart(
+                        id = 1,
+                        title = "Title",
+                        price = 10.0,
+                        description = "Description",
+                        category = Category(
+                            id = 1,
+                            name = "category"
+                        ),
+                        images = listOf("image1", "image2"),
+                        qtd = 1,
+                        priceFinal = 10.0,
+                    ),
+                    ProductCart(
+                        id = 2,
+                        title = "Title",
+                        price = 10.0,
+                        description = "Description",
+                        images = listOf("image1", "image2"),
+                        qtd = 1,
+                        priceFinal = 10.0,
+                        category = Category(
+                            id = 1,
+                            name = "category"
+                        ),
+
+                        ),
+
+                    ),
+                discountApplied = 10.0,
+                couponCode = "DISCOUNT10"
+            ),
+            replaceAll = {}
+        )
+    }
