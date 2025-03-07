@@ -60,7 +60,7 @@ class CartScreen : Screen {
         LaunchedEffect(state) {
             if (state is CartScreenModel.State.Result) {
                 val newDiscount =
-                    (state as CartScreenModel.State.Result).state.discountApplied ?: 0.0
+                    (state as CartScreenModel.State.Result).state.discountApplied
                 if (newDiscount != discountPercentage) {
                     discountPercentage = newDiscount
                 }
@@ -158,15 +158,16 @@ class CartScreen : Screen {
                         placeholder = { Text("Has Promo Code") },
                         trailingIcon = {
                             IconButton(onClick = {
-                                screenModel.applyCoupon(
-                                    userId = "123",
-                                    code = promoCode,
-                                    subtotal = subtotal.toDouble()
-                                )
-                                if (state is CartScreenModel.State.Result) {
-                                    discountPercentage =
-                                        (state as CartScreenModel.State.Result).state.discountApplied
-                                            ?: 0.0
+                                if (promoCode.isNotBlank()) {
+                                    screenModel.applyCoupon(
+                                        userId = "123",
+                                        code = promoCode,
+                                        subtotal = subtotal.toDouble()
+                                    )
+                                    if (state is CartScreenModel.State.Result) {
+                                        discountPercentage =
+                                            (state as CartScreenModel.State.Result).state.discountApplied
+                                    }
                                 }
                             }) {
                                 Icon(
