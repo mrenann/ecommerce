@@ -21,7 +21,8 @@ fun ProductCart.toCartItemEntity(): CartItemEntity {
         name = title,
         price = price.toDouble(),
         quantity = qtd,
-        imageUrl = images[0]
+        imageUrl = images[0],
+        couponCode = coupon,
     )
 }
 
@@ -53,6 +54,7 @@ fun List<CartItemEntity>.toProductCart() = map { entity ->
         ),
         images = listOf(entity.imageUrl ?: ""),
         qtd = entity.quantity,
-        priceFinal = entity.totalPrice()
+        priceFinal = entity.totalPrice(),
+        coupon = entity.couponCode
     )
 }

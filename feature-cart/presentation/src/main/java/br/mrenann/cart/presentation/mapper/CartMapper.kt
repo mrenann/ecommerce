@@ -12,6 +12,7 @@ fun Product.toProductCart(): ProductCart {
         category = category,
         images = images,
         qtd = 1,
-        priceFinal = price.toDouble()
+        priceFinal = price.toDouble(),
+        coupon = ""
     )
 }

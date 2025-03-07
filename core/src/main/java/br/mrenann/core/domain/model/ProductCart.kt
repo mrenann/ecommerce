@@ -8,6 +8,7 @@ data class ProductCart(
     val category: Category,
     val images: List<String>,
     val qtd: Int,
-    val priceFinal: Double
+    val priceFinal: Double,
+    val coupon: String? = ""
 )
 
