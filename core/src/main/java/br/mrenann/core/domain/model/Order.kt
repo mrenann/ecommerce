@@ -4,7 +4,7 @@ import com.google.firebase.firestore.ServerTimestamp
 import java.util.Date
 
 data class Order(
-    val card: String = "",
+    val card: String? = "",
     val coupon: String = "",
     @ServerTimestamp val createdAt: Date? = null,
     val discount: Double = 0.0,
