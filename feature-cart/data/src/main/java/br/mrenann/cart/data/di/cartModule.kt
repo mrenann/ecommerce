@@ -40,7 +40,12 @@ val cartModule = module {
     single<GetProductsFromCartUseCase> { GetProductsFromCartUseCaseImpl(get<CartRepository>()) }
     single<AddCartUseCase> { AddCartUseCaseImpl(get<CartRepository>()) }
     single<ClearCartUseCase> { ClearCartUseCaseImpl(get<CartRepository>()) }
-    single<ApplyCouponUseCase> { ApplyCouponUseCaseImpl(get<FavoritesFirestoreRepository>()) }
+    single<ApplyCouponUseCase> {
+        ApplyCouponUseCaseImpl(
+            get<FavoritesFirestoreRepository>(),
+            get<CartRepository>()
+        )
+    }
     single<GetCartTotalUseCase> { GetCartTotalUseCaseImpl(get<CartRepository>()) }
     single<IncreaseUseCase> { IncreaseUseCaseImpl(get<CartRepository>()) }
     single<DecreaseUseCase> { DecreaseUseCaseImpl(get<CartRepository>()) }

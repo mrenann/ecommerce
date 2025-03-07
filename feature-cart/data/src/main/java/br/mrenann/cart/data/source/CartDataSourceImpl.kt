@@ -43,6 +43,10 @@ class CartDataSourceImpl(
         return dao.inList(productId) != null
     }
 
+    override suspend fun applyCoupon(productId: String, discount: Double, coupon: String) {
+        dao.applyCoupon(productId, discount, coupon)
+    }
+
     override suspend fun clear() {
         return dao.clearCart()
     }

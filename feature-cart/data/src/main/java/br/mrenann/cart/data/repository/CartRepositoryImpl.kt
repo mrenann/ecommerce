@@ -32,6 +32,10 @@ class CartRepositoryImpl(
         return dataSource.deleteProduct(product)
     }
 
+    override suspend fun applyCoupon(productId: String, discount: Double, coupon: String) {
+        return dataSource.applyCoupon(productId, discount, coupon)
+    }
+
     override suspend fun exists(productId: String): Boolean {
         return dataSource.exists(productId)
     }

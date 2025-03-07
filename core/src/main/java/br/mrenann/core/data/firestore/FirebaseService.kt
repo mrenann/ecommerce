@@ -1,5 +1,6 @@
 package br.mrenann.core.data.firestore
 
+import br.mrenann.core.domain.model.Discount
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -34,9 +35,9 @@ class FirebaseService {
         return snapshot.documents.map { it.data ?: emptyMap() }
     }
 
-    suspend fun getCoupon(code: String): Map<String, Any>? {
+    suspend fun getCoupon(code: String): Discount? {
         val doc = db.collection("coupons").document(code).get().await()
-        return if (doc.exists()) doc.data else null
+        return if (doc.exists()) doc.toObject(Discount::class.java) else null
     }
 
     suspend fun redeemCoupon(userId: String, code: String): Boolean {
@@ -53,7 +54,7 @@ class FirebaseService {
             return false // Coupon already used or exceeded max redemptions
         }
 
-        couponRef.update("redeemedBy", redeemedBy + userId).await()
+//        couponRef.update("redeemedBy", redeemedBy + userId).await()
         return true
     }
 }

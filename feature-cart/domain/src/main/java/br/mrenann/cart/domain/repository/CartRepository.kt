@@ -10,6 +10,7 @@ interface CartRepository {
     suspend fun addQuantity(productId: String)
     suspend fun removeQuantity(productId: String)
     suspend fun deleteProduct(product: ProductCart)
+    suspend fun applyCoupon(productId: String, discount: Double, coupon: String)
     suspend fun exists(productId: String): Boolean
     suspend fun clear()
 

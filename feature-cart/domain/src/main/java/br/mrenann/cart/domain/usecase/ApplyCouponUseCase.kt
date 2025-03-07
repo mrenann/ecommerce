@@ -1,5 +1,6 @@
 package br.mrenann.cart.domain.usecase
 
+import br.mrenann.core.domain.model.Discount
 import kotlinx.coroutines.flow.Flow
 
 interface ApplyCouponUseCase {
@@ -7,7 +8,7 @@ interface ApplyCouponUseCase {
     data class Params(val userId: String, val code: String, val subtotal: Double)
 
     sealed class Result {
-        data class Success(val discountAmount: Double) : Result()
+        data class Success(val discount: Discount, val discountAmount: Double) : Result()
         object Invalid : Result()
     }
 }

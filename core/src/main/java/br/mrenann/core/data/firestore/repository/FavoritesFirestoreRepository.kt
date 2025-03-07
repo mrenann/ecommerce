@@ -1,6 +1,7 @@
 package br.mrenann.core.data.firestore.repository
 
 import br.mrenann.core.data.firestore.FirebaseService
+import br.mrenann.core.domain.model.Discount
 
 class FavoritesFirestoreRepository(private val firebaseService: FirebaseService) {
     suspend fun addFavorite(userId: String, productId: String, productData: Map<String, Any>) {
@@ -15,7 +16,7 @@ class FavoritesFirestoreRepository(private val firebaseService: FirebaseService)
         return firebaseService.getFavorites(userId)
     }
 
-    suspend fun getCoupon(code: String): Map<String, Any>? {
+    suspend fun getCoupon(code: String): Discount? {
         return firebaseService.getCoupon(code)
     }
 
