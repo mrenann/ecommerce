@@ -231,22 +231,25 @@ fun ConfirmationCard(
                                     status = "awaiting_payment"
                                 )
                                 ordersRef.set(completeCardData)
-                                    .await() // Use await() in a coroutine
+                                    .await()
 
-                                // Update coupon redemption status
-                                val couponRef =
-                                    db.collection("coupons").document(cartState.couponCode ?: "")
-                                val snapshot = couponRef.get().await()
-                                val data = snapshot.data ?: emptyMap()
-                                val redeemedBy =
-                                    (data["redeemedBy"] as? List<*>)?.map { it.toString() }
-                                        ?: emptyList()
 
-                                couponRef.update("redeemedBy", redeemedBy + userId)
-                                    .await() // Use await() in a coroutine
+                                if (cartState.couponCode != null && cartState.discountApplied > 0) {
+                                    val couponRef =
+                                        db.collection("coupons")
+                                            .document(cartState.couponCode)
+                                    val snapshot = couponRef.get().await()
+                                    val data = snapshot.data ?: emptyMap()
+                                    val redeemedBy =
+                                        (data["redeemedBy"] as? List<*>)?.map { it.toString() }
+                                            ?: emptyList()
+
+                                    couponRef.update("redeemedBy", redeemedBy + userId)
+                                        .await()
+                                }
 
                                 loading = false
-                                replaceAll() // Call the callback after successful operation
+                                replaceAll()
                             } catch (e: Exception) {
                                 // Handle error
                                 loading = false
