@@ -112,15 +112,15 @@ class CartScreenModel(
                     }
                 }
 
-                CartEvent.RemoveCoupon -> { // Handle RemoveCoupon event
+                CartEvent.RemoveCoupon -> {
                     clearCouponUseCase().collectLatest {
-                        // Reset discountApplied and update the total
                         val currentState = state.value
                         if (currentState is Result) {
                             mutableState.value = Result(
                                 currentState.state.copy(
                                     discountApplied = 0.0,
-                                    total = currentSubtotal // Reset to subtotal
+                                    total = currentSubtotal, // Reset to subtotal
+                                    couponCode = null // Clear the coupon code
                                 )
                             )
                         }
@@ -135,29 +135,30 @@ class CartScreenModel(
                 }
 
                 is CartEvent.ApplyCoupon -> {
+                    val products = getUseCase.invoke().first()
+                    currentSubtotal = products.sumOf { it.price * it.qtd }
+
                     applyCouponUseCase(
                         ApplyCouponUseCase.Params(
                             userId = event.userId,
                             code = event.code,
-                            subtotal = event.subtotal
+                            subtotal = currentSubtotal
                         )
                     ).collectLatest { result ->
                         when (result) {
                             is ApplyCouponUseCase.Result.Invalid -> {
                                 Log.i("COUPON", "INVALID")
-                                //  Could add an error message state here
                             }
 
                             is ApplyCouponUseCase.Result.Success -> {
                                 Log.i("COUPON", "SUCCESS")
-                                // Update the UI state to reflect the applied coupon
-                                // We no longer need to modify individual product prices.
                                 val currentState = state.value
                                 if (currentState is Result) {
                                     mutableState.value = Result(
                                         currentState.state.copy(
-                                            discountApplied = result.discountAmount, // Store discount
-                                            total = currentSubtotal - result.discountAmount//update the total.
+                                            discountApplied = result.discountAmount,
+                                            total = currentSubtotal - result.discountAmount,
+                                            couponCode = event.code // Store the coupon code here
                                         )
                                     )
                                 }
@@ -170,13 +171,30 @@ class CartScreenModel(
                     removeUseCase.invoke(DeleteCartUseCase.Params(event.product)).collectLatest {}
                 }
 
-                is CartEvent.decreaseQuantity -> {
-                    decreaseUseCase.invoke(DecreaseUseCase.Params(event.id)).collectLatest { }
+                is CartEvent.increaseQuantity -> {
+                    increaseUseCase.invoke(IncreaseUseCase.Params(event.id)).collectLatest {
+                        reapplyCouponIfNeeded()
+                    }
                 }
 
-                is CartEvent.increaseQuantity -> {
-                    increaseUseCase.invoke(IncreaseUseCase.Params(event.id)).collectLatest { }
+                is CartEvent.decreaseQuantity -> {
+                    decreaseUseCase.invoke(DecreaseUseCase.Params(event.id)).collectLatest {
+                        reapplyCouponIfNeeded()
+                    }
                 }
+            }
+        }
+    }
+
+    private fun reapplyCouponIfNeeded() {
+        val currentState = state.value
+        if (currentState is Result && currentState.state.discountApplied > 0) {
+            // Retrieve the stored coupon code
+            val couponCode = currentState.state.couponCode
+            if (couponCode != null) {
+                // Reapply the coupon with the updated subtotal
+                val userId = "123" // Replace with actual user ID
+                applyCoupon(userId, couponCode)
             }
         }
     }
