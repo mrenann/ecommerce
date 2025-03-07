@@ -120,13 +120,16 @@ class ProfileScreen : Screen {
                             Spacer(modifier = Modifier.width(8.dp))
                             Column {
                                 Text(
-                                    text = userName,
+                                    text = Firebase.auth.currentUser?.displayName ?: "",
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Bold,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
-                                Text(text = userEmail, fontSize = 14.sp)
+                                Text(
+                                    text = Firebase.auth.currentUser?.email ?: "",
+                                    fontSize = 14.sp
+                                )
                             }
                         }
                     }

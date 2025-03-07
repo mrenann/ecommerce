@@ -37,6 +37,9 @@ import br.mrenann.main.presentation.MainScreen
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.google.firebase.Firebase
+import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.auth.auth
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Fill
 import compose.icons.evaicons.Outline
@@ -196,6 +199,14 @@ class RegisterScreen : Screen {
                                     .onEach { response ->
                                         when (response) {
                                             is AuthResponse.Success -> {
+                                                val profileUpdates =
+                                                    UserProfileChangeRequest.Builder()
+                                                        .setDisplayName(name)
+                                                        .build()
+                                                val auth = Firebase.auth
+                                                auth.currentUser?.updateProfile(profileUpdates)
+                                                    ?.addOnCompleteListener { }
+
                                                 navigation.replaceAll(MainScreen())
                                             }
 

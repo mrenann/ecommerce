@@ -42,6 +42,7 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import com.google.firebase.Firebase
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
@@ -242,16 +243,49 @@ class AuthenticationManager(val context: Context) {
 
     fun loginWithEmail(email: String, password: String): Flow<AuthResponse> = callbackFlow {
         auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    trySend(AuthResponse.Success)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val userId = auth.currentUser?.uid
+                    if (userId != null) {
+                        fetchUserName(userId) { displayName ->
+                            Log.d("UserData", "Nome do usuário: $displayName")
+
+                            // Atualiza o displayName do FirebaseAuth
+                            val profileUpdates = UserProfileChangeRequest.Builder()
+                                .setDisplayName(displayName)
+                                .build()
+
+                            auth.currentUser?.updateProfile(profileUpdates)
+                                ?.addOnCompleteListener { updateTask ->
+                                    if (updateTask.isSuccessful) {
+                                        Log.d(
+                                            "UserData",
+                                            "displayName atualizado para: ${auth.currentUser?.displayName}"
+                                        )
+                                    } else {
+                                        Log.e(
+                                            "UserData",
+                                            "Erro ao atualizar displayName",
+                                            updateTask.exception
+                                        )
+                                    }
+                                    trySend(AuthResponse.Success) // Envia resposta apenas após a atualização
+                                }
+                        }
+                    } else {
+                        Log.e("UserData", "Usuário não autenticado")
+                        trySend(AuthResponse.Success)
+                    }
                 } else {
-                    trySend(AuthResponse.Error(message = it.exception?.message ?: ""))
+                    trySend(
+                        AuthResponse.Error(
+                            message = task.exception?.message ?: "Erro ao fazer login"
+                        )
+                    )
                 }
             }
 
         awaitClose()
-
     }
 
     private fun createNonce(): String {
@@ -318,6 +352,26 @@ class AuthenticationManager(val context: Context) {
         awaitClose()
 
     }
+
+    fun fetchUserName(userId: String, onResult: (String) -> Unit) {
+        val db = Firebase.firestore
+        val userRef = db.collection("users").document(userId)
+
+        userRef.get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val displayName = document.getString("name") ?: "No Name"
+                    onResult(displayName) // Retorna o nome do usuário
+                } else {
+                    onResult("No Name") // Retorno padrão se não encontrar o documento
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Erro ao buscar usuário", e)
+                onResult("No Name") // Retorno em caso de erro
+            }
+    }
+
 
 }
 
