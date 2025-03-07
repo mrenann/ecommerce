@@ -23,6 +23,7 @@ import br.mrenann.core.domain.model.toOrderStatus
 import br.mrenann.core.util.formatToReadableDate
 import br.mrenann.profile.presentation.components.DeliveryCard
 import br.mrenann.profile.presentation.components.PaidCard
+import br.mrenann.profile.presentation.components.PaymentCard
 import br.mrenann.profile.presentation.components.orders.OrderStatusInfo
 import br.mrenann.profile.presentation.components.orders.ReceiptView
 import cafe.adriel.voyager.core.screen.Screen
@@ -73,17 +74,31 @@ data class OrderScreen(
 
                     OrderStatusInfo(
                         status = orderStatus,
-                        subtitle = if (order.deliveredAt != null && orderStatus == OrderStatus.DELIVERED) {
-                            order.deliveredAt?.formatToReadableDate() ?: ""
-                        } else if (orderStatus == OrderStatus.UNKNOWN_STATUS) {
-                            "We're checking on this for you"
-                        } else if (order.paidAt != null && orderStatus == OrderStatus.PAID) {
-                            order.paidAt?.formatToReadableDate() ?: ""
-                        } else if (order.cancelledAt != null && orderStatus == OrderStatus.PAYMENT_CANCELLED) {
-                            order.cancelledAt?.formatToReadableDate() ?: ""
-                        } else {
-                            ""
-                        }
+                        subtitle = when {
+                            order.deliveredAt != null && orderStatus == OrderStatus.DELIVERED -> {
+                                order.deliveredAt?.formatToReadableDate() ?: ""
+                            }
+                            orderStatus == OrderStatus.UNKNOWN_STATUS -> {
+                                "We're checking on this for you"
+                            }
+                            order.paidAt != null && orderStatus == OrderStatus.PAID -> {
+                                order.paidAt?.formatToReadableDate() ?: ""
+                            }
+                            order.cancelledAt != null && orderStatus == OrderStatus.PAYMENT_CANCELLED -> {
+                                order.cancelledAt?.formatToReadableDate() ?: ""
+                            }
+                            orderStatus == OrderStatus.AWAITING_PAYMENT && order.card.isNullOrBlank() -> {
+                                "Pay your order with Pix"
+                            }
+                            orderStatus == OrderStatus.AWAITING_PAYMENT && order.card.isNullOrBlank()
+                                .not() -> {
+                                "Ensure your payment method has sufficient limit"
+                            }
+                            else -> {
+                                ""
+                            }
+                        },
+                        isPix = orderStatus == OrderStatus.AWAITING_PAYMENT && order.card.isNullOrBlank()
                     )
                 }
 
@@ -95,6 +110,7 @@ data class OrderScreen(
 
                 DeliveryCard(order, orderStatus.color)
                 if (order.paidAt != null) PaidCard(order, orderStatus.color)
+                if (order.status == "awaiting_payment") PaymentCard(order, orderStatus.color)
 
             }
         }

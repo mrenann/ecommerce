@@ -43,10 +43,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 data class CardScreen(val total: Double, val card: Card) : Screen {
     @Composable
     override fun Content() {
-        val context = LocalContext.current
         val navigator = LocalNavigator.current
-        val pixCode =
-            "00020126540014br.gov.bcb.pix0132pix.br@bankingecommerce.br123.gov" // Simulação do código Pix
 
         Scaffold { innerPadding ->
             Column(
