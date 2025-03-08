@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import br.mrenann.core.domain.model.Order
 import br.mrenann.core.domain.model.formatOrderStatus
+import br.mrenann.core.domain.model.toOrderStatus
 import cafe.adriel.lyricist.LocalStrings
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
@@ -45,11 +46,12 @@ fun OrderCard(order: Order, onClick: () -> Unit) {
                 val format = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
                 format.format(it)
             } ?: "Data não disponível"
-            val (title, subtitle, color) = order.status.formatOrderStatus()
+            val (_, _, color) = order.status.formatOrderStatus()
+            val orderStatus = order.status.toOrderStatus()
 
             Text(
                 modifier = Modifier.padding(8.dp),
-                text = "$formattedDate",
+                text = formattedDate,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -71,13 +73,13 @@ fun OrderCard(order: Order, onClick: () -> Unit) {
                 )
                 Column {
                     Text(
-                        text = title,
+                        text = strings.ordersStatusTitle(orderStatus),
                         style = MaterialTheme.typography.bodyMedium,
                         color = color
                     )
 
                     Text(
-                        text = subtitle,
+                        text = strings.ordersStatusSubtitle(orderStatus),
                         style = MaterialTheme.typography.bodySmall
                     )
                     Text(

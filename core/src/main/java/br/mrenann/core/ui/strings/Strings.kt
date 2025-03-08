@@ -1,5 +1,7 @@
 package br.mrenann.core.ui.strings
 
+import br.mrenann.core.domain.model.OrderStatus
+
 data class Strings(
     val homeTab: HomeTabStrings,
     val favoriteTab: FavoriteTabStrings,
@@ -138,4 +140,7 @@ data class OrdersStrings(
     val unknownStatus: String,
     val paymentCancelled: String,
     val delivered: String,
-)
+    val ordersStatusTitle: (OrderStatus) -> String,
+    val ordersStatusSubtitle: (OrderStatus) -> String,
+
+    )

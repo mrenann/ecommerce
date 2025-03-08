@@ -1,5 +1,6 @@
 package br.mrenann.core.ui.strings
 
+import br.mrenann.core.domain.model.OrderStatus
 import cafe.adriel.lyricist.LyricistStrings
 
 @LyricistStrings(languageTag = Locales.EN)
@@ -122,7 +123,27 @@ internal val EnStrings = Strings(
             onTheWay = "On the way",
             unknownStatus = "Unknown status",
             paymentCancelled = "Payment cancelled",
-            delivered = "Delivered"
+            delivered = "Delivered",
+            ordersStatusTitle = { status ->
+                when (status) {
+                    OrderStatus.AWAITING_PAYMENT -> "Awaiting Payment"
+                    OrderStatus.PAYMENT_CANCELLED -> "Payment Cancelled"
+                    OrderStatus.PAID -> "Paid"
+                    OrderStatus.ON_THE_WAY -> "On the Way"
+                    OrderStatus.DELIVERED -> "Delivered"
+                    OrderStatus.UNKNOWN_STATUS -> "Unknown Status"
+                }
+            },
+            ordersStatusSubtitle = { status ->
+                when (status) {
+                    OrderStatus.AWAITING_PAYMENT -> "Your payment has not been received yet."
+                    OrderStatus.PAYMENT_CANCELLED -> "The payment has been cancelled."
+                    OrderStatus.PAID -> "Your order has been paid and is being processed."
+                    OrderStatus.ON_THE_WAY -> "Your order has been shipped."
+                    OrderStatus.DELIVERED -> "Your order has been successfully delivered."
+                    OrderStatus.UNKNOWN_STATUS -> "We couldn't determine the order status."
+                }
+            }
         ),
         logout = "Logout"
     )
