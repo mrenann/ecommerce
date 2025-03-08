@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -76,6 +77,7 @@ class LoginScreen : Screen {
         val strings = LocalStrings.current.authScreen
         val coroutineScope = rememberCoroutineScope()
         val navigation = LocalNavigator.currentOrThrow
+        var isLoading by remember { mutableStateOf(false) }
 
         Scaffold { innerPadding ->
             Column(
@@ -157,29 +159,39 @@ class LoginScreen : Screen {
                     Button(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(10.dp),
-                        enabled = email.isNotEmpty() && password.isNotEmpty(),
+                        enabled = !isLoading && email.isNotEmpty() && password.isNotEmpty(),
                         onClick = {
+                            isLoading = true
                             authenticationManager.loginWithEmail(email, password)
                                 .onEach { response ->
                                     when (response) {
                                         is AuthResponse.Success -> {
+                                            isLoading = false
                                             navigation.replace(MainScreen())
                                         }
 
                                         is AuthResponse.Error -> {
+                                            isLoading = false
                                             Log.i("LoginScreen", "Error")
-
                                         }
                                     }
                                 }.launchIn(coroutineScope)
                         }
                     ) {
-                        Text(strings.signIn)
+                        if (isLoading) {
+                            CircularProgressIndicator(
+                                color = Color.White,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        } else {
+                            Text(strings.signIn)
+                        }
                     }
 
                     Button(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(10.dp),
+                        enabled = !isLoading,
                         onClick = {
                             navigation.push(RegisterScreen())
 //                            authenticationManager.signInWithGoogle()
