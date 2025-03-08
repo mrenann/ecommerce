@@ -56,6 +56,7 @@ import br.mrenann.productdetails.presentation.components.CartBottomSheet
 import br.mrenann.productdetails.presentation.components.ShimmerEffect
 import br.mrenann.productdetails.presentation.screenModel.DetailsScreenModel
 import br.mrenann.productdetails.presentation.state.DetailsEvent
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -92,6 +93,7 @@ data class DetailsScreen(
         LaunchedEffect(key1 = id) {
             screenModel.getDetails(DetailsEvent.GetDetails(id))
         }
+        val strings = LocalStrings.current.detailsScreen
 
 
         Scaffold(
@@ -182,7 +184,7 @@ data class DetailsScreen(
                                                 snackBarState = !checkedState
                                                 snackbarHostState.currentSnackbarData?.dismiss()
                                                 snackbarHostState.showSnackbar(
-                                                    message = if (checkedState) "Product removed from favorites" else "Product added to favorites",
+                                                    message = if (checkedState) strings.removedFromFavorite else strings.addedToFavorite,
                                                     duration = SnackbarDuration.Short,
                                                 )
                                             }
@@ -198,7 +200,7 @@ data class DetailsScreen(
                                     IconButton(onClick = {
                                         product?.let {
                                             val title =
-                                                "Check this product: \n${it.title}\n${it.price.formatBalance()}"
+                                                "${strings.checkThisProduct}: \n${it.title}\n${it.price.formatBalance()}"
 
                                             val shareIntent = Intent().apply {
                                                 action = Intent.ACTION_SEND
@@ -209,7 +211,7 @@ data class DetailsScreen(
                                             context.startActivity(
                                                 Intent.createChooser(
                                                     shareIntent,
-                                                    "Share via"
+                                                    strings.checkThisProduct
                                                 )
                                             )
                                         }
@@ -326,7 +328,7 @@ data class DetailsScreen(
                                     showBottomSheet = true
                                 }
                             ) {
-                                Text("Add to Cart")
+                                Text(strings.addToCart)
                             }
                         }
 
@@ -397,7 +399,7 @@ data class DetailsScreen(
                                     .padding(top = 16.dp)
                             ) {
                                 Text(
-                                    text = "PRODUCT NOT FOUND",
+                                    text = strings.productNotFound,
                                     style = MaterialTheme.typography.bodyLarge,
                                     fontSize = 22.sp,
                                     fontWeight = FontWeight.Bold

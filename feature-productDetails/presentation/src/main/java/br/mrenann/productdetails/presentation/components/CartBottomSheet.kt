@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.Category
 import br.mrenann.core.domain.model.Product
+import cafe.adriel.lyricist.LocalStrings
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -34,7 +35,7 @@ import compose.icons.evaicons.outline.Close
 
 @Composable
 fun CartBottomSheet(product: Product?, onClose: () -> Unit) {
-
+    val strings = LocalStrings.current.detailsScreen
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -75,7 +76,7 @@ fun CartBottomSheet(product: Product?, onClose: () -> Unit) {
             )
             Column {
                 Text(
-                    text = "Added to Cart",
+                    text = strings.addedToCart,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
@@ -91,7 +92,7 @@ fun CartBottomSheet(product: Product?, onClose: () -> Unit) {
                     lineHeight = 13.sp
                 )
                 Text(
-                    text = "1 unit",
+                    text = "1 ${strings.unit}",
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
                     color = Color.Gray,

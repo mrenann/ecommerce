@@ -36,6 +36,7 @@ import br.mrenann.profile.presentation.components.flipCard.CardData
 import br.mrenann.profile.presentation.components.flipCard.CardFace
 import br.mrenann.profile.presentation.util.DigitsAndSpacesTransformation
 import br.mrenann.profile.presentation.util.formatCardNumber
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -59,6 +60,7 @@ class CardScreen : Screen {
         var expiry by remember { mutableStateOf("") }
         var state: CardFace by remember { mutableStateOf(CardFace.Front) }
         val cardBrand = CardBrand.fromCardNumber(number)
+        val strings = LocalStrings.current.profileTab.myCards
 
         Scaffold(
             modifier = Modifier.fillMaxSize()
@@ -83,7 +85,7 @@ class CardScreen : Screen {
                     }
                     Text(
                         modifier = Modifier.weight(1F),
-                        text = "Card",
+                        text = strings.card,
                         style = MaterialTheme.typography.bodyLarge,
                         fontSize = 18.sp
                     )
@@ -118,7 +120,7 @@ class CardScreen : Screen {
                                 contentDescription = "Credit Icon"
                             )
                         },
-                        placeholder = { Text("Card number") },
+                        placeholder = { Text(strings.cardNumber) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .onFocusChanged { focusState: FocusState ->
@@ -162,7 +164,7 @@ class CardScreen : Screen {
                                     contentDescription = "Search Icon"
                                 )
                             },
-                            placeholder = { Text("Expire date (MM/YY)") },
+                            placeholder = { Text(strings.expireDate) },
                             modifier = Modifier
                                 .weight(1F)
                                 .onFocusChanged { focusState: FocusState ->
@@ -196,7 +198,7 @@ class CardScreen : Screen {
                                     cvv = it.filter { char -> char.isDigit() }
                                 }
                             },
-                            placeholder = { Text("CVV") },
+                            placeholder = { Text(strings.cvv) },
                             modifier = Modifier
                                 .weight(1F)
                                 .onFocusChanged { focusState: FocusState ->
@@ -250,7 +252,7 @@ class CardScreen : Screen {
                         }
                     }
                 ) {
-                    Text("Add Card")
+                    Text(strings.addCard)
                 }
             }
         }

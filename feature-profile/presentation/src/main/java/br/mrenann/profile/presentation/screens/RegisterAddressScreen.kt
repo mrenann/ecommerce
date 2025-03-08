@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.Address
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -48,6 +49,7 @@ data class RegisterAddressScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        val strings = LocalStrings.current.profileTab.myAddresses
 
         var street by remember { mutableStateOf(address?.street ?: "") }
         var number by remember { mutableStateOf(address?.number?.toString() ?: "") }
@@ -81,7 +83,7 @@ data class RegisterAddressScreen(
                     }
                     Text(
                         modifier = Modifier.weight(1F),
-                        text = if (address != null) "Edit Address" else "Add Address",
+                        text = if (address != null) strings.editAddress else strings.addAddress,
                         style = MaterialTheme.typography.bodyLarge,
                         fontSize = 18.sp
                     )
@@ -104,7 +106,7 @@ data class RegisterAddressScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text(text = "Main Address")
+                            Text(text = strings.mainAddress)
                             Switch(
                                 checked = isMain,
                                 onCheckedChange = { isMain = it }
@@ -114,7 +116,7 @@ data class RegisterAddressScreen(
                         OutlinedTextField(
                             value = street,
                             onValueChange = { street = it },
-                            placeholder = { Text("Street") },
+                            placeholder = { Text(strings.street) },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(8.dp),
                             colors = OutlinedTextFieldDefaults.colors(
@@ -128,7 +130,7 @@ data class RegisterAddressScreen(
                         OutlinedTextField(
                             value = number,
                             onValueChange = { number = it },
-                            placeholder = { Text("Number") },
+                            placeholder = { Text(strings.number) },
                             modifier = Modifier.fillMaxWidth(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             shape = RoundedCornerShape(8.dp),
@@ -143,7 +145,7 @@ data class RegisterAddressScreen(
                         OutlinedTextField(
                             value = district,
                             onValueChange = { district = it },
-                            placeholder = { Text("District") },
+                            placeholder = { Text(strings.district) },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(8.dp),
                             colors = OutlinedTextFieldDefaults.colors(
@@ -157,7 +159,7 @@ data class RegisterAddressScreen(
                         OutlinedTextField(
                             value = city,
                             onValueChange = { city = it },
-                            placeholder = { Text("City") },
+                            placeholder = { Text(strings.city) },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(8.dp),
                             colors = OutlinedTextFieldDefaults.colors(
@@ -171,7 +173,7 @@ data class RegisterAddressScreen(
                         OutlinedTextField(
                             value = state,
                             onValueChange = { state = it },
-                            placeholder = { Text("State") },
+                            placeholder = { Text(strings.state) },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(8.dp),
                             colors = OutlinedTextFieldDefaults.colors(
@@ -185,7 +187,7 @@ data class RegisterAddressScreen(
                         OutlinedTextField(
                             value = code,
                             onValueChange = { code = it },
-                            placeholder = { Text("Postal Code") },
+                            placeholder = { Text(strings.zipCode) },
                             modifier = Modifier.fillMaxWidth(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             shape = RoundedCornerShape(8.dp),
@@ -200,7 +202,7 @@ data class RegisterAddressScreen(
                         OutlinedTextField(
                             value = complement,
                             onValueChange = { complement = it },
-                            placeholder = { Text("Complement") },
+                            placeholder = { Text(strings.complement) },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(8.dp),
                             colors = OutlinedTextFieldDefaults.colors(
@@ -240,7 +242,7 @@ data class RegisterAddressScreen(
                                         }
                                 }
                             ) {
-                                Text("Remove Address")
+                                Text(strings.removeAddress)
                             }
                         }
 
@@ -302,7 +304,7 @@ data class RegisterAddressScreen(
                                     }
                             }
                         ) {
-                            Text("Save Address")
+                            Text(strings.saveAddress)
                         }
                     }
 

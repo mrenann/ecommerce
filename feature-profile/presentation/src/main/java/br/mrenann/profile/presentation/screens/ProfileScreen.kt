@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.navigation.LocalNavigatorParent
 import br.mrenann.navigation.SharedScreen
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.core.registry.rememberScreen
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -67,6 +68,7 @@ class ProfileScreen : Screen {
         val loginScreen = rememberScreen(SharedScreen.LoginScreen)
         var userName by remember { mutableStateOf("Carregando...") }
         var userEmail by remember { mutableStateOf("Carregando...") }
+        val strings = LocalStrings.current.profileTab
 
         LaunchedEffect(userId) {
             if (userId != null) {
@@ -156,7 +158,7 @@ class ProfileScreen : Screen {
                             imageVector = EvaIcons.Outline.CreditCard,
                             contentDescription = "My Gigs"
                         )
-                        Text("My Cards")
+                        Text(strings.myCards.buttonProfile)
                     }
 
                     Column(
@@ -171,13 +173,13 @@ class ProfileScreen : Screen {
                             imageVector = EvaIcons.Outline.ShoppingBag,
                             contentDescription = "My Gigs"
                         )
-                        Text("Orders")
+                        Text(strings.orders.buttonProfile)
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 
                 ListItem(
-                    text = "My addresses",
+                    text = strings.myAddresses.buttonProfile,
                     icon = EvaIcons.Fill.Map,
                     color = Color.DarkGray,
                     onClick = {
@@ -185,7 +187,7 @@ class ProfileScreen : Screen {
                     })
 
                 ListItem(
-                    text = "Logout",
+                    text = strings.logout,
                     icon = EvaIcons.Outline.LogOut,
                     color = Color.Red,
                     onClick = {

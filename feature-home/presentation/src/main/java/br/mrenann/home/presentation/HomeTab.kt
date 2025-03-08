@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import br.mrenann.home.presentation.screen.HomeScreen
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
@@ -18,7 +19,7 @@ class HomeTab : Tab {
     override val options: TabOptions
         @Composable
         get() {
-            val title = "Home"
+            val title = LocalStrings.current.homeTab.title
             val tabNavigator = LocalTabNavigator.current
             val icon = rememberVectorPainter(EvaIcons.Outline.Home)
             val iconChecked = rememberVectorPainter(EvaIcons.Fill.Home)

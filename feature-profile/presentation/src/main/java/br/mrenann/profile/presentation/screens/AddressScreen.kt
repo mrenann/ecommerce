@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.Address
 import br.mrenann.profile.presentation.components.addresses.AddressItem
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -44,6 +45,7 @@ class AddressScreen : Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         var addresses by remember { mutableStateOf<List<Address>>(emptyList()) }
+        val strings = LocalStrings.current.profileTab.myAddresses
 
         LaunchedEffect(true) {
             val db = Firebase.firestore
@@ -98,7 +100,7 @@ class AddressScreen : Screen {
                     }
                     Text(
                         modifier = Modifier.weight(1F),
-                        text = "Addresses",
+                        text = strings.title,
                         style = MaterialTheme.typography.bodyLarge,
                         fontSize = 18.sp
                     )
@@ -125,7 +127,7 @@ class AddressScreen : Screen {
                         navigator.push(RegisterAddressScreen())
                     }
                 ) {
-                    Text("Add Address")
+                    Text(strings.addAddress)
                 }
             }
         }

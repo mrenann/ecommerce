@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.CardBrand
 import br.mrenann.profile.presentation.screens.Card
+import cafe.adriel.lyricist.LocalStrings
 import compose.icons.SimpleIcons
 import compose.icons.simpleicons.Americanexpress
 import compose.icons.simpleicons.Bandcamp
@@ -48,6 +49,8 @@ fun CardItem(card: Card, index: Int, modifier: Modifier = Modifier) {
         SimpleIcons.Bandcamp
     }
 
+    val strings = LocalStrings.current.profileTab.myCards
+
     Column(
         modifier = modifier
             .width(200.dp)
@@ -70,6 +73,6 @@ fun CardItem(card: Card, index: Int, modifier: Modifier = Modifier) {
             color = Color.White
         )
         Spacer(modifier = Modifier.height(4.dp))
-        Text(text = "Exp ${card.expiryDate}", fontSize = 14.sp, color = Color.White)
+        Text(text = "${strings.exp} ${card.expiryDate}", fontSize = 14.sp, color = Color.White)
     }
 }

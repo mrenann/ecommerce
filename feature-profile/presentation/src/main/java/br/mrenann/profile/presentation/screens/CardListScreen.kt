@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import br.mrenann.profile.presentation.components.CardItem
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -73,8 +74,7 @@ class CardListScreen : Screen {
         var draggedCardIndex by remember { mutableStateOf(-1) }
         val cardOffsets = remember { mutableStateMapOf<Int, Float>() }
         val coroutineScope = rememberCoroutineScope()
-
-        Log.i("card", "${draggedCardIndex}")
+        val strings = LocalStrings.current.profileTab.myCards
 
         LaunchedEffect(true) {
             val db = Firebase.firestore
@@ -115,7 +115,7 @@ class CardListScreen : Screen {
                     }
                     Text(
                         modifier = Modifier.weight(1F),
-                        text = "Cards",
+                        text = strings.title,
                         style = MaterialTheme.typography.bodyLarge,
                         fontSize = 18.sp
                     )
@@ -195,7 +195,7 @@ class CardListScreen : Screen {
                             verticalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                text = "No cards available",
+                                text = strings.noCards,
                                 textAlign = TextAlign.Center,
                             )
                         }
@@ -213,7 +213,7 @@ class CardListScreen : Screen {
                                 shape = RoundedCornerShape(8.dp)
                             )
                             .padding(12.dp),
-                        text = "To remove a card, drag it up."
+                        text = strings.toRemove
                     )
                 }
 
@@ -252,14 +252,14 @@ class CardListScreen : Screen {
                             draggedCardIndex = -1
 
                         },
-                        title = { Text("Delete Card") }, // More specific title
+                        title = { Text(strings.deleteCard) }, // More specific title
                         text = {
                             Text(
-                                "Are you sure you want to delete card ending in ${
+                                strings.sureToRemove(
                                     cards.getOrNull(
                                         draggedCardIndex
                                     )?.cardNumber?.takeLast(4) ?: "N/A"
-                                }?"
+                                )
                             )
                         },
                         confirmButton = {
@@ -292,12 +292,12 @@ class CardListScreen : Screen {
                                     }
                                 }
                             }) {
-                                Text("Delete")
+                                Text(strings.delete)
                             }
                         },
                         dismissButton = {
                             Button(onClick = { showDialog = false; draggedCardIndex = -1 }) {
-                                Text("Cancel")
+                                Text(strings.cancel)
                             }
                         }
                     )

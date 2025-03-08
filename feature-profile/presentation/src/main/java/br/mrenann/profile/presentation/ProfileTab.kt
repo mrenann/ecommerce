@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import br.mrenann.profile.presentation.screens.ProfileScreen
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
@@ -18,7 +19,7 @@ class ProfileTab : Tab {
     override val options: TabOptions
         @Composable
         get() {
-            val title = "Profile"
+            val title = LocalStrings.current.profileTab.title
             val tabNavigator = LocalTabNavigator.current
             val icon = rememberVectorPainter(EvaIcons.Outline.Person)
             val iconChecked = rememberVectorPainter(EvaIcons.Fill.Person)
