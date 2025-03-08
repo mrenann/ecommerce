@@ -34,6 +34,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.main.presentation.MainScreen
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -56,7 +57,7 @@ class RegisterScreen : Screen {
         var email by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
         var confirmPassword by remember { mutableStateOf("") }
-
+        val strings = LocalStrings.current.authScreen
         val context = LocalContext.current
         val authenticationManager = remember { AuthenticationManager(context) }
         val coroutineScope = rememberCoroutineScope()
@@ -89,13 +90,13 @@ class RegisterScreen : Screen {
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "Create Account",
+                        text = strings.createAccount,
                         fontSize = 36.sp,
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.bodyLarge
                     )
                     Text(
-                        text = "Please fill the form to create your account",
+                        text = strings.pleaseFillTheFormToCreateYourAccount,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
                         style = MaterialTheme.typography.bodyLarge
@@ -109,7 +110,7 @@ class RegisterScreen : Screen {
                         OutlinedTextField(
                             value = name,
                             onValueChange = { value -> name = value },
-                            placeholder = { Text("Name") },
+                            placeholder = { Text(strings.name) },
                             leadingIcon = {
                                 Icon(
                                     imageVector = EvaIcons.Fill.Email,
@@ -129,7 +130,7 @@ class RegisterScreen : Screen {
                         OutlinedTextField(
                             value = email,
                             onValueChange = { value -> email = value },
-                            placeholder = { Text("Email") },
+                            placeholder = { Text(strings.email) },
                             leadingIcon = {
                                 Icon(
                                     imageVector = EvaIcons.Fill.Email,
@@ -149,7 +150,7 @@ class RegisterScreen : Screen {
                         OutlinedTextField(
                             value = password,
                             onValueChange = { value -> password = value },
-                            placeholder = { Text("Password") },
+                            placeholder = { Text(strings.password) },
                             leadingIcon = {
                                 Icon(
                                     imageVector = EvaIcons.Fill.Lock,
@@ -170,7 +171,7 @@ class RegisterScreen : Screen {
                         OutlinedTextField(
                             value = confirmPassword,
                             onValueChange = { value -> confirmPassword = value },
-                            placeholder = { Text("Confirm Password") },
+                            placeholder = { Text(strings.confirmPassword) },
                             leadingIcon = {
                                 Icon(
                                     imageVector = EvaIcons.Fill.Lock,
@@ -217,7 +218,7 @@ class RegisterScreen : Screen {
                                     }.launchIn(coroutineScope)
                             }
                         ) {
-                            Text("Register")
+                            Text(strings.register)
                         }
                     }
                 }

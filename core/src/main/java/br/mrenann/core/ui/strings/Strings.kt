@@ -13,7 +13,17 @@ data class Strings(
 
 data class AuthScreenStrings(
     val login: String,
-)
+    val signIn: String,
+    val email: String,
+    val password: String,
+    val createAccount: String,
+    val name: String,
+    val pleaseFillTheFormToContinue: String,
+    val pleaseFillTheFormToCreateYourAccount: String,
+    val register: String,
+    val confirmPassword: String,
+
+    )
 
 data class CartScreenStrings(
     val title: String,

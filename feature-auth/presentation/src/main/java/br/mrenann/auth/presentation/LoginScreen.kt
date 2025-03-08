@@ -34,6 +34,7 @@ import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import br.mrenann.main.presentation.MainScreen
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -72,6 +73,7 @@ class LoginScreen : Screen {
         val authenticationManager = remember {
             AuthenticationManager(context)
         }
+        val strings = LocalStrings.current.authScreen
         val coroutineScope = rememberCoroutineScope()
         val navigation = LocalNavigator.currentOrThrow
 
@@ -84,13 +86,13 @@ class LoginScreen : Screen {
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Sign-in",
+                    text = strings.signIn,
                     fontSize = 36.sp,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    text = "Please fill the form to continue",
+                    text = strings.pleaseFillTheFormToContinue,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
                     style = MaterialTheme.typography.bodyLarge
@@ -106,7 +108,7 @@ class LoginScreen : Screen {
                         onValueChange = { value ->
                             email = value
                         },
-                        placeholder = { Text("Email") },
+                        placeholder = { Text(strings.email) },
                         leadingIcon = {
                             Icon(
                                 imageVector = EvaIcons.Fill.Email,
@@ -130,7 +132,7 @@ class LoginScreen : Screen {
                         onValueChange = { value ->
                             password = value
                         },
-                        placeholder = { Text("Password") },
+                        placeholder = { Text(strings.password) },
                         leadingIcon = {
                             Icon(
                                 imageVector = EvaIcons.Fill.Lock,
@@ -172,7 +174,7 @@ class LoginScreen : Screen {
                                 }.launchIn(coroutineScope)
                         }
                     ) {
-                        Text("Sign-In")
+                        Text(strings.signIn)
                     }
 
                     Button(
@@ -195,7 +197,7 @@ class LoginScreen : Screen {
 //                                }.launchIn(coroutineScope)
                         }
                     ) {
-                        Text("Create Account")
+                        Text(strings.createAccount)
                     }
                 }
             }

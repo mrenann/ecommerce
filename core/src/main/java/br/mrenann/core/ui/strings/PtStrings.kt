@@ -76,7 +76,17 @@ internal val PtStrings = Strings(
         expNumber = { "Val $it" },
     ),
     authScreen = AuthScreenStrings(
-        login = "Login"
+        login = "Login",
+        signIn = "Entrar",
+        email = "E-mail",
+        password = "Senha",
+        createAccount = "Criar conta",
+        pleaseFillTheFormToContinue = "Por favor, preencha o formulário para continuar",
+        pleaseFillTheFormToCreateYourAccount = "Por favor, preencha o formulário para criar sua conta",
+        register = "Registrar",
+        confirmPassword = "Confirmar senha",
+        name = "Nome"
+
     ),
     profileTab = ProfileTabStrings(
         title = "Perfil",
@@ -168,7 +178,7 @@ internal val PtStrings = Strings(
             dispatchedSubtitle = "Estamos preparando tudo para sua entrega.",
             enRouteSubtitle = "Seu pedido está em rota de entrega! É agendado para chegar brevemen"
 
-            ),
+        ),
         logout = "Sair"
     )
 )

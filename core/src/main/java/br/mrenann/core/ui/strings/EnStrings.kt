@@ -27,7 +27,16 @@ internal val EnStrings = Strings(
         productNotFound = "Product not found"
     ),
     authScreen = AuthScreenStrings(
-        login = "Login"
+        login = "Login",
+        signIn = "Sign-In",
+        email = "Email",
+        password = "Password",
+        createAccount = "Create account",
+        pleaseFillTheFormToContinue = "Please fill the form to continue",
+        pleaseFillTheFormToCreateYourAccount = "Please fill the form to create your account",
+        register = "Register",
+        confirmPassword = "Confirm password",
+        name = "Name"
     ),
     cartScreen = CartScreenStrings(
         title = "Cart",
