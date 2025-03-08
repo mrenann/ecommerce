@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.Order
 import br.mrenann.core.domain.model.OrderStatus
+import cafe.adriel.lyricist.LocalStrings
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Fill
 import compose.icons.evaicons.fill.Person
@@ -27,13 +28,15 @@ import compose.icons.evaicons.fill.Pin
 
 @Composable
 fun DeliveryCard(order: Order, color: Color) {
+    val strings = LocalStrings.current.profileTab.orders
+
     Column(
         modifier = Modifier.padding(horizontal = 12.dp),
     ) {
         Text(
             modifier = Modifier.padding(bottom = 12.dp),
             fontSize = 17.sp,
-            text = "Delivery To",
+            text = strings.deliveryTo,
             fontWeight = FontWeight.Bold
         )
 
@@ -71,7 +74,7 @@ fun DeliveryCard(order: Order, color: Color) {
             Column {
                 Text(
                     fontWeight = FontWeight.Bold,
-                    text = order.typeAddress,
+                    text = if (order.typeAddress == "Agency") strings.agency else strings.residence,
                     fontSize = 15.sp,
                     lineHeight = 15.sp,
                     style = MaterialTheme.typography.bodyLarge,

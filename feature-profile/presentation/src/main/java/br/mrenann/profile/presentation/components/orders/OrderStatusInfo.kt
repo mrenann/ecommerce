@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.OrderStatus
 import br.mrenann.profile.presentation.components.TimelineView
+import cafe.adriel.lyricist.LocalStrings
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Outline
 import compose.icons.evaicons.outline.Link
@@ -37,6 +38,7 @@ fun OrderStatusInfo(
     subtitle: String = "",
     isPix: Boolean = false
 ) {
+    val strings = LocalStrings.current.profileTab.orders
     val context = LocalContext.current
 
     Column(
@@ -46,7 +48,7 @@ fun OrderStatusInfo(
             .padding(22.dp),
     ) {
         Text(
-            text = status.displayName,
+            text = strings.ordersStatusTitle(status),
             color = Color.White,
             fontWeight = FontWeight.Bold,
             fontSize = 22.sp
@@ -103,24 +105,24 @@ fun OrderStatusInfo(
             TimelineView(
                 listOf(
                     TimelineStep(
-                        OrderStatusEnum.SHIPPED.name,
+                        strings.shippedTitle,
                         true,
-                        "Your order has been confirmed and is now being prepared."
+                        strings.shippedSubtitle
                     ),
                     TimelineStep(
-                        OrderStatusEnum.ON_THE_ROAD.name,
+                        strings.onTheRoadTitle,
                         true,
-                        "Your order is on the way! Expect a quick delivery soon."
+                        strings.onTheRoadSubtitle
                     ),
                     TimelineStep(
-                        OrderStatusEnum.DISPATCHED.name,
+                        strings.dispatchedTitle,
                         false,
-                        "We're getting everything ready for your delivery."
+                        strings.dispatchedSubtitle
                     ),
                     TimelineStep(
-                        OrderStatusEnum.EN_ROUTE.name,
+                        strings.enRouteTitle,
                         false,
-                        "Your order is on the road! It's scheduled to arrive shortly."
+                        strings.enRouteSubtitle
                     ),
                 )
             )

@@ -143,7 +143,29 @@ internal val EnStrings = Strings(
                     OrderStatus.DELIVERED -> "Your order has been successfully delivered."
                     OrderStatus.UNKNOWN_STATUS -> "We couldn't determine the order status."
                 }
-            }
+            },
+            orderDetails = "Order Details",
+            total = "Total",
+            deliveryTo = "Delivery to",
+            payment = "Payment",
+            agency = "Agency",
+            residence = "Residence",
+            subTotal = "Subtotal",
+            paymentAwaitingApproval = "Payment awaiting approval",
+            ensureCompleteTransfer = "Ensure the transfer was completed within the time limit.",
+            oneTimePayment = { "1x $it" },
+            paidWith = "Paid with",
+            ensurePaymentSufficientLimit = "Ensure your payment method has sufficient limit",
+            payYourOrderWithPix = "Pay your order with Pix",
+            checkingThisForYou = "We're checking on this for you",
+            shippedTitle = "Shipped",
+            onTheRoadTitle = "On the road",
+            dispatchedTitle = "Dispatched",
+            enRouteTitle = "En route",
+            shippedSubtitle = "Your order has been confirmed and is now being prepared.",
+            onTheRoadSubtitle = "Your order is on the way! Expect a quick delivery soon.",
+            dispatchedSubtitle = "We're getting everything ready for your delivery.",
+            enRouteSubtitle = "Your order is on the road! It's scheduled to arrive shortly."
         ),
         logout = "Logout"
     )

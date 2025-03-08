@@ -40,6 +40,7 @@ import br.mrenann.core.domain.model.OrderProduct
 import br.mrenann.core.util.formatBalance
 import br.mrenann.navigation.LocalNavigatorParent
 import br.mrenann.navigation.SharedScreen
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.core.registry.rememberScreen
 import cafe.adriel.voyager.navigator.currentOrThrow
 import coil3.compose.AsyncImage
@@ -56,6 +57,7 @@ fun ReceiptView(
 
     ) {
     val navigator = LocalNavigatorParent.currentOrThrow
+    val strings = LocalStrings.current.profileTab.orders
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -124,15 +126,6 @@ fun ReceiptView(
 
                 }
             }
-//            Text(
-//                text = "№$orderNumber",
-//                style = MaterialTheme.typography.headlineLarge,
-//                fontWeight = FontWeight.Bold,
-//            )
-//            Spacer(modifier = Modifier.height(16.dp))
-//
-//            // Pizza Details
-
 
             Spacer(modifier = Modifier.height(8.dp))
             DashedLine(color = contentColor)
@@ -145,7 +138,7 @@ fun ReceiptView(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Sub total",
+                        text = strings.subTotal,
                         style = MaterialTheme.typography.bodyLarge,
 
                         )
@@ -185,7 +178,7 @@ fun ReceiptView(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Total",
+                    text = strings.total,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
 

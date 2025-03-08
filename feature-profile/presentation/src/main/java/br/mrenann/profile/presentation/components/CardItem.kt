@@ -67,7 +67,7 @@ fun CardItem(card: Card, index: Int, modifier: Modifier = Modifier) {
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "**** ${card.cardNumber.takeLast(4)}",
+            text = LocalStrings.current.cartScreen.cardNumber(card.cardNumber.takeLast(4)),
             fontSize = 20.sp,
             fontWeight = FontWeight.SemiBold,
             color = Color.White

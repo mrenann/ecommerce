@@ -22,12 +22,14 @@ import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.Order
 import br.mrenann.core.util.formatBalance
 import br.mrenann.profile.presentation.R
+import cafe.adriel.lyricist.LocalStrings
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Fill
 import compose.icons.evaicons.fill.CreditCard
 
 @Composable
 fun PaidCard(order: Order, color: Color) {
+    val strings = LocalStrings.current.profileTab.orders
     Column(
         modifier = Modifier
             .padding(horizontal = 12.dp)
@@ -36,7 +38,7 @@ fun PaidCard(order: Order, color: Color) {
         Text(
             modifier = Modifier.padding(bottom = 12.dp),
             fontSize = 17.sp,
-            text = "Paid with",
+            text = strings.paidWith,
             fontWeight = FontWeight.Bold
         )
 
@@ -50,13 +52,14 @@ fun PaidCard(order: Order, color: Color) {
                 ) rememberVectorPainter(EvaIcons.Fill.CreditCard) else painterResource(
                     R.drawable.ic_pix
                 ),
-                contentDescription = null, // Provide a meaningful description
+                contentDescription = null,
                 modifier = Modifier.size(24.dp),
                 colorFilter = ColorFilter.tint(color)
             )
             Column {
                 Text(
-                    text = if (order.card.isNullOrBlank()) "Pix" else order.card ?: "",
+                    text = if (order.card.isNullOrBlank()) LocalStrings.current.cartScreen.pix else order.card
+                        ?: "",
                     fontSize = 14.sp,
                     lineHeight = 14.sp,
                     style = MaterialTheme.typography.bodyLarge,

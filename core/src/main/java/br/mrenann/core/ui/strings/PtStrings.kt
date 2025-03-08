@@ -144,8 +144,31 @@ internal val PtStrings = Strings(
                     OrderStatus.DELIVERED -> "Seu pedido foi entregue com sucesso."
                     OrderStatus.UNKNOWN_STATUS -> "Não foi possível determinar o status do pedido."
                 }
-            }
-        ),
+            },
+            orderDetails = "Detalhes do pedido",
+            total = "Total",
+            deliveryTo = "Entrega para",
+            payment = "Pagamento",
+            agency = "Agência",
+            residence = "Casa",
+            subTotal = "Subtotal",
+            paymentAwaitingApproval = "Pagamento aguardando aprovação",
+            ensureCompleteTransfer = "Certifique-se de que a transferência foi completa dentro do tempo limite.",
+            oneTimePayment = { "1x $it" },
+            paidWith = "Pago com",
+            ensurePaymentSufficientLimit = "Certifique-se de que seu cartão tenha limite suficiente",
+            payYourOrderWithPix = "Pague seu pedido com Pix",
+            checkingThisForYou = "Estamos verificando isso para você",
+            shippedTitle = "Enviado",
+            onTheRoadTitle = "A caminho",
+            dispatchedTitle = "Saiu para entrega",
+            enRouteTitle = "Em rota de entrega",
+            shippedSubtitle = "Seu pedido foi confirmado e está sendo preparado.",
+            onTheRoadSubtitle = "Seu pedido está a caminho! Você receberá a entrega em breve.",
+            dispatchedSubtitle = "Estamos preparando tudo para sua entrega.",
+            enRouteSubtitle = "Seu pedido está em rota de entrega! É agendado para chegar brevemen"
+
+            ),
         logout = "Sair"
     )
 )

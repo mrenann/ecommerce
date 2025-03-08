@@ -24,12 +24,15 @@ import br.mrenann.core.domain.model.Order
 import br.mrenann.core.domain.model.OrderStatus
 import br.mrenann.core.util.formatBalance
 import br.mrenann.profile.presentation.R
+import cafe.adriel.lyricist.LocalStrings
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Fill
 import compose.icons.evaicons.fill.CreditCard
 
 @Composable
 fun PaymentCard(order: Order, color: Color) {
+    val strings = LocalStrings.current.profileTab.orders
+
     Column(
         modifier = Modifier
             .padding(horizontal = 12.dp)
@@ -38,7 +41,7 @@ fun PaymentCard(order: Order, color: Color) {
         Text(
             modifier = Modifier.padding(bottom = 12.dp),
             fontSize = 17.sp,
-            text = "Payment",
+            text = strings.payment,
             fontWeight = FontWeight.Bold
         )
 
@@ -52,25 +55,26 @@ fun PaymentCard(order: Order, color: Color) {
                 ) rememberVectorPainter(EvaIcons.Fill.CreditCard) else painterResource(
                     R.drawable.ic_pix
                 ),
-                contentDescription = null, // Provide a meaningful description
+                contentDescription = null,
                 modifier = Modifier.size(24.dp),
                 colorFilter = ColorFilter.tint(color)
             )
             Column {
                 Text(
-                    text = if (order.card.isNullOrBlank()) "Pix" else order.card ?: "",
+                    text = if (order.card.isNullOrBlank()) LocalStrings.current.cartScreen.pix else order.card
+                        ?: "",
                     fontSize = 14.sp,
                     lineHeight = 14.sp,
                     style = MaterialTheme.typography.bodyLarge,
                 )
                 Text(
-                    text = "1x ${order.priceFinal.formatBalance()}",
+                    text = strings.oneTimePayment(order.priceFinal.formatBalance()),
                     fontSize = 14.sp,
                     lineHeight = 14.sp,
                     style = MaterialTheme.typography.bodyLarge,
                 )
                 Text(
-                    text = if (order.card.isNullOrBlank()) "Ensure you complete the transfer within the time limit" else "Payment is awaiting approval",
+                    text = if (order.card.isNullOrBlank()) strings.ensureCompleteTransfer else strings.paymentAwaitingApproval,
                     fontSize = 14.sp,
                     lineHeight = 14.sp,
                     style = MaterialTheme.typography.bodyLarge,

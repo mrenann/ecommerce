@@ -26,6 +26,7 @@ import br.mrenann.profile.presentation.components.PaidCard
 import br.mrenann.profile.presentation.components.PaymentCard
 import br.mrenann.profile.presentation.components.orders.OrderStatusInfo
 import br.mrenann.profile.presentation.components.orders.ReceiptView
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -40,6 +41,7 @@ data class OrderScreen(
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val orderStatus = order.status.toOrderStatus()
+        val strings = LocalStrings.current.profileTab.orders
         Scaffold(
             modifier = Modifier.fillMaxSize()
         ) { innerPadding ->
@@ -62,7 +64,7 @@ data class OrderScreen(
                     }
                     Text(
                         modifier = Modifier.weight(1F),
-                        text = "Order Details",
+                        text = strings.orderDetails,
                         style = MaterialTheme.typography.bodyLarge,
                         fontSize = 18.sp
                     )
@@ -80,7 +82,7 @@ data class OrderScreen(
                             }
 
                             orderStatus == OrderStatus.UNKNOWN_STATUS -> {
-                                "We're checking on this for you"
+                                strings.checkingThisForYou
                             }
 
                             order.paidAt != null && orderStatus == OrderStatus.PAID -> {
@@ -92,12 +94,12 @@ data class OrderScreen(
                             }
 
                             orderStatus == OrderStatus.AWAITING_PAYMENT && order.card.isNullOrBlank() -> {
-                                "Pay your order with Pix"
+                                strings.payYourOrderWithPix
                             }
 
                             orderStatus == OrderStatus.AWAITING_PAYMENT && order.card.isNullOrBlank()
                                 .not() -> {
-                                "Ensure your payment method has sufficient limit"
+                                strings.ensurePaymentSufficientLimit
                             }
 
                             else -> {
