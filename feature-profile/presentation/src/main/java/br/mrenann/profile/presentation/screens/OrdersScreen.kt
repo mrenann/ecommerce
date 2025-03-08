@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.Order
 import br.mrenann.profile.presentation.components.orders.OrderList
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -78,7 +79,7 @@ class OrdersScreen : Screen { // Pass the orders list
                     }
                     Text(
                         modifier = Modifier.weight(1F),
-                        text = "Orders",
+                        text = LocalStrings.current.profileTab.orders.buttonProfile,
                         style = MaterialTheme.typography.bodyLarge,
                         fontSize = 18.sp
                     )

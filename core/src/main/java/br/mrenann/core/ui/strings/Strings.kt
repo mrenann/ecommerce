@@ -131,4 +131,11 @@ data class MyCardsStrings(
 
 data class OrdersStrings(
     val buttonProfile: String,
+    val qtdProducts: (count: Int) -> String,
+    val awaitingPayment: String,
+    val paid: String,
+    val onTheWay: String,
+    val unknownStatus: String,
+    val paymentCancelled: String,
+    val delivered: String,
 )

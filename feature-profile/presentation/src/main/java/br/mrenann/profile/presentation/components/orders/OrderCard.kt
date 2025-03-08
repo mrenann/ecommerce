@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import br.mrenann.core.domain.model.Order
 import br.mrenann.core.domain.model.formatOrderStatus
+import cafe.adriel.lyricist.LocalStrings
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -30,6 +31,7 @@ import java.util.Locale
 
 @Composable
 fun OrderCard(order: Order, onClick: () -> Unit) {
+    val strings = LocalStrings.current.profileTab.orders
     Card(
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
@@ -79,7 +81,7 @@ fun OrderCard(order: Order, onClick: () -> Unit) {
                         style = MaterialTheme.typography.bodySmall
                     )
                     Text(
-                        text = "${order.products.size} product",
+                        text = strings.qtdProducts(order.products.size),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }

@@ -113,7 +113,17 @@ internal val PtStrings = Strings(
             card = "Cartão"
         ),
         orders = OrdersStrings(
-            buttonProfile = "Pedidos"
+            buttonProfile = "Pedidos",
+            qtdProducts = { count ->
+                val product = if (count == 1) "produto" else "produtos"
+                "$count $product"
+            },
+            awaitingPayment = "Aguardando pagamento",
+            paid = "Pago",
+            onTheWay = "Em trânsito",
+            unknownStatus = "Status desconhecido",
+            paymentCancelled = "Pagamento cancelado",
+            delivered = "Entregue"
         ),
         logout = "Sair"
     )

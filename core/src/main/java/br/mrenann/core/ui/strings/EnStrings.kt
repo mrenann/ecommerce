@@ -112,7 +112,17 @@ internal val EnStrings = Strings(
             card = "Card"
         ),
         orders = OrdersStrings(
-            buttonProfile = "Orders"
+            buttonProfile = "Orders",
+            qtdProducts = { count ->
+                val product = if (count == 1) "product" else "products"
+                "$count $product"
+            },
+            awaitingPayment = "Awaiting payment",
+            paid = "Paid",
+            onTheWay = "On the way",
+            unknownStatus = "Unknown status",
+            paymentCancelled = "Payment cancelled",
+            delivered = "Delivered"
         ),
         logout = "Logout"
     )
