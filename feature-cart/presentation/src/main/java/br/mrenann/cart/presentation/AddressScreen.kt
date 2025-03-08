@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.Address
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -54,7 +55,7 @@ data class AddressScreen(
                     navigatePop = { navigator.pop() },
                     navigateToChooseArrive = { type, address ->
                         navigator.push(
-                            WhenArriveScreen(type,address)
+                            WhenArriveScreen(type, address)
                         )
                     })
 
@@ -65,9 +66,11 @@ data class AddressScreen(
     @Composable
     fun AddressContent(
         navigatePop: () -> Boolean,
-        navigateToChooseArrive: (String,String) -> Unit,
+        navigateToChooseArrive: (String, String) -> Unit,
         address: Address?
     ) {
+        val strings = LocalStrings.current.cartScreen
+
         Column {
             Row(
                 modifier = Modifier
@@ -81,7 +84,7 @@ data class AddressScreen(
                     )
                 }
                 Text(
-                    text = "Delivery method",
+                    text = strings.deliveryMethod,
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = 18.sp
                 )
@@ -90,9 +93,9 @@ data class AddressScreen(
 
             if (address != null) {
                 AddressCard(
-                    title = "Send to my address",
+                    title = strings.sendToMyAddress,
                     location = "${address.street},${address.number}, ${address.district}, ${address.city}",
-                    type = "Residence",
+                    type = 1,
                     navigate = navigateToChooseArrive
                 )
             } else {
@@ -109,7 +112,7 @@ data class AddressScreen(
                                 .padding(vertical = 12.dp)
                         ) {
                             Text(
-                                text = "You dont have main address",
+                                text = strings.dontHaveMainAddress,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold
                             )
@@ -119,9 +122,9 @@ data class AddressScreen(
                 }
             }
             AddressCard(
-                title = "Pick up at Ecommerce Agency",
+                title = strings.pickUpAgency,
                 location = "224001-224499 E County Rd 345, Mooreland, OK 73852, USA",
-                type = "Agency",
+                type = 2,
                 navigate = navigateToChooseArrive
             )
         }
@@ -132,14 +135,16 @@ data class AddressScreen(
     private fun AddressCard(
         title: String,
         location: String,
-        type: String,
-        navigate: (String,String) -> Unit
+        type: Int,
+        navigate: (String, String) -> Unit
     ) {
+        val strings = LocalStrings.current.cartScreen
+        val typeString = if (type == 1) "Residence" else "Agency"
         Card(
             modifier = Modifier
                 .padding(12.dp)
                 .fillMaxWidth(),
-            onClick = { navigate(type,location) },
+            onClick = { navigate(typeString, location) },
             shape = RoundedCornerShape(4.dp)
         ) {
             Column {
@@ -157,11 +162,11 @@ data class AddressScreen(
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
-                        Text(text = "Free", color = Color(0xFF098D19))
+                        Text(text = strings.free, color = Color(0xFF098D19))
                     }
                     Spacer(modifier = Modifier.size(12.dp))
                     Text(location)
-                    Text(type)
+                    Text(if (type == 1) strings.residence else strings.agency)
                 }
                 HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
                 Column(
@@ -170,7 +175,7 @@ data class AddressScreen(
                         .padding(bottom = 12.dp)
                 ) {
                     Text(
-                        text = "Choose this Address",
+                        text = strings.chooseThisAddress,
                         color = Color(0xFF2481E8),
                         fontWeight = FontWeight.Bold
                     )

@@ -36,6 +36,7 @@ import br.mrenann.core.domain.model.Category
 import br.mrenann.home.presentation.R
 import br.mrenann.home.presentation.components.ShimmerCategories
 import br.mrenann.home.presentation.screenModel.HomeScreenModel
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -91,7 +92,7 @@ class CategoriesScreen : Screen {
                     )
                 }
                 Text(
-                    text = "Categories",
+                    text = LocalStrings.current.homeTab.categories,
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = 18.sp
                 )

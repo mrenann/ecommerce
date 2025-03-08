@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import cafe.adriel.lyricist.LocalStrings
 
 
 @Composable
@@ -71,7 +72,7 @@ fun ShimmerHome() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                SectionTitle("Discover")
+                SectionTitle(LocalStrings.current.homeTab.discover)
 
             }
         }

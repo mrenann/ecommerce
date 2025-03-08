@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import br.mrenann.cart.presentation.components.ChoosePaymentContent
 import br.mrenann.cart.presentation.screenModel.CartScreenModel
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -49,7 +50,7 @@ class ChoosePaymentScreen : Screen {
         var cards by remember { mutableStateOf<List<Card>>(emptyList()) }
         val cartScreenModel = koinScreenModel<CartScreenModel>()
         val cartState by cartScreenModel.state.collectAsState()
-
+        val strings = LocalStrings.current.cartScreen
         LaunchedEffect(true) {
             val db = Firebase.firestore
             val userId = Firebase.auth.currentUser?.uid
@@ -84,7 +85,7 @@ class ChoosePaymentScreen : Screen {
                         )
                     }
                     Text(
-                        text = "Payment",
+                        text = strings.payment,
                         style = MaterialTheme.typography.bodyLarge,
                         fontSize = 18.sp
                     )

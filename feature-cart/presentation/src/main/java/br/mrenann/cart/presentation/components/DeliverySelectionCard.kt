@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cafe.adriel.lyricist.LocalStrings
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Fill
 import compose.icons.evaicons.fill.Flash
@@ -37,7 +38,7 @@ import java.util.Locale
 fun DeliverySelectionCard() {
     val options = listOf(3, 4, 6) // Days ahead
     val today = LocalDate.now()
-
+    val strings = LocalStrings.current.cartScreen
     var selectedOption by remember { mutableStateOf(options.first()) }
 
     Card(
@@ -47,7 +48,6 @@ fun DeliverySelectionCard() {
         shape = RoundedCornerShape(4.dp)
     ) {
         Column(modifier = Modifier) {
-            // Title and Icon
             Column(
                 modifier = Modifier
                     .padding(horizontal = 12.dp)
@@ -59,7 +59,7 @@ fun DeliverySelectionCard() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "1 delivery",
+                        text = strings.oneDelivery,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -71,7 +71,7 @@ fun DeliverySelectionCard() {
                             contentDescription = "Search Icon",
                             tint = Color(0xFF098D19)
                         )
-                        Text(text = "Full", color = Color(0xFF098D19))
+                        Text(text = strings.full, color = Color(0xFF098D19))
                     }
                 }
                 Spacer(modifier = Modifier.size(12.dp))
@@ -107,8 +107,8 @@ fun DeliverySelectionCard() {
                             modifier = Modifier.weight(1F),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text(text = "$daysAhead days ($dayOfWeek)")
-                            Text(text = "Free", color = Color(0xFF098D19))
+                            Text(text = strings.daysAhedToDelivery(daysAhead, dayOfWeek))
+                            Text(text = strings.free, color = Color(0xFF098D19))
                         }
                     }
                 }

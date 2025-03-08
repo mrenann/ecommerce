@@ -84,8 +84,8 @@ fun CardFront(
             .background(
                 brush = Brush.linearGradient(
                     colors = listOf(
-                        Color(0xFF171717),
-                        Color(0xFF3B3B3B),
+                        Color(0xFFFF7F33),
+                        Color(0xFF735DFF),
                     )
                 )
             )
@@ -93,8 +93,8 @@ fun CardFront(
                 drawCircle(
                     brush = Brush.linearGradient(
                         colors = listOf(
-                            Color(0xFF171717).copy(alpha = 0.4f),
-                            Color(0xFF3B3B3B).copy(alpha = 0.2f)
+                            Color(0xFFFF7F33).copy(alpha = 0.4f),
+                            Color(0xFF735DFF).copy(alpha = 0.2f)
                         )
                     ),
                     center = this.size.center * 2f,
@@ -104,8 +104,8 @@ fun CardFront(
                     brush = Brush.linearGradient(
                         tileMode = TileMode.Mirror,
                         colors = listOf(
-                            Color(0xFF1E1E1F).copy(alpha = 0.4f),
-                            Color(0xFF3B3B3B).copy(alpha = 0.2f)
+                            Color(0xFFFF7F33).copy(alpha = 0.4f),
+                            Color(0xFF735DFF).copy(alpha = 0.2f)
                         )
                     ),
                     center = this.size.center.copy(y = this.size.height * 1.4f),
@@ -155,60 +155,7 @@ fun CardFront(
             fontFamily = FontFamily(
                 Font(R.font.atkinson_hyperlegible),
             )
-//        OutlinedTextField(
-//            singleLine = true,
-//            value = formatCardNumber(cardNumber),
-//            onValueChange = { textFieldValue -> // Receive TextFieldValue
-//                val unformatted = textFieldValue.text.replace(" ", "")
-//                if (unformatted.length <= 16) {
-//                    cardNumber = unformatted
-//                }
-//            },
-//            placeholder = {
-//                Text(
-//                    text = "1234 5678 9012 3456",
-//                    fontSize = 24.sp,
-//                    fontFamily = FontFamily(
-//                        Font(R.font.atkinson_hyperlegible),
-//                    ),
-//                    textAlign = TextAlign.Center,
-//
-//
-//                    )
-//            },
-//
-//            shape = OutlinedTextFieldDefaults.shape,
-//            colors = OutlinedTextFieldDefaults.colors(
-//                unfocusedBorderColor = Color.Transparent,
-//                focusedBorderColor = Color.Transparent,
-//                unfocusedContainerColor = Color.Transparent,
-//                focusedContainerColor = Color.Transparent
-//            ),
-//            visualTransformation = DigitsAndSpacesTransformation(), // Key change!
-//            textStyle = TextStyle(
-//                fontFamily = FontFamily(Font(R.font.atkinson_hyperlegible)),
-//                fontSize = 24.sp,
-//                textAlign = TextAlign.Center,
-//                color = Color.White
-//            ),
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .heightIn(30.dp, 70.dp)
-//                .focusRequester(focusRequester1)
-//                .onFocusChanged {
-//                    isCardNumberFocused = it.isFocused
-//                },
-//            keyboardOptions = KeyboardOptions(
-//                keyboardType = KeyboardType.Number,
-//                imeAction = ImeAction.Next
-//            ),
-//            keyboardActions = KeyboardActions(
-//                onNext = {
-//                    if (cardNumber.length == 16) {
-//                        focusRequester2.requestFocus()
-//                    }
-//                }
-//            )
+
         )
         Row(
             modifier = Modifier
@@ -231,7 +178,7 @@ fun CardFront(
 }
 
 
-fun formatCardNumber(number: String): TextFieldValue {  // Return TextFieldValue
+fun formatCardNumber(number: String): TextFieldValue {
     val formattedNumber = number.replace(" ", "").chunked(4).joinToString(" ")
     return TextFieldValue(
         text = formattedNumber,
@@ -241,8 +188,8 @@ fun formatCardNumber(number: String): TextFieldValue {  // Return TextFieldValue
 
 @Composable
 fun NameDisplay(userName: String) {
-    val words = userName.trim().split("\\s+".toRegex()) // Splits by multiple spaces
-    val displayName = words.take(2).joinToString(" ") // Takes first two words safely
+    val words = userName.trim().split("\\s+".toRegex())
+    val displayName = words.take(2).joinToString(" ")
 
     Text(
         text = displayName,

@@ -43,6 +43,7 @@ import br.mrenann.core.domain.model.Category
 import br.mrenann.core.domain.model.ProductCart
 import br.mrenann.core.domain.model.Purchase
 import br.mrenann.core.util.formatBalance
+import cafe.adriel.lyricist.LocalStrings
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FieldValue
@@ -63,6 +64,7 @@ fun ConfirmationCard(
 ) {
     var loading by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+    val strings = LocalStrings.current.cartScreen
     Column {
         Card(
             modifier = Modifier
@@ -83,7 +85,7 @@ fun ConfirmationCard(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Products(${cartState.itemsCount})",
+                            text = strings.products(cartState.itemsCount),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -119,12 +121,12 @@ fun ConfirmationCard(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Delivery",
+                            text = strings.delivery,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "Free",
+                            text = strings.free,
                             fontSize = 16.sp,
                         )
                     }
@@ -163,7 +165,7 @@ fun ConfirmationCard(
                         modifier = Modifier.padding(bottom = 8.dp)
                     ) {
                         Text(
-                            text = "Pay with",
+                            text = strings.payWith,
                             fontSize = 16.sp,
                         )
                         Row(
@@ -187,11 +189,11 @@ fun ConfirmationCard(
                                 )
                             }
                             Text(
-                                text = if (card == null) paymentMethod.uppercase() else "Card **** ${
+                                text = if (card == null) paymentMethod.uppercase() else strings.payWithCard(
                                     card.cardNumber.takeLast(
                                         4
                                     )
-                                }",
+                                ),
                                 fontSize = 14.sp,
                                 modifier = Modifier.padding(start = 12.dp)
                             )
@@ -267,7 +269,7 @@ fun ConfirmationCard(
                 }
             ) {
                 if (loading.not()) {
-                    Text("Confirm Purchase")
+                    Text(strings.confirmPurchase)
                 } else {
                     CircularProgressIndicator(
                         color = Color.White,

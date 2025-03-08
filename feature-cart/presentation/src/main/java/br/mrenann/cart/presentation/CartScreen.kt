@@ -40,6 +40,7 @@ import br.mrenann.cart.presentation.components.CartItem
 import br.mrenann.cart.presentation.screenModel.CartScreenModel
 import br.mrenann.core.ui.components.SnackBarCustom
 import br.mrenann.core.util.formatBalance
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -61,6 +62,7 @@ class CartScreen : Screen {
         val snackbarHostState = remember { SnackbarHostState() }
         var promoCode by remember { mutableStateOf("") }
         val coroutineScope = rememberCoroutineScope()
+        val strings = LocalStrings.current.cartScreen
 
         LaunchedEffect(Unit) {
             screenModel.getProducts()
@@ -95,7 +97,7 @@ class CartScreen : Screen {
                         )
                     }
                     Text(
-                        text = "Cart",
+                        text = strings.title,
                         style = MaterialTheme.typography.bodyLarge,
                         fontSize = 18.sp
                     )
@@ -157,7 +159,7 @@ class CartScreen : Screen {
                         minLines = 1,
                         singleLine = true,
                         onValueChange = { promoCode = it },
-                        placeholder = { Text("Has Promo Code") },
+                        placeholder = { Text(strings.hasPromoCode) },
                         trailingIcon = {
                             IconButton(onClick = {
                                 if (state is CartScreenModel.State.Result) {
@@ -190,7 +192,7 @@ class CartScreen : Screen {
                             if (state is CartScreenModel.State.Result) {
                                 val result = state as CartScreenModel.State.Result
                                 if (result.state.discountApplied != 0.0) {
-                                    Text("PROMO APPLIED")
+                                    Text(strings.promoAplied)
                                 }
                             }
                         },
@@ -215,7 +217,10 @@ class CartScreen : Screen {
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text("Subtotal:", style = MaterialTheme.typography.bodyMedium)
+                                Text(
+                                    "${strings.subtotal}:",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
                                 Text(resultState.products.sumOf { it.price * it.qtd }
                                     .formatBalance())
                             }
@@ -223,15 +228,21 @@ class CartScreen : Screen {
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text("Delivery Fee:", style = MaterialTheme.typography.bodyMedium)
-                                Text(text = "Free", color = Color(0xFF48D861))
+                                Text(
+                                    "${strings.deliveryFee}:",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Text(text = strings.free, color = Color(0xFF48D861))
                             }
                             if (resultState.discountApplied != 0.0) {
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                    Text("Discount:", style = MaterialTheme.typography.bodyMedium)
+                                    Text(
+                                        "${strings.discount}:",
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
                                     Text("- " + resultState.discountApplied.formatBalance())
                                 }
                             }
@@ -246,9 +257,9 @@ class CartScreen : Screen {
 
                         val text =
                             if (resultState.products.isEmpty()) {
-                                "Cart Empty"
+                                strings.cartEmpty
                             } else {
-                                "Checkout for ${resultState.total.formatBalance()}"
+                                strings.checkoutFor(resultState.total.formatBalance())
                             }
                         Button(
                             onClick = { navigator.push(PreparingScreen()) },

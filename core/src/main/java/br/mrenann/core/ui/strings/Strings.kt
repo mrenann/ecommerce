@@ -4,7 +4,62 @@ data class Strings(
     val homeTab: HomeTabStrings,
     val favoriteTab: FavoriteTabStrings,
     val profileTab: ProfileTabStrings,
-    val detailsScreen: DetailsScreenStrings
+    val detailsScreen: DetailsScreenStrings,
+    val cartScreen: CartScreenStrings,
+    val authScreen: AuthScreenStrings,
+)
+
+data class AuthScreenStrings(
+    val login: String,
+)
+
+data class CartScreenStrings(
+    val title: String,
+    val subtotal: String,
+    val deliveryFee: String,
+    val hasPromoCode: String,
+    val promoAplied: String,
+    val checkoutFor: (String) -> String,
+    val preparingEverithingForYou: String,
+    val deliveryMethod: String,
+    val chooseThisAddress: String,
+    val cartEmpty: String,
+    val free: String,
+    val discount: String,
+    val dontHaveMainAddress: String,
+    val pickUpAgency: String,
+    val sendToMyAddress: String,
+    val agency: String,
+    val residence: String,
+    val chooseDeliveryDate: String,
+    val continueBtn: String,
+    val delivery: String,
+    val payment: String,
+    val youWillPay: String,
+    val recommended: String,
+    val card: String,
+    val confirmation: String,
+    val confirmPurchase: String,
+    val payWith: String,
+    val daysAhedToDelivery: (Int, String) -> String,
+    val oneDelivery: String,
+    val full: String,
+    val toPosition: (String) -> String,
+    val pix: String,
+    val immediateApproval: String,
+    val products: (Int) -> String,
+    val payPixToEnsure: (String) -> String,
+    val copyCodeToPay: String,
+    val pixGuideOne: String,
+    val pixGuideTwo: String,
+    val pixGuideThree: String,
+    val pixCredited: String,
+    val pixCode: String,
+    val copyCode: String,
+    val payWithCard: (String) -> String,
+    val cardCharged: (String) -> String,
+    val cardNumber: (String) -> String,
+    val expNumber: (String) -> String,
 )
 
 data class DetailsScreenStrings(
@@ -19,6 +74,12 @@ data class DetailsScreenStrings(
 
 data class HomeTabStrings(
     val title: String,
+    val discover: String,
+    val search: String,
+    val categories: String,
+    val forYou: String,
+    val more: String,
+    val buyYourElectronics: String,
 )
 
 data class FavoriteTabStrings(

@@ -1,7 +1,5 @@
 package br.mrenann.cart.presentation.components
 
-import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,8 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,16 +21,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cafe.adriel.lyricist.LocalStrings
 import compose.icons.EvaIcons
-import compose.icons.evaicons.Fill
 import compose.icons.evaicons.Outline
-import compose.icons.evaicons.fill.Car
-import compose.icons.evaicons.fill.Flash
 import compose.icons.evaicons.outline.Car
 import compose.icons.evaicons.outline.ChevronLeft
 import compose.icons.evaicons.outline.Pin
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 @Composable
 fun ArriveContent(
@@ -42,6 +34,8 @@ fun ArriveContent(
     goToNext: () -> Unit,
     position: String
 ) {
+    val strings = LocalStrings.current.cartScreen
+    val positionTranslated = if(position == "Residence") strings.residence else strings.agency
     Column {
         Row(
             modifier = Modifier
@@ -55,7 +49,7 @@ fun ArriveContent(
                 )
             }
             Text(
-                text = "Choose delivery date",
+                text = strings.chooseDeliveryDate,
                 style = MaterialTheme.typography.bodyLarge,
                 fontSize = 18.sp
             )
@@ -76,7 +70,7 @@ fun ArriveContent(
                     imageVector = EvaIcons.Outline.Pin,
                     contentDescription = "Search Icon"
                 )
-                Text(text = "To $position")
+                Text(text = strings.toPosition(positionTranslated))
 
             }
 
@@ -95,12 +89,14 @@ fun ArriveContent(
             modifier = Modifier.padding(12.dp)
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 3.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 3.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Delivery",
+                    text = strings.delivery,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -113,7 +109,7 @@ fun ArriveContent(
                         tint = Color(0xFF098D19)
                     )
                     Spacer(modifier = Modifier.size(3.dp))
-                    Text(text = "Free", color = Color(0xFF098D19))
+                    Text(text = strings.free, color = Color(0xFF098D19))
                 }
             }
             Button(
@@ -123,7 +119,7 @@ fun ArriveContent(
                     goToNext()
                 }
             ) {
-                Text("Continue")
+                Text(strings.continueBtn)
             }
         }
 

@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.util.formatBalance
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 
@@ -44,6 +45,7 @@ data class CardScreen(val total: Double, val card: Card) : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.current
+        val strings = LocalStrings.current.cartScreen
 
         Scaffold { innerPadding ->
             Column(
@@ -71,7 +73,7 @@ data class CardScreen(val total: Double, val card: Card) : Screen {
 
                 // Título
                 Text(
-                    text = "Your card will be charged ${total.formatBalance()}",
+                    text = strings.cardCharged(total.formatBalance()),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
@@ -87,7 +89,7 @@ data class CardScreen(val total: Double, val card: Card) : Screen {
     @Composable
     fun CardItem(card: Card) {
         val backgroundColor = MaterialTheme.colorScheme.surfaceContainer
-
+        val strings = LocalStrings.current.cartScreen
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -103,13 +105,13 @@ data class CardScreen(val total: Double, val card: Card) : Screen {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "**** ${card.cardNumber.takeLast(4)}",
+                text = strings.cardNumber(card.cardNumber.takeLast(4)),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Exp ${card.expiryDate}",
+                text = strings.expNumber(card.expiryDate),
                 fontSize = 14.sp,
             )
         }

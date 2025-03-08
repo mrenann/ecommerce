@@ -5,7 +5,14 @@ import cafe.adriel.lyricist.LyricistStrings
 @LyricistStrings(languageTag = Locales.PT, default = true)
 internal val PtStrings = Strings(
     homeTab = HomeTabStrings(
-        title = "Inicio"
+        title = "Inicio",
+        discover = "Descubra",
+        search = "Pesquisar",
+        categories = "Categorias",
+        forYou = "Para você",
+        more = "Mais",
+        buyYourElectronics = "Compre seus eletronicos"
+
     ),
     favoriteTab = FavoriteTabStrings(
         title = "Favoritos"
@@ -18,6 +25,57 @@ internal val PtStrings = Strings(
         addedToCart = "Adicionado ao carrinho",
         unit = "Unidade",
         productNotFound = "Produto não encontrado"
+    ),
+    cartScreen = CartScreenStrings(
+        title = "Carrinho",
+        subtotal = "Subtotal",
+        deliveryFee = "Frete",
+        hasPromoCode = "Cupom de promoção",
+        promoAplied = "Promoção aplicada",
+        checkoutFor = { "Comprar por $it" },
+        preparingEverithingForYou = "Preparando tudo para você",
+        deliveryMethod = "Método de entrega",
+        chooseThisAddress = "Escolha este endereço",
+        cartEmpty = "Carrinho vazio",
+        free = "Gratis",
+        discount = "Desconto",
+        dontHaveMainAddress = "Você não tem endereço principal",
+        pickUpAgency = "Retirar na Agência",
+        sendToMyAddress = "Enviar para meu endereço",
+        agency = "Agência",
+        residence = "Casa",
+        chooseDeliveryDate = "Escolha a data de entrega",
+        continueBtn = "Continuar",
+        delivery = "Entrega",
+        payment = "Pagamento",
+        youWillPay = "Você vai pagar",
+        recommended = "Recomendado",
+        card = "Cartão",
+        confirmation = "Confirmar",
+        confirmPurchase = "Confirmar compra",
+        payWith = "Pagar com",
+        daysAhedToDelivery = { daysAhead, dayOfWeek -> "$daysAhead dias ($dayOfWeek)" },
+        oneDelivery = "1 entrega",
+        full = "Full",
+        toPosition = { "Para $it" },
+        pix = "Pix",
+        immediateApproval = "Aprovação imediata",
+        products = { "Produtos ($it)" },
+        payPixToEnsure = { "Pagar $it via Pix para garantir a sua compra" },
+        copyCodeToPay = "Copie este código para pagar",
+        pixGuideOne = "1. Acesse o seu aplicativo de Internet Banking ou de pagamento.",
+        pixGuideTwo = "2. Escolha pagar via Pix.",
+        pixGuideThree = "3. Cole o código abaixo:",
+        pixCode = "00020126540014br.gov.bcb.pix0132pix.br@bankingecommerce.br123.gov",
+        copyCode = "Copiar código",
+        pixCredited = "💳 Pague e ele será creditado instantaneamente",
+        payWithCard = { "Cartão **** $it" },
+        cardCharged = { "Seu cartão será cobrado $it" },
+        cardNumber = { "**** $it" },
+        expNumber = { "Val $it" },
+    ),
+    authScreen = AuthScreenStrings(
+        login = "Login"
     ),
     profileTab = ProfileTabStrings(
         title = "Perfil",

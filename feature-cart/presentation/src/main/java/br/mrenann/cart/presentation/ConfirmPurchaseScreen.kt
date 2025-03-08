@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import br.mrenann.cart.presentation.components.ConfirmationCard
 import br.mrenann.cart.presentation.screenModel.CartScreenModel
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -35,6 +36,7 @@ data class ConfirmPurchaseScreen(
         val navigator = LocalNavigator.currentOrThrow
         val cartScreenModel = koinScreenModel<CartScreenModel>()
         val cartState by cartScreenModel.state.collectAsState()
+        val strings = LocalStrings.current.cartScreen
 
         Scaffold(
             modifier = Modifier
@@ -57,7 +59,7 @@ data class ConfirmPurchaseScreen(
                         )
                     }
                     Text(
-                        text = "Confirmation",
+                        text = strings.confirmation,
                         style = MaterialTheme.typography.bodyLarge,
                         fontSize = 18.sp
                     )

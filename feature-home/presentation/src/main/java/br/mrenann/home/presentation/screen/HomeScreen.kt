@@ -52,6 +52,7 @@ import br.mrenann.home.presentation.components.ShimmerHome
 import br.mrenann.home.presentation.screenModel.HomeScreenModel
 import br.mrenann.navigation.LocalNavigatorParent
 import br.mrenann.productdetails.presentation.DetailsScreen
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -71,7 +72,7 @@ class HomeScreen : Screen {
         val navigatorChildren = LocalNavigator.currentOrThrow
         val screenModel = koinScreenModel<HomeScreenModel>()
         val state by screenModel.state.collectAsState()
-
+        val strings = LocalStrings.current.homeTab
         val cartScreenModel = koinScreenModel<CartScreenModel>()
         val cartState by cartScreenModel.state.collectAsState()
         cartScreenModel.countItemsFromCart()
@@ -116,7 +117,7 @@ class HomeScreen : Screen {
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
-                                    SectionTitle("Discover")
+                                    SectionTitle(strings.discover)
                                     IconButton(onClick = {
                                         navigator.push(CartScreen())
                                     }) {
@@ -189,14 +190,14 @@ class HomeScreen : Screen {
                                             style = MaterialTheme.typography.bodyLarge,
                                             fontWeight = FontWeight.Bold,
                                             fontSize = 26.sp,
-                                            text = "Buy your electronics",
+                                            text = strings.buyYourElectronics,
                                             color = Color.White
                                         )
                                     }
                                 }
                             }
 
-                            item { SectionTitle("Categories") }
+                            item { SectionTitle(strings.categories) }
 
                             item {
                                 LazyVerticalGrid(
@@ -234,7 +235,7 @@ class HomeScreen : Screen {
                                 }
                             }
 
-                            item { SectionTitle("For You") }
+                            item { SectionTitle(strings.forYou) }
 
                             item {
                                 Box(

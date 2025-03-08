@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import cafe.adriel.lyricist.LocalStrings
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Outline
 import compose.icons.evaicons.outline.Search
@@ -25,9 +26,8 @@ import compose.icons.evaicons.outline.Search
 fun SearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
-    onSearch: (String) -> Unit // Callback to handle search
+    onSearch: (String) -> Unit
 ) {
-    // Local software keyboard controller to hide keyboard after search
     val keyboardController = LocalSoftwareKeyboardController.current
 
     OutlinedTextField(
@@ -35,7 +35,7 @@ fun SearchBar(
         maxLines = 1,
         onValueChange = onQueryChange,
         singleLine = true,
-        placeholder = { Text("Search") },
+        placeholder = { Text(LocalStrings.current.homeTab.search) },
         trailingIcon = {
             Icon(
                 modifier = Modifier.clickable {
@@ -54,12 +54,12 @@ fun SearchBar(
         ),
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Done // Sets the action to "Done" on the keyboard
+            imeAction = ImeAction.Done
         ),
         keyboardActions = KeyboardActions(
             onDone = {
-                if (query.length > 3) onSearch(query) // Trigger the search when "Done" is pressed
-                keyboardController?.hide() // Hide the keyboard after the search
+                if (query.length > 3) onSearch(query)
+                keyboardController?.hide()
             }
         ),
         modifier = Modifier

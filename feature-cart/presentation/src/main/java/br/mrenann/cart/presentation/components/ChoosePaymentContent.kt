@@ -26,15 +26,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.cart.presentation.Card
 import br.mrenann.cart.presentation.R
 import br.mrenann.core.util.formatBalance
+import cafe.adriel.lyricist.LocalStrings
 import compose.icons.EvaIcons
 import compose.icons.evaicons.Outline
 import compose.icons.evaicons.outline.ChevronRight
@@ -47,6 +49,7 @@ fun ChoosePaymentContent(
     discountValue: Double = 0.0,
     discountCode: String?,
 ) {
+    val strings = LocalStrings.current.cartScreen
     Column {
         LazyColumn(
             modifier = Modifier.weight(1F),
@@ -54,8 +57,8 @@ fun ChoosePaymentContent(
             item {
                 PaymentOption(
                     icon = painterResource(R.drawable.ic_pix), // Replace
-                    title = "Pix",
-                    subtitle = "Immediate approval",
+                    title = strings.pix,
+                    subtitle = strings.immediateApproval,
                     cashback = "",
                     recommended = true,
                     click = goToNext
@@ -90,6 +93,8 @@ fun PaymentOption(
     isNew: Boolean = false,
     click: (String, Card?) -> Unit,
 ) {
+    val strings = LocalStrings.current.cartScreen
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -145,7 +150,7 @@ fun PaymentOption(
 
         if (recommended) {
             Text(
-                text = "RECOMMENDED",
+                text = strings.recommended.toUpperCase(Locale.current),
                 color = Color.White,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
@@ -172,6 +177,8 @@ fun BankPaymentOption(
     card: Card,
     click: (String, Card?) -> Unit
 ) {
+    val strings = LocalStrings.current.cartScreen
+
     Row(
         modifier = Modifier
             .padding(horizontal = 12.dp, vertical = 2.dp)
@@ -187,7 +194,7 @@ fun BankPaymentOption(
             Spacer(modifier = Modifier.width(16.dp))
 
             Column {
-                Text(text = "Card", fontWeight = FontWeight.Bold)
+                Text(text = strings.card, fontWeight = FontWeight.Bold)
                 Text(
                     text = "**** ${card.cardNumber.takeLast(4)}",
                     fontSize = 14.sp,
@@ -205,6 +212,8 @@ fun BankPaymentOption(
 
 @Composable
 fun TotalAmountSection(value: Double, discountValue: Double = 0.0) {
+    val strings = LocalStrings.current.cartScreen
+
     val totalValue = discountValue + value
     Box(
         modifier = Modifier
@@ -216,13 +225,18 @@ fun TotalAmountSection(value: Double, discountValue: Double = 0.0) {
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "You will pay")
+            Text(text = strings.youWillPay)
             Row(
                 horizontalArrangement = Arrangement.spacedBy(2.dp)
-            ){
+            ) {
                 Text(text = value.formatBalance())
-                if(totalValue != value){
-                    Text(text = totalValue.formatBalance(), fontSize = 12.sp, color = Color.Gray, textDecoration = TextDecoration.LineThrough)
+                if (totalValue != value) {
+                    Text(
+                        text = totalValue.formatBalance(),
+                        fontSize = 12.sp,
+                        color = Color.Gray,
+                        textDecoration = TextDecoration.LineThrough
+                    )
                 }
             }
 

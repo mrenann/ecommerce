@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.domain.model.Address
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -91,7 +92,7 @@ fun PreparingScreenContent(mainAddress: Address?) {
             CircularProgressIndicator(color = Color(0xFF00C236))
             Spacer(modifier = Modifier.height(24.dp))
             Text(
-                text = "Preparing everything for you...",
+                text = LocalStrings.current.cartScreen.preparingEverithingForYou,
                 fontSize = 16.sp,
                 style = MaterialTheme.typography.bodyLarge
             )

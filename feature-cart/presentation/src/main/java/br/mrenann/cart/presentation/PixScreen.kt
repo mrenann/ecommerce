@@ -34,6 +34,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.mrenann.core.util.formatBalance
+import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 
@@ -42,8 +43,7 @@ data class PixScreen(val total: Double) : Screen {
     override fun Content() {
         val context = LocalContext.current
         val navigator = LocalNavigator.current
-        val pixCode =
-            "00020126540014br.gov.bcb.pix0132pix.br@bankingecommerce.br123.gov" // Simulação do código Pix
+        val strings = LocalStrings.current.cartScreen
 
         Scaffold { innerPadding ->
             Column(
@@ -70,7 +70,7 @@ data class PixScreen(val total: Double) : Screen {
 
                 // Título
                 Text(
-                    text = "Pay ${total.formatBalance()} via Pix to secure your purchase",
+                    text = strings.payPixToEnsure(total.formatBalance()),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
@@ -86,12 +86,12 @@ data class PixScreen(val total: Double) : Screen {
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text("Copy this code to pay", fontWeight = FontWeight.Bold)
+                        Text(strings.copyCodeToPay, fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        Text("1. Access your Internet Banking or payment app.")
-                        Text("2. Choose to pay via Pix.")
-                        Text("3. Paste the following code:")
+                        Text(strings.pixGuideOne)
+                        Text(strings.pixGuideTwo)
+                        Text(strings.pixGuideThree)
 
                         Spacer(modifier = Modifier.height(8.dp))
 
@@ -103,7 +103,7 @@ data class PixScreen(val total: Double) : Screen {
                                 .padding(12.dp)
                         ) {
                             Text(
-                                text = pixCode,
+                                text = strings.pixCode,
                                 fontSize = 14.sp,
                                 color = Color.Black,
                                 maxLines = 1,
@@ -113,7 +113,7 @@ data class PixScreen(val total: Double) : Screen {
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        Text("💳 Pay and it will be credited instantly", fontSize = 12.sp)
+                        Text(strings.pixCredited, fontSize = 12.sp)
 
                         Spacer(modifier = Modifier.height(16.dp))
 
@@ -122,7 +122,7 @@ data class PixScreen(val total: Double) : Screen {
                             onClick = {
                                 val clipboard =
                                     context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                                val clip = ClipData.newPlainText("Pix Code", pixCode)
+                                val clip = ClipData.newPlainText("Pix Code", strings.pixCode)
                                 clipboard.setPrimaryClip(clip)
                                 Toast.makeText(context, "Code copied!", Toast.LENGTH_SHORT)
                                     .show()
@@ -130,7 +130,7 @@ data class PixScreen(val total: Double) : Screen {
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(8.dp)
                         ) {
-                            Text("Copy code")
+                            Text(strings.copyCode)
                         }
 
                         Spacer(modifier = Modifier.height(8.dp))

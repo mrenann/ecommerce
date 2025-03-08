@@ -36,8 +36,8 @@ fun CardBack(cvv: String) { // Add finish parameter
             .background(
                 brush = Brush.linearGradient(
                     colors = listOf(
-                        Color(0xFF171717),
-                        Color(0xFF3B3B3B),
+                        Color(0xFFFF7F33),
+                        Color(0xFF735DFF),
                     )
                 )
             )
@@ -45,8 +45,8 @@ fun CardBack(cvv: String) { // Add finish parameter
                 drawCircle(
                     brush = Brush.linearGradient(
                         colors = listOf(
-                            Color(0xFF171717).copy(alpha = 0.4f),
-                            Color(0xFF3B3B3B).copy(alpha = 0.2f)
+                            Color(0xFFFF7F33).copy(alpha = 0.4f),
+                            Color(0xFF735DFF).copy(alpha = 0.2f)
                         )
                     ),
                     center = this.size.center * 2f,
@@ -56,8 +56,8 @@ fun CardBack(cvv: String) { // Add finish parameter
                     brush = Brush.linearGradient(
                         tileMode = TileMode.Mirror,
                         colors = listOf(
-                            Color(0xFF1E1E1F).copy(alpha = 0.4f),
-                            Color(0xFF3B3B3B).copy(alpha = 0.2f)
+                            Color(0xFFFF7F33).copy(alpha = 0.4f),
+                            Color(0xFF735DFF).copy(alpha = 0.2f)
                         )
                     ),
                     center = this.size.center.copy(y = this.size.height * 1.4f),
@@ -78,12 +78,6 @@ fun CardBack(cvv: String) { // Add finish parameter
             Spacer(modifier = Modifier)
 
             Column(horizontalAlignment = Alignment.End) {
-//                Image(
-//                    modifier = Modifier.size(36.dp),
-//                    painter = painterResource(SharedRes.image.ufcalogo),
-//                    colorFilter = ColorFilter.tint(Color.White),
-//                    contentDescription = null
-//                )
 
             }
 

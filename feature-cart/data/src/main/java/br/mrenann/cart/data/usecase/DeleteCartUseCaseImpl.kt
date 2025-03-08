@@ -1,6 +1,5 @@
 package br.mrenann.cart.data.usecase
 
-import android.util.Log
 import br.mrenann.cart.domain.repository.CartRepository
 import br.mrenann.cart.domain.usecase.DeleteCartUseCase
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +13,6 @@ class DeleteCartUseCaseImpl(
     override suspend fun invoke(params: DeleteCartUseCase.Params): Flow<Unit> {
         return flow {
             val exists = repository.exists(params.item.id.toString())
-            Log.i("CART", "EXISTS: $exists")
             if (exists) {
                 repository.deleteProduct(params.item)
             }
