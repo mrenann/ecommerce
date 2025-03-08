@@ -88,6 +88,7 @@ dependencies {
     implementation(project(":feature-productDetails:domain"))
     implementation(project(":feature-productDetails:data"))
     implementation(project(":feature-productDetails:presentation"))
+    implementation(project(":feature-profile:presentation"))
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)

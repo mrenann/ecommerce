@@ -16,6 +16,7 @@ import br.mrenann.navigation.SharedScreen
 import br.mrenann.productdetails.data.di.productModule
 import br.mrenann.productdetails.presentation.DetailsScreen
 import br.mrenann.productdetails.presentation.di.detailsModule
+import br.mrenann.profile.presentation.di.profileModule
 import cafe.adriel.voyager.core.registry.ScreenRegistry
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -38,6 +39,7 @@ class App : Application() {
                     cartModelModule,
                     productModule,
                     detailsModule,
+                    profileModule,
                     myFavoritesModule
                 )
             } catch (e: Exception) {
